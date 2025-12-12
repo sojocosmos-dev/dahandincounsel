@@ -212,11 +212,11 @@
         @media print {
             body { 
                 padding: 0; margin: 0; 
-                /* 3-2. 폰트 크기 조정 */
-                font-size: 8.5pt; /* 9pt에서 더 줄임 */
+                /* 폰트 크기 유지 */
+                font-size: 8.2pt; 
             }
             
-            /* 3-1. 제목 '상담 준비 다했니?' 제거 */
+            /* 제목 '상담 준비 다했니?' 제거 */
             body > h1:first-of-type { 
                 display: none; 
             }
@@ -224,28 +224,41 @@
             #input-area, .button-group, .print-download-group { display: none; }
             #report-area { 
                 box-shadow: none; 
-                padding: 3mm 4mm; /* 3-2. 패딩 축소 (5mm 5mm에서) */
+                /* 보고서 상하 패딩 추가 축소 */
+                padding: 1mm 4mm; 
                 margin: 0; 
                 border-radius: 0; 
                 background-color: white;
+                
+                /* ==================================== */
+                /* 🌟 핵심 수정: 전체 배율 축소 (0.93 -> 0.91로 더 축소) */
+                transform: scale(0.91); 
+                transform-origin: top center; 
+                /* ==================================== */
             }
-            /* 3-2. 보고서 내 제목 크기 및 여백 조정 */
+            
+            /* 보고서 내 제목 크기 및 여백 조정 */
             #report-area h1 { font-size: 1.6em; padding-bottom: 6px; margin-bottom: 3px; }
             
             /* 여백 및 크기 조정 */
-            /* 3-2. 섹션 마진/패딩 축소 */
-            .usage-section, .asset-section-container, .summary-section { 
-                margin-bottom: 3px; /* 5px에서 줄임 */
-                padding: 4px; /* 5px에서 줄임 */
+            /* 섹션 마진/패딩 축소 */
+            .usage-section {
+                margin-bottom: 3px;
+                padding: 4px; 
+                page-break-inside: avoid; 
+            }
+            .asset-section-container, .summary-section { 
+                margin-bottom: 2px; 
+                padding: 4px; 
                 page-break-inside: avoid; 
             }
             
             /* Column Layout Reduction */
-            /* 3-2. 컬럼 간격/마진 축소 */
             .dynamic-column-layout { gap: 6px; margin-top: 5px; } 
             .dynamic-column-layout > div { 
-                min-height: 140px; /* 150px에서 줄임 */
-                padding: 3px; /* 4px에서 줄임 */
+                /* 컬럼 최소 높이 축소 */
+                min-height: 110px; 
+                padding: 3px; 
                 font-size: 0.85em;
             }
             .column-title { font-size: 0.9em; margin-bottom: 5px; }
@@ -254,29 +267,37 @@
             /* 총평 항목 크기 조정 */
             .summary-section { 
                 padding: 8px; 
-                margin-top: 10px; /* 15px에서 줄임 */
+                margin-top: 10px; 
             }
             .summary-section h3 {
-                margin-top: 8px; 
-                margin-bottom: 3px;
-                font-size: 1.05em; /* 1.1em에서 줄임 */
+                /* 8px -> 5px로 축소 */
+                margin-top: 5px; 
+                /* 3px -> 2px로 축소 */
+                margin-bottom: 2px;
+                font-size: 1.05em; 
             }
             .summary-textarea { 
-                min-height: 50px; 
+                /* ==================================== */
+                /* 🌟 총평 텍스트 에어리어 최소 높이 축소 (40px -> 30px로 더 축소) */
+                min-height: 30px; 
+                /* 추가 조정: 내부 패딩도 줄여서 공간 확보 */
+                padding: 3px 5px; 
+                /* ==================================== */
                 font-size: 0.9em;
             }
             .auto-summary-area {
-                padding: 8px; 
-                font-size: 0.9em; /* 0.95em에서 줄임 */
+                /* 8px -> 5px로 축소 */
+                padding: 5px; 
+                font-size: 0.9em; 
             }
             
             /* 돌아보기 텍스트 크기 조정 */
             .student-review-area label { margin-top: 5px; margin-bottom: 3px; font-size: 0.85em; }
             .student-review-area textarea { 
-                min-height: 40px; /* 45px에서 줄임 */
-                padding: 4px; /* 8px에서 줄임 */
+                min-height: 35px; 
+                padding: 4px; 
                 font-size: 0.8em; 
-                margin-bottom: 5px !important; /* 화면/프린트 분리 */
+                margin-bottom: 5px !important; 
             }
             .student-review-area textarea:last-child {
                 margin-bottom: 0 !important;
@@ -284,14 +305,28 @@
             
             /* 꼬리말 */
             .report-footer {
-                margin-top: 10px; /* 15px에서 줄임 */
+                margin-top: 10px; 
                 padding-top: 5px;
                 font-size: 8pt;
             }
             /* 뱃지 크기 조정 */
             .badge-item-display { width: 60px; font-size: 7pt; }
             .badge-item-display img { width: 40px; height: 40px; }
-            .pie-chart { width: 90px; height: 90px; } 
+            
+            /* 원그래프 출력 오류 수정 및 크기 축소 */
+            .pie-chart { 
+                width: 70px; 
+                height: 70px; 
+                -webkit-print-color-adjust: exact; 
+                print-color-adjust: exact; 
+            }
+            .pie-chart > div {
+                 /* 원그래프 안의 텍스트 크기 조정 */
+                font-size: 0.9em !important; 
+            }
+            
+            .cookie-asset-info { padding: 0 5px; } /* 쿠키 정보 패딩 축소 */
+            .cookie-asset-item { font-size: 0.8em; } /* 쿠키 정보 폰트 축소 */
         }
     </style>
 </head>
