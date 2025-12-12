@@ -114,6 +114,10 @@
             margin-top: 10px;
         }
         .dynamic-column-layout > div {
+            /* 2-1. 칸 크기 늘리기를 위해 flex-direction 추가 */
+            display: flex;
+            flex-direction: column;
+            
             padding: 8px; 
             border: 1px dashed #e0e0e0;
             border-radius: 4px;
@@ -136,14 +140,28 @@
         .cookie-asset-item { display: flex; justify-content: space-between; margin-bottom: 5px; padding: 3px 0; border-bottom: 1px dotted #eee; }
 
         /* 학생 돌아보기 스타일 */
+        .student-review-area {
+            /* 2-1. 칸 크기 늘리기를 위해 flex 속성 추가 */
+            flex-grow: 1; 
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between; 
+        }
         .student-review-area textarea { 
+            /* 2-1. 칸 크기 늘리기를 위해 flex 속성 및 min-height 0 설정 */
+            flex-grow: 1; 
+            min-height: 0; 
+            
             font-size: 0.95em; 
             padding: 8px; 
-            margin: 0; 
-            min-height: 70px;
+            margin: 0 0 10px 0; /* 텍스트 에어리어 간격 확보 */
             box-sizing: border-box; 
             border: 1px solid #ccc; 
             border-radius: 4px;
+        }
+        .student-review-area textarea:last-child {
+            /* 2-1. 마지막 텍스트 에어리어 하단 여백 제거 */
+            margin-bottom: 0;
         }
         
         /* 쿠키 원형 그래프 스타일 */
@@ -194,43 +212,54 @@
         @media print {
             body { 
                 padding: 0; margin: 0; 
-                font-size: 9pt; 
+                /* 3-2. 폰트 크기 조정 */
+                font-size: 8.5pt; /* 9pt에서 더 줄임 */
             }
+            
+            /* 3-1. 제목 '상담 준비 다했니?' 제거 */
+            body > h1:first-of-type { 
+                display: none; 
+            }
+            
             #input-area, .button-group, .print-download-group { display: none; }
             #report-area { 
                 box-shadow: none; 
-                padding: 5mm 5mm; 
+                padding: 3mm 4mm; /* 3-2. 패딩 축소 (5mm 5mm에서) */
                 margin: 0; 
                 border-radius: 0; 
                 background-color: white;
             }
-            #report-area h1 { font-size: 1.6em; padding-bottom: 8px; margin-bottom: 5px; }
+            /* 3-2. 보고서 내 제목 크기 및 여백 조정 */
+            #report-area h1 { font-size: 1.6em; padding-bottom: 6px; margin-bottom: 3px; }
             
             /* 여백 및 크기 조정 */
+            /* 3-2. 섹션 마진/패딩 축소 */
             .usage-section, .asset-section-container, .summary-section { 
-                margin-bottom: 5px; 
-                padding: 5px; 
+                margin-bottom: 3px; /* 5px에서 줄임 */
+                padding: 4px; /* 5px에서 줄임 */
                 page-break-inside: avoid; 
             }
             
             /* Column Layout Reduction */
-            .dynamic-column-layout { gap: 8px; }
+            /* 3-2. 컬럼 간격/마진 축소 */
+            .dynamic-column-layout { gap: 6px; margin-top: 5px; } 
             .dynamic-column-layout > div { 
-                min-height: 150px; 
-                padding: 4px; 
+                min-height: 140px; /* 150px에서 줄임 */
+                padding: 3px; /* 4px에서 줄임 */
                 font-size: 0.85em;
             }
             .column-title { font-size: 0.9em; margin-bottom: 5px; }
-
+            .activity-title { margin-top: 10px; margin-bottom: 8px; font-size: 1.2em; }
+            
             /* 총평 항목 크기 조정 */
             .summary-section { 
                 padding: 8px; 
-                margin-top: 15px; 
+                margin-top: 10px; /* 15px에서 줄임 */
             }
             .summary-section h3 {
                 margin-top: 8px; 
                 margin-bottom: 3px;
-                font-size: 1.1em;
+                font-size: 1.05em; /* 1.1em에서 줄임 */
             }
             .summary-textarea { 
                 min-height: 50px; 
@@ -238,16 +267,24 @@
             }
             .auto-summary-area {
                 padding: 8px; 
-                font-size: 0.95em; 
+                font-size: 0.9em; /* 0.95em에서 줄임 */
             }
             
             /* 돌아보기 텍스트 크기 조정 */
-            .student-review-area label { margin-top: 10px; margin-bottom: 5px; font-size: 0.85em; }
-            .student-review-area textarea { font-size: 0.8em; min-height: 45px; }
+            .student-review-area label { margin-top: 5px; margin-bottom: 3px; font-size: 0.85em; }
+            .student-review-area textarea { 
+                min-height: 40px; /* 45px에서 줄임 */
+                padding: 4px; /* 8px에서 줄임 */
+                font-size: 0.8em; 
+                margin-bottom: 5px !important; /* 화면/프린트 분리 */
+            }
+            .student-review-area textarea:last-child {
+                margin-bottom: 0 !important;
+            }
             
             /* 꼬리말 */
             .report-footer {
-                margin-top: 15px;
+                margin-top: 10px; /* 15px에서 줄임 */
                 padding-top: 5px;
                 font-size: 8pt;
             }
@@ -315,7 +352,7 @@
                         </label>
                         
                         <p style="font-size: 0.9em; color: #777; margin-top: 10px;">* 획득/사용 내용을 구분해서 입력해야 합니다. (예: 획득: ..., 사용: ...)</p>
-                        <textarea id="input-cookie-usage" rows="4" placeholder="획득: 발표 3회 시 1쿠키 지급, 학습지 100% 완료 시 2쿠키 지급.&#10;사용: 자리 선택권 구매 10쿠키, 간식 교환 5쿠키."></textarea>
+                        <textarea id="input-cookie-usage" rows="4" placeholder="획득: 주제글쓰기 제출 2쿠키, 받아쓰기 1쿠키~3쿠키, 놀이마당 1쿠키~2쿠키, 1인 1역 월급 7쿠키~15쿠키.&#10;사용: 자리 선택권 20쿠키, 간식교환 5쿠키~10쿠키, 음악재생권 10쿠키."></textarea>
                     </div>
                 </div>
 
@@ -340,7 +377,7 @@
                         </label>
 
                         <p style="font-size: 0.9em; color: #777; margin-top: 10px;">* 획득/사용 내용을 구분해서 입력해야 합니다. (예: 획득: ..., 사용: ...)</p>
-                        <textarea id="input-chip-usage" rows="4" placeholder="획득: 쿠키 10개 저축 시 1초코칩 자동 교환, 월말 생활 태도 우수자에게 5초코칩 지급.&#10;사용: 학기말 행사 시 특별한 보상 아이템 구매에 사용."></textarea>
+                        <textarea id="input-chip-usage" rows="4" placeholder="획득: 발표 내용이 좋은 학생에게 1초코칩, 경청 태도가 좋은 학생에게 1초코칩.&#10;사용: 10초코칩을 1쿠키로 교환할 수 있음."></textarea>
                     </div>
                 </div>
 
@@ -364,7 +401,7 @@
                         </label>
 
                         <p style="font-size: 0.9em; color: #777; margin-top: 10px;">* 소개/획득 내용을 구분해서 입력해야 합니다. (예: 소개: ..., 획득: ...)</p>
-                        <textarea id="input-badge-usage" rows="4" placeholder="소개: 1학기에는 성실, 용기, 책임 등 6가지 미덕 뱃지를 계획하였습니다.&#10;획득: 성실 뱃지는 주간 과제 4주 연속 만점 시 지급, 용기 뱃지는 학급회장 선거 출마 시 지급."></textarea>
+                        <textarea id="input-badge-usage" rows="4" placeholder="소개: 아침 독서, 바르게 글씨 쓰기, 인사 잘하기, 환경보호 실천하기, 마음 다스리기, 효도미션.&#10;획득: 아침 한 줄 독서록 쓰기 완성, 바른 글씨 칭찬 10회 이상, 매달 학급회의 시간 인사왕 뽑기, 제로웨이스트 미션 통과, 현명하게 갈등 해결하기 5회, 효도 미션통과."></textarea>
                     </div>
                 </div>
                 
@@ -429,11 +466,15 @@
             { title: "봉사", imgUrl: "https://i.imgur.com/badge_bongsa.png" },
         ];
         
+        // 1-1, 1-2, 1-3. 예시 텍스트 수정
         const USAGE_EXAMPLE_TEXTS = {
             general: "우리 학급은 다했니 다했어요를 태블릿 활용 수업의 메인 플랫폼으로 사용했습니다. 학생들은 학급 생활, 수업 참여, 과제 수행 등에 따라 쿠키, 초코칩, 뱃지를 획득했습니다.",
-            cookieUsage: "획득: 발표 3회 시 1쿠키 지급, 학습지 100% 완료 시 2쿠키 지급. \n사용: 자리 선택권 구매 10쿠키, 간식 교환 5쿠키.",
-            chipUsage: "획득: 쿠키 10개 저축 시 1초코칩 자동 교환, 월말 생활 태도 우수자에게 5초코칩 지급. \n사용: 학기말 행사 시 특별한 보상 아이템 구매에 사용.",
-            badgeUsage: "소개: 1학기에는 성실, 용기, 책임 등 6가지 미덕 뱃지를 계획하였습니다. \n획득: 성실 뱃지는 주간 과제 4주 연속 만점 시 지급, 용기 뱃지는 학급회장 선거 출마 시 지급."
+            // 1-1. 쿠키 텍스트 수정
+            cookieUsage: "획득: 주제글쓰기 제출 2쿠키, 받아쓰기 1쿠키~3쿠키, 놀이마당 1쿠키~2쿠키, 1인 1역 월급 7쿠키~15쿠키 \n사용: 자리 선택권 20쿠키, 간식교환 5쿠키~10쿠키, 음악재생권 10쿠키",
+            // 1-2. 초코칩 텍스트 수정
+            chipUsage: "획득: 발표 내용이 좋은 학생에게 1초코칩, 경청 태도가 좋은 학생에게 1초코칩. \n사용: 10초코칩을 1쿠키로 교환할 수 있음.",
+            // 1-3. 뱃지 텍스트 수정
+            badgeUsage: "소개: 아침 독서, 바르게 글씨 쓰기, 인사 잘하기, 환경보호 실천하기, 마음 다스리기, 효도미션 \n획득: 아침 한 줄 독서록 쓰기 완성, 바른 글씨 칭찬 10회 이상, 매달 학급회의 시간 인사왕 뽑기, 제로웨이스트 미션 통과, 현명하게 갈등 해결하기 5회, 효도 미션통과"
         };
 
         let currentMode = 'single'; 
@@ -482,6 +523,7 @@
         document.addEventListener('DOMContentLoaded', () => {
             setMode('single'); 
             
+            // 1-1, 1-2, 1-3. 예시 텍스트 초기값 설정
             document.getElementById('input-usage-general').value = USAGE_EXAMPLE_TEXTS.general;
             document.getElementById('input-cookie-usage').value = USAGE_EXAMPLE_TEXTS.cookieUsage;
             document.getElementById('input-chip-usage').value = USAGE_EXAMPLE_TEXTS.chipUsage;
@@ -663,6 +705,7 @@
                 studentCodes = codeListText.split(',').map(code => code.trim()).filter(code => code.length > 0);
             }
             
+            document.getElementById('generate-report-btn').disabled = true;
             reportArea.innerHTML = '<p class="alert alert-loading">데이터를 불러오는 중입니다... 잠시만 기다려주세요.</p>';
             let allReportsHtml = '';
             
@@ -676,6 +719,7 @@
             }
             
             reportArea.innerHTML = allReportsHtml;
+            document.getElementById('generate-report-btn').disabled = false;
         }
 
         function generatePieChartStyle(saving, usage) {
@@ -928,7 +972,7 @@
                             <div class="student-review-area">
                                 <label>1. 가장 자랑스러운 뱃지와 그 이유:</label>
                                 <textarea placeholder=""></textarea>
-                                <label>2. 다음 학기에 받고 싶은 뱃지:</label>
+                                <label>2. 내가 받고 싶은 뱃지 추천:</label>
                                 <textarea placeholder=""></textarea>
                             </div>
                         </div>
