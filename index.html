@@ -212,11 +212,11 @@
         @media print {
             body { 
                 padding: 0; margin: 0; 
-                /* 폰트 크기 유지 */
+                /* 5. 전체 폰트 크기 추가 축소 */
                 font-size: 8.2pt; 
             }
             
-            /* 제목 '상담 준비 다했니?' 제거 */
+            /* 3-1. 제목 '상담 준비 다했니?' 제거 */
             body > h1:first-of-type { 
                 display: none; 
             }
@@ -224,39 +224,33 @@
             #input-area, .button-group, .print-download-group { display: none; }
             #report-area { 
                 box-shadow: none; 
-                /* 보고서 상하 패딩 추가 축소 */
-                padding: 1mm 4mm; 
+                /* 5. 보고서 상하 패딩 축소 */
+                padding: 2mm 4mm; 
                 margin: 0; 
                 border-radius: 0; 
                 background-color: white;
-                
-                /* ==================================== */
-                /* 🌟 핵심 수정: 전체 배율 축소 */
-                transform: scale(0.93); 
-                transform-origin: top center; 
-                /* ==================================== */
             }
-            
-            /* 보고서 내 제목 크기 및 여백 조정 */
+            /* 3-2. 보고서 내 제목 크기 및 여백 조정 */
             #report-area h1 { font-size: 1.6em; padding-bottom: 6px; margin-bottom: 3px; }
             
             /* 여백 및 크기 조정 */
-            /* 섹션 마진/패딩 축소 */
+            /* 5. 섹션 마진/패딩 축소 */
             .usage-section {
                 margin-bottom: 3px;
                 padding: 4px; 
                 page-break-inside: avoid; 
             }
             .asset-section-container, .summary-section { 
-                margin-bottom: 2px; 
+                margin-bottom: 2px; /* 3px에서 줄임 */
                 padding: 4px; 
                 page-break-inside: avoid; 
             }
             
             /* Column Layout Reduction */
+            /* 3-2. 컬럼 간격/마진 축소 */
             .dynamic-column-layout { gap: 6px; margin-top: 5px; } 
             .dynamic-column-layout > div { 
-                /* 컬럼 최소 높이 축소 */
+                /* 5. 컬럼 최소 높이 축소 */
                 min-height: 110px; 
                 padding: 3px; 
                 font-size: 0.85em;
@@ -275,7 +269,7 @@
                 font-size: 1.05em; 
             }
             .summary-textarea { 
-                /* 총평 텍스트 에어리어 최소 높이 축소 */
+                /* 5. 총평 텍스트 에어리어 최소 높이 축소 */
                 min-height: 40px; 
                 font-size: 0.9em;
             }
@@ -287,7 +281,7 @@
             /* 돌아보기 텍스트 크기 조정 */
             .student-review-area label { margin-top: 5px; margin-bottom: 3px; font-size: 0.85em; }
             .student-review-area textarea { 
-                min-height: 35px; 
+                min-height: 35px; /* 40px에서 줄임 */
                 padding: 4px; 
                 font-size: 0.8em; 
                 margin-bottom: 5px !important; 
@@ -308,8 +302,10 @@
             
             /* 원그래프 출력 오류 수정 및 크기 축소 */
             .pie-chart { 
+                /* 5. 원그래프 크기 추가 축소 */
                 width: 70px; 
                 height: 70px; 
+                /* 원그래프 출력을 강제하는 속성 유지 */
                 -webkit-print-color-adjust: exact; 
                 print-color-adjust: exact; 
             }
