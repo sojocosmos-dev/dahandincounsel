@@ -2,172 +2,69 @@
 <html lang="ko">
 <head>
     <meta charset="UTF-8">
-    <title>상담 준비 다했니? 성장 기록</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>성장 기록 보고서 - 로그인</title>
     <link rel="stylesheet" href="styles.css">
 </head>
-<body>
+<body class="auth-page">
+    <div class="auth-container">
+        <div class="auth-logo">🎓 성장 기록 보고서</div>
+        <div class="auth-subtitle">상담 준비 다했니?</div>
 
-    <h1>상담 준비 다했니?</h1>
-
-    <div id="input-area">
-        <input type="text" id="api-key-input" placeholder="여기에 다했니 API Key 입력 (필수)" required>
-        
-        <div class="mode-selection">
-            <div id="tab-single" class="mode-tab active" onclick="setMode('single')">👤 개별 학생 조회</div>
-            <div id="tab-batch" class="mode-tab" onclick="setMode('batch')">🧑‍🤝‍🧑 전체 학생 일괄 조회</div>
-        </div>
-
-        <div id="mode-content-area">
-            
-            <div id="mode-single-content">
-                <input type="text" id="student-code-input" placeholder="여기에 학생 코드 입력 (필수)" required>
-            </div>
-            <div id="mode-batch-content" style="display: none;">
-                <div class="control-group" style="background-color: #fffde7; border-color: #ffeb3b;">
-                    <h4>쉼표(,)로 구분된 학생 코드 입력</h4>
-                    <p style="font-size: 0.9em; color: #a1887f;">* 전체 학생 코드를 쉼표(,)로 구분하여 한 줄에 모두 입력하세요 (예: A1000, A1001, A1002...)</p>
-                    <textarea id="code-list-input" rows="6" placeholder="A1001, A1002, A1003, ..."></textarea>
-                </div>
-            </div>
-            
-            <div class="config-section" style="background-color: #e8f5e9; border-color: #66bb6a;">
-                <h3>✅ 필수 입력: 우리 학급의 다했니 다했어요 활용 방안</h3>
-                <p style="font-size: 0.9em; color: #777;">* 수정해서 입력 가능합니다.</p>
-                <textarea id="input-usage-general" rows="3" placeholder="예시: 우리 학급은 다했니 다했어요를 태블릿 활용 수업의 메인 플랫폼으로 사용했습니다. 학생들은 학급 생활, 수업 참여, 과제 수행 등에 따라 쿠키, 초코칩, 뱃지를 획득했습니다." required></textarea>
+        <!-- 로그인 선택 화면 -->
+        <div class="auth-selection" id="auth-selection">
+            <div class="auth-option">
+                <div class="auth-option-icon">👨‍🏫</div>
+                <div class="auth-option-title">교사용</div>
+                <div class="auth-option-desc">API Key로 전체 학급 학생들의<br>성장 기록 보고서를 생성합니다</div>
+                <button class="btn-teacher" onclick="redirectToTeacherReport()">
+                    교사 로그인
+                </button>
             </div>
 
-
-            <div class="config-section">
-                <h3>📋 성장 기록 보고서 출력 항목 선택</h3>
-                <p style="font-size: 0.9em; color: #777;">* 항목을 체크하면 관련 활용 방안 입력란이 활성화됩니다. 하위 항목까지 선택 가능합니다.</p>
-                
-                <div class="output-option-group" id="option-group-cookie">
-                    <label>
-                        <input type="checkbox" id="check-output-cookie" checked onchange="toggleConfigGroup('cookie')">
-                        🍪 쿠키 활동 전체 출력
-                    </label>
-                    
-                    <div id="cookie-config-details" class="sub-options">
-                        <label>
-                            <input type="checkbox" id="check-output-cookie-usage" checked>
-                            우리 학급 쿠키 획득 및 사용
-                        </label>
-                        <label>
-                            <input type="checkbox" id="check-output-cookie-asset" checked>
-                            쿠키 자산 현황 (수입/지출/잔여)
-                        </label>
-                        <label>
-                            <input type="checkbox" id="check-output-cookie-review" checked>
-                            나의 쿠키 활동 돌아보기 (학생 입력칸)
-                        </label>
-                        
-                        <p style="font-size: 0.9em; color: #777; margin-top: 10px;">* 획득/사용 내용을 구분해서 입력해야 합니다. (예: 획득: ..., 사용: ...)</p>
-                        <textarea id="input-cookie-usage" rows="4" placeholder="획득: 주제글쓰기 제출 2쿠키, 받아쓰기 1쿠키~3쿠키, 놀이마당 1쿠키~2쿠키, 1인 1역 월급 7쿠키~15쿠키.&#10;사용: 자리 선택권 20쿠키, 간식교환 5쿠키~10쿠키, 음악재생권 10쿠키."></textarea>
-                    </div>
-                </div>
-
-                <div class="output-option-group" id="option-group-chip">
-                    <label>
-                        <input type="checkbox" id="check-output-chip" checked onchange="toggleConfigGroup('chip')">
-                        🍫 초코칩 활동 전체 출력
-                    </label>
-                    
-                    <div id="chip-config-details" class="sub-options">
-                        <label>
-                            <input type="checkbox" id="check-output-chip-usage" checked>
-                            우리 학급 초코칩 획득 및 사용
-                        </label>
-                        <label>
-                            <input type="checkbox" id="check-output-chip-asset" checked>
-                            초코칩 자산 현황 (잔액)
-                        </label>
-                        <label>
-                            <input type="checkbox" id="check-output-chip-review" checked>
-                            나의 초코칩 활동 돌아보기 (학생 입력칸)
-                        </label>
-
-                        <p style="font-size: 0.9em; color: #777; margin-top: 10px;">* 획득/사용 내용을 구분해서 입력해야 합니다. (예: 획득: ..., 사용: ...)</p>
-                        <textarea id="input-chip-usage" rows="4" placeholder="획득: 발표 내용이 좋은 학생에게 1초코칩, 경청 태도가 좋은 학생에게 1초코칩.&#10;사용: 10초코칩을 1쿠키로 교환할 수 있음."></textarea>
-                    </div>
-                </div>
-
-                <div class="output-option-group" id="option-group-badge">
-                    <label>
-                        <input type="checkbox" id="check-output-badge" checked onchange="toggleConfigGroup('badge')">
-                        🏅 뱃지 활동 전체 출력
-                    </label>
-                    
-                    <div id="badge-config-details" class="sub-options">
-                        <label>
-                            <input type="checkbox" id="check-output-badge-usage" checked>
-                            우리 학급 뱃지 소개 및 획득
-                        </label>
-                        <label>
-                            <input type="checkbox" id="check-output-badge-status" checked>
-                            학생의 뱃지 획득 현황
-                        </label>
-                        <label>
-                            <input type="checkbox" id="check-output-badge-strength" style="display: none;">
-                        </label>
-
-                        <p style="font-size: 0.9em; color: #777; margin-top: 10px;">* 소개/획득 내용을 구분해서 입력해야 합니다. (예: 소개: ..., 획득: ...)</p>
-                        <textarea id="input-badge-usage" rows="4" placeholder="소개: 아침 독서, 바르게 글씨 쓰기, 인사 잘하기, 환경보호 실천하기, 마음 다스리기, 효도미션.&#10;획득: 아침 한 줄 독서록 쓰기 완성, 바른 글씨 칭찬 10회 이상, 매달 학급회의 시간 인사왕 뽑기, 제로웨이스트 미션 통과, 현명하게 갈등 해결하기 5회, 효도 미션통과."></textarea>
-                    </div>
-                </div>
-                
-                <div class="output-option-group" id="option-group-summary" style="background-color: #fce4ec; border-color: #ec407a;">
-                    <label>
-                        <input type="checkbox" id="check-output-summary" checked onchange="toggleConfigGroup('summary', false)">
-                        📊 총평 섹션 전체 출력
-                    </label>
-                    <div id="summary-config-details" class="sub-options">
-                        <label>
-                            <input type="checkbox" id="check-output-summary-summary" checked style="display: none;"> 
-                            활동 요약 (자동 입력)
-                        </label>
-                        <label>
-                            <input type="checkbox" id="check-output-summary-strength" checked>
-                            칭찬과 다짐 (학생 입력칸)
-                        </label>
-                        <label>
-                            <input type="checkbox" id="check-output-summary-parent" checked>
-                            격려의 한 마디 (학부모 입력칸)
-                        </label>
-
-                        <p style="font-size: 0.85em; color: #a1887f; margin-top: 10px;">
-                            * **활동 요약**은 자동으로 입력되며, **칭찬과 다짐**은 학생, **격려의 한 마디**는 학부모님께서 작성하는 항목입니다.
-                        </p>
-                    </div>
-                </div>
-
+            <div class="auth-option">
+                <div class="auth-option-icon">👨‍🎓</div>
+                <div class="auth-option-title">학생용</div>
+                <div class="auth-option-desc">개인 코드로 자신의<br>성장 기록을 조회합니다</div>
+                <button class="btn-student" onclick="showStudentLoginForm()">
+                    학생 로그인
+                </button>
             </div>
         </div>
 
-        <div class="button-group">
-            <button id="generate-report-btn" onclick="handleReport()">📋 성장 기록표 출력</button>
+        <!-- 학생 로그인 폼 -->
+        <div class="student-login-form" id="student-login-form" style="display: none;">
+            <div class="form-header">
+                <button class="back-button" onclick="hideStudentLoginForm()">← 뒤로</button>
+                <h2>학생 성장 기록 조회</h2>
+            </div>
+
+            <div class="form-group">
+                <label for="student-api-key">API Key</label>
+                <input 
+                    type="password" 
+                    id="student-api-key" 
+                    placeholder="API Key를 입력하세요"
+                    required>
+            </div>
+
+            <div class="form-group">
+                <label for="student-code">개인 코드</label>
+                <input 
+                    type="text" 
+                    id="student-code" 
+                    placeholder="개인 코드를 입력하세요 (예: A1001)"
+                    required>
+            </div>
+
+            <div class="form-message" id="form-message" style="display: none;"></div>
+
+            <button class="btn-student" onclick="submitStudentLogin()" style="width: 100%; margin-top: 20px;">
+                성장 기록 조회
+            </button>
         </div>
     </div>
-    
-    <div id="report-area">
-        <p class="alert alert-loading">출력 버튼을 누르면 선택한 방식에 따라 성장 기록 보고서가 생성됩니다.</p>
-    </div>
 
-    <div class="print-download-group">
-        <button onclick="window.print()">🖨️ 인쇄 / PDF로 저장</button>
-        <button onclick="shareUrl()">🔗 URL 공유하기</button>
-    </div>
-
-
-    <!-- 스크립트 순서대로 로드 (모듈 의존성 해결) -->
-    <script src="config.js"></script>
-    <script src="StateManager.js"></script>
-    <script src="APIManager.js"></script>
-    <script src="TextUtility.js"></script>
-    <script src="ReportDataGenerator.js"></script>
-    <script src="ReportSectionGenerator.js"></script>
-    <script src="ReportGenerator.js"></script>
-    <script src="UIController.js"></script>
-    <script src="ReportService.js"></script>
-    <script src="main.js"></script>
+    <script src="auth.js"></script>
 </body>
 </html>

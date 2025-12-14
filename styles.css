@@ -485,3 +485,590 @@ h1 {
         font-size: 0.8em;
     }
 }
+
+/* ===== 인증 페이지 (로그인 선택) 스타일 ===== */
+.auth-page {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 100vh;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    font-family: 'Malgun Gothic', 'Arial', sans-serif;
+    margin: 0;
+    padding: 0;
+}
+
+.auth-container {
+    background-color: white;
+    border-radius: 16px;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+    padding: 50px 40px;
+    text-align: center;
+    max-width: 600px;
+    width: 90%;
+}
+
+.auth-logo {
+    font-size: 2.5em;
+    font-weight: bold;
+    color: #333;
+    margin-bottom: 10px;
+}
+
+.auth-subtitle {
+    color: #666;
+    font-size: 1.1em;
+    margin-bottom: 40px;
+    line-height: 1.5;
+}
+
+.auth-selection {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+    margin-top: 30px;
+}
+
+.auth-option {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 30px 20px;
+    border-radius: 12px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    border: 2px solid transparent;
+}
+
+.auth-option:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+}
+
+.auth-option-icon {
+    font-size: 3em;
+    margin-bottom: 15px;
+}
+
+.auth-option-title {
+    font-size: 1.3em;
+    font-weight: bold;
+    margin-bottom: 8px;
+}
+
+.auth-option-desc {
+    font-size: 0.9em;
+    color: #666;
+    line-height: 1.4;
+}
+
+.btn-teacher {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    padding: 15px 30px;
+    border: none;
+    border-radius: 8px;
+    font-size: 1.1em;
+    font-weight: bold;
+    cursor: pointer;
+    width: 100%;
+    margin-top: 15px;
+    transition: all 0.3s ease;
+}
+
+.btn-teacher:hover {
+    transform: scale(1.05);
+    box-shadow: 0 8px 20px rgba(102, 126, 234, 0.4);
+}
+
+.btn-student {
+    background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+    color: white;
+    padding: 15px 30px;
+    border: none;
+    border-radius: 8px;
+    font-size: 1.1em;
+    font-weight: bold;
+    cursor: pointer;
+    width: 100%;
+    margin-top: 15px;
+    transition: all 0.3s ease;
+}
+
+.btn-student:hover {
+    transform: scale(1.05);
+    box-shadow: 0 8px 20px rgba(245, 87, 108, 0.4);
+}
+
+/* ===== 학생 페이지 스타일 ===== */
+.student-page {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    min-height: 100vh;
+    padding: 20px;
+}
+
+.student-page body {
+    background: transparent;
+    margin: 0;
+    max-width: 800px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.student-input-area {
+    background-color: white;
+    border-radius: 12px;
+    padding: 30px;
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+    margin-bottom: 30px;
+}
+
+.student-input-area h2 {
+    color: #333;
+    margin-top: 0;
+    margin-bottom: 20px;
+    font-size: 1.8em;
+}
+
+.student-input-group {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 15px;
+}
+
+.student-input-group input {
+    flex: 1;
+    padding: 12px 15px;
+    border: 2px solid #ddd;
+    border-radius: 8px;
+    font-size: 1em;
+    transition: border-color 0.3s ease;
+}
+
+.student-input-group input:focus {
+    outline: none;
+    border-color: #667eea;
+}
+
+.student-input-group button {
+    padding: 12px 30px;
+    background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+    color: white;
+    border: none;
+    border-radius: 8px;
+    font-size: 1em;
+    font-weight: bold;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.student-input-group button:hover {
+    transform: scale(1.05);
+    box-shadow: 0 8px 15px rgba(245, 87, 108, 0.4);
+}
+
+.student-input-group button:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+    transform: none;
+}
+
+.student-message {
+    padding: 12px 15px;
+    border-radius: 8px;
+    margin-bottom: 15px;
+    display: none;
+    font-weight: 500;
+}
+
+.student-message.show {
+    display: block;
+}
+
+.student-message.error {
+    background-color: #ffebee;
+    color: #c62828;
+    border: 1px solid #ef5350;
+}
+
+.student-message.success {
+    background-color: #e8f5e9;
+    color: #2e7d32;
+    border: 1px solid #81c784;
+}
+
+.student-message.info {
+    background-color: #e3f2fd;
+    color: #1565c0;
+    border: 1px solid #42a5f5;
+}
+
+#student-report-area {
+    background-color: white;
+    border-radius: 12px;
+    padding: 30px;
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+    display: none;
+}
+
+#student-report-area.show {
+    display: block;
+}
+
+.student-report-header {
+    text-align: center;
+    margin-bottom: 30px;
+    padding-bottom: 20px;
+    border-bottom: 3px solid #667eea;
+}
+
+.student-report-header h1 {
+    color: #333;
+    margin: 0 0 10px 0;
+    font-size: 2em;
+}
+
+.student-report-header p {
+    color: #666;
+    margin: 5px 0;
+}
+
+.stat-boxes-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    gap: 15px;
+    margin-bottom: 30px;
+}
+
+.stat-box {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    padding: 20px;
+    border-radius: 12px;
+    text-align: center;
+    box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
+    transition: all 0.3s ease;
+}
+
+.stat-box:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 25px rgba(102, 126, 234, 0.4);
+}
+
+.stat-box-value {
+    font-size: 2.2em;
+    font-weight: bold;
+    margin-bottom: 8px;
+}
+
+.stat-box-label {
+    font-size: 0.95em;
+    opacity: 0.95;
+}
+
+.badge-section-title {
+    font-size: 1.4em;
+    font-weight: bold;
+    color: #333;
+    margin: 30px 0 20px 0;
+    padding-bottom: 10px;
+    border-bottom: 2px solid #f093fb;
+}
+
+.badge-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(90px, 1fr));
+    gap: 15px;
+    margin-bottom: 30px;
+}
+
+.badge-item {
+    text-align: center;
+    padding: 10px;
+    border-radius: 10px;
+    background-color: #f8f8f8;
+    transition: all 0.3s ease;
+}
+
+.badge-item:hover {
+    background-color: #f0f0f0;
+    transform: scale(1.05);
+}
+
+.badge-item img {
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 3px solid #667eea;
+    margin-bottom: 8px;
+    box-shadow: 0 2px 8px rgba(102, 126, 234, 0.3);
+}
+
+.badge-item-name {
+    font-size: 0.85em;
+    color: #333;
+    font-weight: 500;
+    word-wrap: break-word;
+    line-height: 1.3;
+}
+
+.student-logout-btn {
+    display: block;
+    margin: 30px auto 0;
+    padding: 10px 30px;
+    background-color: #ccc;
+    color: #333;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    font-weight: bold;
+    transition: all 0.3s ease;
+}
+
+.student-logout-btn:hover {
+    background-color: #aaa;
+}
+
+/* ===== 반응형 디자인 ===== */
+@media (max-width: 768px) {
+    .auth-container {
+        padding: 30px 20px;
+    }
+
+    .auth-logo {
+        font-size: 2em;
+    }
+
+    .auth-subtitle {
+        font-size: 0.95em;
+    }
+
+    .auth-selection {
+        grid-template-columns: 1fr;
+        gap: 15px;
+    }
+
+    .auth-option {
+        padding: 20px;
+    }
+
+    .stat-boxes-container {
+        grid-template-columns: 1fr;
+    }
+
+    .badge-grid {
+        grid-template-columns: repeat(auto-fill, minmax(70px, 1fr));
+        gap: 10px;
+    }
+
+    .badge-item img {
+        width: 50px;
+        height: 50px;
+    }
+
+    .student-input-group {
+        flex-direction: column;
+    }
+
+    .student-input-group button {
+        width: 100%;
+    }
+
+    #report-area {
+        padding: 20px;
+    }
+
+    h1 {
+        font-size: 1.8em;
+    }
+}
+
+@media (max-width: 480px) {
+    .auth-container {
+        padding: 20px 15px;
+    }
+
+    .auth-logo {
+        font-size: 1.6em;
+    }
+
+    .auth-subtitle {
+        font-size: 0.85em;
+        margin-bottom: 25px;
+    }
+
+    .auth-option-icon {
+        font-size: 2.5em;
+        margin-bottom: 10px;
+    }
+
+    .auth-option-title {
+        font-size: 1.1em;
+    }
+
+    .auth-option-desc {
+        font-size: 0.8em;
+    }
+
+    .stat-box-value {
+        font-size: 1.8em;
+    }
+
+    .badge-grid {
+        grid-template-columns: repeat(3, 1fr);
+    }
+
+    .student-input-group input,
+    .student-input-group button {
+        padding: 10px;
+    }
+}
+
+/* ===== 학생 페이지 인쇄 스타일 ===== */
+@media print {
+    .student-page {
+        background: white;
+    }
+
+    .student-input-area,
+    .student-logout-btn {
+        display: none;
+    }
+
+    #student-report-area {
+        box-shadow: none;
+        padding: 0;
+        background-color: white;
+    }
+
+    .stat-boxes-container {
+        gap: 10px;
+        margin-bottom: 20px;
+    }
+
+    .stat-box {
+        background: white;
+        color: #333;
+        border: 2px solid #667eea;
+        padding: 15px;
+        -webkit-print-color-adjust: exact;
+        print-color-adjust: exact;
+    }
+
+    .badge-grid {
+        gap: 10px;
+        margin-bottom: 20px;
+    }
+
+    .badge-item {
+        background-color: white;
+        padding: 5px;
+    }
+
+    .badge-item img {
+        width: 50px;
+        height: 50px;
+    }
+}
+
+/* ===== 학생 로그인 폼 스타일 ===== */
+.student-login-form {
+    width: 100%;
+    background-color: white;
+    border-radius: 12px;
+    padding: 30px;
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+}
+
+.form-header {
+    display: flex;
+    align-items: center;
+    margin-bottom: 30px;
+    position: relative;
+}
+
+.back-button {
+    position: absolute;
+    left: 0;
+    background: none;
+    border: none;
+    font-size: 1.2em;
+    cursor: pointer;
+    color: #667eea;
+    font-weight: bold;
+    padding: 5px 10px;
+    transition: all 0.3s ease;
+}
+
+.back-button:hover {
+    transform: translateX(-3px);
+}
+
+.form-header h2 {
+    flex: 1;
+    text-align: center;
+    color: #333;
+    margin: 0;
+    font-size: 1.5em;
+}
+
+.form-group {
+    margin-bottom: 20px;
+    text-align: left;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 8px;
+    color: #333;
+    font-weight: 600;
+    font-size: 0.95em;
+}
+
+.form-group input {
+    width: 100%;
+    padding: 12px 15px;
+    border: 2px solid #ddd;
+    border-radius: 8px;
+    font-size: 1em;
+    box-sizing: border-box;
+    transition: border-color 0.3s ease;
+}
+
+.form-group input:focus {
+    outline: none;
+    border-color: #667eea;
+}
+
+.form-message {
+    padding: 12px 15px;
+    border-radius: 8px;
+    margin-bottom: 15px;
+    display: none;
+    font-weight: 500;
+    text-align: center;
+}
+
+.form-message.show {
+    display: block;
+}
+
+.form-message.error {
+    background-color: #ffebee;
+    color: #c62828;
+    border: 1px solid #ef5350;
+}
+
+.form-message.success {
+    background-color: #e8f5e9;
+    color: #2e7d32;
+    border: 1px solid #81c784;
+}
+
+.form-message.info {
+    background-color: #e3f2fd;
+    color: #1565c0;
+    border: 1px solid #42a5f5;
+}

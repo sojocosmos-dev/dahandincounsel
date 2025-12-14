@@ -28,6 +28,9 @@ class ReportService {
             return;
         }
 
+        // 교사가 설정한 config를 로컬 스토리지에 저장 (학생용에서 사용)
+        this.saveTeacherConfig(config);
+
         const studentCodes = this.uiController.parseStudentCodes(
             currentMode,
             ELEMENT_IDS.studentCodeInput,
@@ -72,7 +75,7 @@ class ReportService {
      */
     async shareUrl() {
         const url = window.location.href;
-        
+
         if (!navigator.clipboard) {
             alert(`클립보드 API를 지원하지 않는 환경입니다. 수동으로 복사해주세요: ${url}`);
             return;
@@ -83,6 +86,30 @@ class ReportService {
             alert("현재 보고서의 URL이 클립보드에 복사되었습니다! (주의: 로컬 파일 실행 시 URL 공유가 불가할 수 있습니다)");
         } catch (err) {
             alert(`URL 복사 실패. 수동으로 복사해주세요: ${url}`);
+        }
+    }
+
+    /**
+     * 교사가 설정한 보고서 config를 로컬 스토리지에 저장합니다
+     */
+    saveTeacherConfig(config) {
+        try {
+            localStorage.setItem('teacherReportConfig', JSON.stringify(config));
+        } catch (error) {
+            console.warn('로컬 스토리지에 설정을 저장하는데 실패했습니다:', error);
+        }
+    }
+
+    /**
+     * 저장된 교사 설정을 불러옵니다
+     */
+    static loadTeacherConfig() {
+        try {
+            const savedConfig = localStorage.getItem('teacherReportConfig');
+            return savedConfig ? JSON.parse(savedConfig) : null;
+        } catch (error) {
+            console.warn('로컬 스토리지에서 설정을 불러오는데 실패했습니다:', error);
+            return null;
         }
     }
 }
