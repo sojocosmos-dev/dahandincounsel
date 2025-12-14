@@ -501,9 +501,11 @@ h1 {
 
 .auth-wrapper {
     display: flex;
+    flex-direction: row;
     gap: 40px;
     justify-content: center;
     align-items: stretch;
+    flex-wrap: nowrap;
 }
 
 .auth-container {
@@ -513,10 +515,13 @@ h1 {
     padding: 40px 35px;
     text-align: center;
     width: 480px;
+    min-width: 480px;
+    max-width: 480px;
     min-height: 450px;
     display: flex;
     flex-direction: column;
-    flex: 0 0 480px;
+    flex: 0 0 auto;
+    box-sizing: border-box;
 }
 
 .auth-logo {
@@ -561,11 +566,18 @@ h1 {
 .auth-option-icon {
     font-size: 3em;
     margin-bottom: 15px;
+    width: 120px;
+    height: 120px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
 .auth-option-icon-img {
-    width: 120px;
-    height: 120px;
+    width: 120px !important;
+    height: 120px !important;
+    max-width: 120px !important;
+    max-height: 120px !important;
     object-fit: contain;
     display: block;
 }
