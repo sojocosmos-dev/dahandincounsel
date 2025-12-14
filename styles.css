@@ -495,17 +495,28 @@ h1 {
     background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
     font-family: 'Malgun Gothic', 'Arial', sans-serif;
     margin: 0;
-    padding: 0;
+    padding: 20px;
+    max-width: none;
+}
+
+.auth-wrapper {
+    display: flex;
+    gap: 40px;
+    justify-content: center;
+    align-items: stretch;
 }
 
 .auth-container {
     background-color: white;
     border-radius: 16px;
     box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
-    padding: 50px 40px;
+    padding: 40px 35px;
     text-align: center;
-    max-width: 600px;
-    width: 90%;
+    width: 480px;
+    min-height: 450px;
+    display: flex;
+    flex-direction: column;
+    flex: 0 0 480px;
 }
 
 .auth-logo {
@@ -523,8 +534,8 @@ h1 {
 }
 
 .auth-selection {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
+    display: flex;
+    flex-direction: column;
     gap: 20px;
     margin-top: 30px;
 }
@@ -833,8 +844,15 @@ h1 {
 
 /* ===== 반응형 디자인 ===== */
 @media (max-width: 768px) {
+    .auth-wrapper {
+        flex-direction: column;
+        align-items: center;
+    }
+
     .auth-container {
         padding: 30px 20px;
+        width: 100%;
+        max-width: 400px;
     }
 
     .auth-logo {
@@ -846,7 +864,6 @@ h1 {
     }
 
     .auth-selection {
-        grid-template-columns: 1fr;
         gap: 15px;
     }
 

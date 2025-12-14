@@ -7,42 +7,52 @@
     <link rel="stylesheet" href="styles.css">
 </head>
 <body class="auth-page">
-    <div class="auth-container">
-        <div class="auth-logo">🎓 성장 기록 보고서</div>
-        <div class="auth-subtitle">상담 준비 다했니?</div>
+    <div class="auth-wrapper">
+        <!-- 교사용 로그인 -->
+        <div class="auth-container">
+            <div class="auth-logo">🎓 상담 준비 다했니?</div>
+            <div class="auth-subtitle"></div>
 
-        <!-- 로그인 선택 화면 -->
-        <div class="auth-selection" id="auth-selection">
-            <div class="auth-option">
-                <div class="auth-option-icon">👨‍🏫</div>
-                <div class="auth-option-title">교사용</div>
-                <div class="auth-option-desc">API Key로 보고서 항목을 설정합니다</div>
-                <div class="form-group" style="margin-top: 15px; margin-bottom: 0;">
-                    <input
-                        type="password"
-                        id="teacher-api-key"
-                        placeholder="API Key를 입력하세요"
-                        required>
+            <div class="auth-selection" id="teacher-auth">
+                <div class="auth-option">
+                    <div class="auth-option-icon">👨‍🏫</div>
+                    <div class="auth-option-title">교사용</div>
+                    <div class="auth-option-desc">API Key로 보고서 항목을 설정합니다</div>
+                    <div class="form-group" style="margin-top: 15px; margin-bottom: 0;">
+                        <input
+                            type="password"
+                            id="teacher-api-key"
+                            placeholder="API Key를 입력하세요"
+                            required>
+                    </div>
+                    <button class="btn-teacher" onclick="submitTeacherLogin()">
+                        교사 로그인
+                    </button>
                 </div>
-                <button class="btn-teacher" onclick="submitTeacherLogin()">
-                    교사 로그인
-                </button>
             </div>
+        </div>
 
-            <div class="auth-option">
-                <div class="auth-option-icon">👨‍🎓</div>
-                <div class="auth-option-title">학생용</div>
-                <div class="auth-option-desc">개인 코드로 상담을 선택하여<br>성장 기록을 조회합니다</div>
-                <div class="form-group" style="margin-top: 15px; margin-bottom: 0;">
-                    <input
-                        type="text"
-                        id="student-code"
-                        placeholder="개인 코드를 입력하세요 (예: A1001)"
-                        required>
+        <!-- 학생용 로그인 -->
+        <div class="auth-container">
+            <div class="auth-logo">🎓 상담 준비 다했어요!</div>
+            <div class="auth-subtitle"></div>
+
+            <div class="auth-selection" id="student-auth">
+                <div class="auth-option">
+                    <div class="auth-option-icon">👨‍🎓</div>
+                    <div class="auth-option-title">학생용</div>
+                    <div class="auth-option-desc">개인 코드로 상담을 선택하여<br>성장 기록을 조회합니다</div>
+                    <div class="form-group" style="margin-top: 15px; margin-bottom: 0;">
+                        <input
+                            type="text"
+                            id="student-code"
+                            placeholder="개인 코드를 입력하세요 (예: A1001)"
+                            required>
+                    </div>
+                    <button class="btn-student" onclick="submitStudentLogin()">
+                        학생 로그인
+                    </button>
                 </div>
-                <button class="btn-student" onclick="submitStudentLogin()">
-                    학생 로그인
-                </button>
             </div>
         </div>
     </div>
