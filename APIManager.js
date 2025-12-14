@@ -3,9 +3,7 @@
  * API 호출 및 데이터 조회 담당
  */
 
-import { CONFIG, BADGE_LIST } from './config.js';
-
-export class APIManager {
+class APIManager {
     /**
      * API에서 학생 데이터를 조회합니다
      * @param {string} studentCode - 학생 코드

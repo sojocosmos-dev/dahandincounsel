@@ -3,11 +3,7 @@
  * 보고서 생성 비즈니스 로직
  */
 
-import { ReportDataGenerator } from './ReportDataGenerator.js';
-import { ReportGenerator } from './ReportGenerator.js';
-import { ELEMENT_IDS } from './config.js';
-
-export class ReportService {
+class ReportService {
     constructor(stateManager, uiController) {
         this.stateManager = stateManager;
         this.uiController = uiController;

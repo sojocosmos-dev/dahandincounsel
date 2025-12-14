@@ -3,7 +3,7 @@
  * 애플리케이션 상태 관리
  */
 
-export class StateManager {
+class StateManager {
     constructor(defaultMode = 'single') {
         this.currentMode = defaultMode;
         this.cumulativeBadges = {};

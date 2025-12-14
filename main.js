@@ -3,10 +3,7 @@
  * 애플리케이션 진입점 및 초기화
  */
 
-import { StateManager } from './StateManager.js';
-import { UIController } from './UIController.js';
-import { ReportService } from './ReportService.js';
-import { CONFIG } from './config.js';
+let app;
 
 class App {
     constructor() {
@@ -67,7 +64,7 @@ class App {
 
 // DOM이 로드되면 앱을 초기화합니다
 document.addEventListener('DOMContentLoaded', () => {
-    const app = new App();
+    app = new App();
     app.initialize();
 
     // 전역 함수로 노출 (기존 HTML inline handlers와 호환성)

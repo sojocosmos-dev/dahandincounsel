@@ -3,10 +3,7 @@
  * 보고서 섹션별 HTML 생성
  */
 
-import { TextUtility } from './TextUtility.js';
-import { COLOR_PALETTE } from './config.js';
-
-export class ReportSectionGenerator {
+class ReportSectionGenerator {
     /**
      * 보고서 헤더를 생성합니다
      */

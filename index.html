@@ -158,8 +158,16 @@
     </div>
 
 
-    <script type="module" src="main.js"></script>
-</body>
-</html>
+    <!-- 스크립트 순서대로 로드 (모듈 의존성 해결) -->
+    <script src="config.js"></script>
+    <script src="StateManager.js"></script>
+    <script src="APIManager.js"></script>
+    <script src="TextUtility.js"></script>
+    <script src="ReportDataGenerator.js"></script>
+    <script src="ReportSectionGenerator.js"></script>
+    <script src="ReportGenerator.js"></script>
+    <script src="UIController.js"></script>
+    <script src="ReportService.js"></script>
+    <script src="main.js"></script>
 </body>
 </html>

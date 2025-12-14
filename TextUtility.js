@@ -3,7 +3,7 @@
  * 텍스트 처리 유틸리티
  */
 
-export class TextUtility {
+class TextUtility {
     /**
      * 입력 텍스트를 특정 키워드를 기준으로 분리합니다
      * @param {string} inputText - 입력 텍스트
