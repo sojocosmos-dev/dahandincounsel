@@ -10,6 +10,7 @@ class StudentApp {
         this.apiKey = null;
         this.studentCode = null;
         this.counselId = null;
+        this.reportData = null; // 원본 보고서 데이터 저장
         this.setupEventListeners();
         this.checkUrlParams();
     }
@@ -95,10 +96,11 @@ class StudentApp {
                 this.showMessage(reportData.error, 'error');
                 this.setButtonEnabled(true);
             } else {
-                // 학생 정보 저장
+                // 학생 정보 및 원본 데이터 저장
                 this.studentCode = studentCode;
                 this.apiKey = apiKey;
                 this.counselId = counselId;
+                this.reportData = reportData; // 원본 보고서 데이터 저장
 
                 const html = StudentReportService.generateStudentReportHTML(reportData);
                 const reportArea = document.getElementById('student-report-area');
@@ -149,6 +151,11 @@ async function handleSubmitReport() {
         return;
     }
 
+    if (!studentApp.reportData) {
+        showMessage("오류: 보고서 데이터를 찾을 수 없습니다.", 'error');
+        return;
+    }
+
     const reportArea = document.getElementById('student-report-area');
     if (!reportArea) {
         showMessage("오류: 보고서를 찾을 수 없습니다.", 'error');
@@ -157,68 +164,68 @@ async function handleSubmitReport() {
 
     // 보고서 내의 모든 textarea 수집
     const textareas = reportArea.querySelectorAll('textarea');
-    const submissionData = {
-        studentCode: studentApp.studentCode,
-        counselId: studentApp.counselId,
-        data: {}
-    };
+    const userInputs = {};
 
     // 각 textarea의 값을 저장
     textareas.forEach((textarea, index) => {
         const value = textarea.value.trim();
         if (value) {
-            // textarea 위의 label/title을 찾기
-            let label = 'Item ' + (index + 1);
-            const columnTitle = textarea.closest('div')?.querySelector('.column-title');
-            const summaryLabel = textarea.closest('.summary-section')?.querySelector('h3');
-            
-            if (columnTitle) {
-                label = columnTitle.textContent.trim();
-            } else if (summaryLabel) {
-                label = summaryLabel.textContent.trim();
-            }
-
             // textarea placeholder로 구분
             const placeholder = textarea.placeholder;
             if (placeholder.includes('쿠키 획득')) {
-                submissionData.data.cookieMethod = value;
+                userInputs.cookieMethod = value;
             } else if (placeholder.includes('좋았던')) {
-                submissionData.data.cookieGood = value;
+                userInputs.cookieGood = value;
             } else if (placeholder.includes('초코칩 획득')) {
-                submissionData.data.chipMethod = value;
+                userInputs.chipMethod = value;
             } else if (placeholder.includes('초코칩') && placeholder.includes('좋았던')) {
-                submissionData.data.chipGood = value;
+                userInputs.chipGood = value;
             } else if (placeholder.includes('자랑스러운')) {
-                submissionData.data.proudBadge = value;
+                userInputs.proudBadge = value;
             } else if (placeholder.includes('받고 싶은')) {
-                submissionData.data.wantBadge = value;
+                userInputs.wantBadge = value;
             } else if (placeholder.includes('칭찬') || placeholder.includes('다짐')) {
-                submissionData.data.praiseResolve = value;
+                userInputs.praiseResolve = value;
             } else if (placeholder.includes('격려')) {
-                submissionData.data.parentComment = value;
+                userInputs.parentComment = value;
             } else {
-                submissionData.data['textarea_' + index] = value;
+                userInputs['textarea_' + index] = value;
             }
         }
     });
 
-    if (Object.keys(submissionData.data).length === 0) {
-        showMessage("입력된 내용이 없습니다.", 'error');
-        return;
-    }
+    // 제출할 데이터: 원본 보고서 데이터 + 학생 입력 내용
+    const submissionData = {
+        studentCode: studentApp.studentCode,
+        counselId: studentApp.counselId,
+        data: {
+            // 원본 보고서 데이터 (API에서 받아온 쿠키, 초코칩, 뱃지 정보)
+            ...studentApp.reportData,
+            // studentCode 명시적 추가 (reportData에 없을 수 있음)
+            studentCode: studentApp.studentCode,
+            // 학생이 입력한 내용
+            userInputs: userInputs
+        }
+    };
 
     try {
+        // 디버깅: 저장할 데이터 확인
+        console.log('📤 제출할 데이터:', submissionData);
+        console.log('📊 보고서 데이터:', studentApp.reportData);
+
         const result = await StudentSubmissionService.saveSubmission(
             submissionData,
             studentApp.apiKey
         );
 
         if (result.success) {
+            console.log('✅ 제출 성공:', result.submission);
             showMessage("✅ 입력 내용이 제출되었습니다!", 'success');
         } else {
             showMessage("❌ 제출 실패: " + result.message, 'error');
         }
     } catch (error) {
+        console.error('❌ 제출 오류:', error);
         showMessage("❌ 오류 발생: " + error.message, 'error');
     }
 }

@@ -136,7 +136,6 @@
         </div>
     </div>
 
-    <!-- 스크립트 순서대로 로드 -->
     <script src="config.js"></script>
     <script src="ConfigStorageService.js"></script>
     <script src="CounselStorageService.js"></script>
@@ -149,6 +148,7 @@
     <script src="ReportGenerator.js"></script>
     <script src="UIController.js"></script>
     <script src="ReportService.js"></script>
+    <script src="studentReportService.js"></script>
 
     <script>
         let currentCounselId = null;
@@ -209,102 +209,57 @@
         /**
          * 학생 제출을 선택하고 보고서를 표시합니다
          */
-        function selectSubmission(index) {
+        async function selectSubmission(index) {
             selectedSubmission = submissions[index];
             renderSubmissionsList();
-            displaySubmissionReport();
+            await displaySubmissionReport();
         }
 
         /**
          * 선택된 학생의 제출 보고서를 표시합니다
          */
-        function displaySubmissionReport() {
+        async function displaySubmissionReport() {
             if (!selectedSubmission) return;
 
             const reportContent = document.getElementById('report-content');
             const submission = selectedSubmission;
 
-            // 제출 데이터에서 보고서 생성
-            const reportHtml = generateSubmissionReportHtml(submission);
-            reportContent.innerHTML = reportHtml;
-        }
+            // 로딩 메시지 표시
+            reportContent.innerHTML = '<div style="text-align: center; padding: 40px; color: #999;">보고서를 생성 중입니다...</div>';
 
-        /**
-         * 제출 데이터로부터 보고서 HTML을 생성합니다
-         */
-        function generateSubmissionReportHtml(submission) {
-            const data = submission.data;
-            const submittedDate = new Date(submission.updatedAt).toLocaleString('ko-KR');
+            try {
+                // 디버깅: 제출된 데이터 확인
+                console.log('📥 제출된 데이터:', submission);
+                console.log('📋 submission.data:', submission.data);
 
-            let html = `
-                <div style="margin-bottom: 20px; padding-bottom: 20px; border-bottom: 2px solid #2196f3;">
-                    <h2 style="margin: 0 0 10px 0; color: #1976d2;">📋 ${submission.studentCode} 제출 보고서</h2>
-                    <p style="margin: 0; color: #666; font-size: 0.9em;">제출일: ${submittedDate}</p>
-                </div>
-            `;
+                // 제출된 로컬 데이터를 사용하여 보고서 생성
+                const reportData = await StudentReportService.fetchStudentReportFromLocalData(
+                    submission.data,
+                    currentCounselId
+                );
 
-            // 제출 데이터가 객체인 경우 각 섹션을 렌더링
-            if (typeof data === 'object' && data !== null) {
-                for (const [key, value] of Object.entries(data)) {
-                    html += `
-                        <div style="margin-bottom: 30px; padding: 20px; background: #f9f9f9; border-radius: 6px; border-left: 4px solid #2196f3;">
-                            <h3 style="margin: 0 0 15px 0; color: #1976d2; font-size: 1.1em;">${formatSectionTitle(key)}</h3>
-                            <div style="background: white; padding: 15px; border-radius: 4px; line-height: 1.8;">
-                                ${formatValue(value)}
-                            </div>
+                console.log('📊 생성된 보고서 데이터:', reportData);
+
+                if (reportData.error) {
+                    reportContent.innerHTML = `
+                        <div style="padding: 30px; text-align: center; background-color: #ffebee; border-radius: 12px;">
+                            <h2>⚠️ 오류</h2>
+                            <p>${reportData.error}</p>
                         </div>
                     `;
+                } else {
+                    // 정식 보고서 HTML 생성
+                    const reportHtml = StudentReportService.generateStudentReportHTML(reportData);
+                    reportContent.innerHTML = reportHtml;
                 }
-            } else {
-                html += `
-                    <div style="padding: 20px; background: #f9f9f9; border-radius: 6px;">
-                        <pre style="white-space: pre-wrap; word-wrap: break-word; margin: 0;">
-${JSON.stringify(data, null, 2)}
-                        </pre>
+            } catch (error) {
+                console.error('❌ 보고서 생성 오류:', error);
+                reportContent.innerHTML = `
+                    <div style="padding: 30px; text-align: center; background-color: #ffebee; border-radius: 12px;">
+                        <h2>⚠️ 오류</h2>
+                        <p>보고서 생성에 실패했습니다: ${error.message}</p>
                     </div>
                 `;
-            }
-
-            return html;
-        }
-
-        /**
-         * 섹션 제목을 포맷합니다
-         */
-        function formatSectionTitle(key) {
-            const titles = {
-                'cookieReview': '🍪 쿠키 활동 돌아보기',
-                'chipReview': '🍫 초코칩 활동 돌아보기',
-                'badgeReview': '🏅 뱃지 활동 돌아보기',
-                'praise': '✨ 칭찬과 다짐',
-                'parentComment': '👨‍👩‍👧 격려의 한 마디',
-                'strengthAndResolve': '💪 칭찬과 다짐',
-                'summary': '📊 요약',
-            };
-            return titles[key] || key;
-        }
-
-        /**
-         * 값을 포맷합니다
-         */
-        function formatValue(value) {
-            if (typeof value === 'string') {
-                return `<p>${value.replace(/\n/g, '<br>')}</p>`;
-            } else if (Array.isArray(value)) {
-                return `<ul>${value.map(v => `<li>${formatValue(v)}</li>`).join('')}</ul>`;
-            } else if (typeof value === 'object' && value !== null) {
-                let html = '<div>';
-                for (const [k, v] of Object.entries(value)) {
-                    html += `
-                        <div style="margin-bottom: 10px;">
-                            <strong>${k}:</strong> ${formatValue(v)}
-                        </div>
-                    `;
-                }
-                html += '</div>';
-                return html;
-            } else {
-                return `<p>${String(value)}</p>`;
             }
         }
 

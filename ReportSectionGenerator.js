@@ -21,7 +21,7 @@ class ReportSectionGenerator {
     /**
      * 쿠키 섹션을 생성합니다
      */
-    static generateCookieSection(cookie, student, totalCookieIncome, totalCookieUsed, cookieSavingRatio, cookieUsageRatio) {
+    static generateCookieSection(cookie, student, totalCookieIncome, totalCookieUsed, cookieSavingRatio, cookieUsageRatio, userInputs = {}) {
         if (!cookie) return '';
 
         const { primary: acquisition, secondary: use } = TextUtility.splitUsageText(cookie.usage, '획득', '사용');
@@ -78,9 +78,9 @@ class ReportSectionGenerator {
                     <div class="column-title">🍪 나의 쿠키 활동 돌아보기</div>
                     <div class="student-review-area">
                         <label>1. 쿠키 획득 비법:</label>
-                        <textarea placeholder=""></textarea>
+                        <textarea placeholder="쿠키 획득 비법을 적어주세요">${userInputs.cookieMethod || ''}</textarea>
                         <label>2. 좋았던 점:</label>
-                        <textarea placeholder=""></textarea>
+                        <textarea placeholder="쿠키 활동에서 좋았던 점을 적어주세요">${userInputs.cookieGood || ''}</textarea>
                     </div>
                 </div>
             `;
@@ -93,7 +93,7 @@ class ReportSectionGenerator {
     /**
      * 초코칩 섹션을 생성합니다
      */
-    static generateChipSection(chip, student, currentChocoChips) {
+    static generateChipSection(chip, student, currentChocoChips, userInputs = {}) {
         if (!chip) return '';
 
         const { primary: acquisition, secondary: use } = TextUtility.splitUsageText(chip.usage, '획득', '사용');
@@ -137,9 +137,9 @@ class ReportSectionGenerator {
                     <div class="column-title">🍫 나의 초코칩 활동 돌아보기</div>
                     <div class="student-review-area">
                         <label>1. 초코칩 획득 비법:</label>
-                        <textarea placeholder=""></textarea>
+                        <textarea placeholder="초코칩 획득 비법을 적어주세요">${userInputs.chipMethod || ''}</textarea>
                         <label>2. 좋았던 점:</label>
-                        <textarea placeholder=""></textarea>
+                        <textarea placeholder="초코칩 활동에서 좋았던 점을 적어주세요">${userInputs.chipGood || ''}</textarea>
                     </div>
                 </div>
             `;
@@ -152,7 +152,7 @@ class ReportSectionGenerator {
     /**
      * 뱃지 섹션을 생성합니다
      */
-    static generateBadgeSection(badge, student, allAcquiredBadges) {
+    static generateBadgeSection(badge, student, allAcquiredBadges, userInputs = {}) {
         if (!badge) return '';
 
         const { primary: introduction, secondary: acquisition } = TextUtility.splitUsageText(badge.usage, '소개', '획득');
@@ -197,9 +197,9 @@ class ReportSectionGenerator {
                     <div class="column-title">🏅 나의 뱃지 활동 돌아보기</div>
                     <div class="student-review-area">
                         <label>1. 가장 자랑스러운 뱃지와 그 이유:</label>
-                        <textarea placeholder=""></textarea>
+                        <textarea placeholder="가장 자랑스러운 뱃지와 그 이유를 적어주세요">${userInputs.proudBadge || ''}</textarea>
                         <label>2. 내가 받고 싶은 뱃지 추천:</label>
-                        <textarea placeholder=""></textarea>
+                        <textarea placeholder="받고 싶은 뱃지를 추천해주세요">${userInputs.wantBadge || ''}</textarea>
                     </div>
                 </div>
             `;
@@ -227,14 +227,14 @@ class ReportSectionGenerator {
         if (summary.praiseAndResolve) {
             section += `
                 <h3>2. 칭찬과 다짐</h3>
-                <textarea class="summary-textarea" rows="4" placeholder="학생 입력: 스스로 잘한 부분을 칭찬하고 앞으로의 다짐을 적어봅시다."></textarea>
+                <textarea class="summary-textarea" rows="4" placeholder="학생 입력: 스스로 잘한 부분을 칭찬하고 앞으로의 다짐을 적어봅시다.">${analysis.praiseAndResolve || ''}</textarea>
             `;
         }
 
         if (summary.parentComment) {
             section += `
                 <h3>3. 격려의 한 마디</h3>
-                <textarea class="summary-textarea" rows="4" placeholder="학부모 입력 : 자녀를 위한 격려의 한 마디를 남겨주세요."></textarea>
+                <textarea class="summary-textarea" rows="4" placeholder="학부모 입력 : 자녀를 위한 격려의 한 마디를 남겨주세요.">${analysis.parentComment || ''}</textarea>
             `;
         }
 
