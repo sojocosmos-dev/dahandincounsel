@@ -36,13 +36,11 @@ class StudentApp {
      */
     checkUrlParams() {
         const params = new URLSearchParams(window.location.search);
-        const apiKey = params.get('apiKey');
         const studentCode = params.get('studentCode');
         const counselId = params.get('counselId');
 
-        if (apiKey && studentCode) {
-            // API Key와 학생 코드가 URL에 있으면 자동으로 조회
-            this.apiKey = apiKey;
+        if (studentCode && counselId) {
+            // 학생 코드와 상담 ID가 URL에 있으면 자동으로 조회
             this.counselId = counselId; // 상담 ID 저장
 
             const codeInput = document.getElementById('student-code-input');
@@ -54,8 +52,8 @@ class StudentApp {
                 inputArea.style.display = 'none';
             }
 
-            // 자동으로 보고서 생성
-            this.handleStudentQuery(apiKey, counselId);
+            // 자동으로 보고서 생성 (API Key는 상담 데이터에서 가져옴)
+            this.handleStudentQuery(null, counselId);
         }
     }
 
@@ -67,8 +65,16 @@ class StudentApp {
         if (!studentCodeInput) return;
 
         const studentCode = studentCodeInput.value.trim();
-        const apiKey = providedApiKey || (this.apiKey ? this.apiKey : CONFIG.STUDENT_API_KEY);
         const counselId = providedCounselId || this.counselId || null;
+
+        // 상담 ID가 있으면 상담에 저장된 API Key를 사용
+        let apiKey = providedApiKey || this.apiKey;
+        if (!apiKey && counselId) {
+            const counsel = await CounselStorageService.getCounselById(counselId);
+            if (counsel && counsel.apiKey) {
+                apiKey = counsel.apiKey;
+            }
+        }
 
         // 입력값 검증
         if (!studentCode) {
@@ -78,6 +84,11 @@ class StudentApp {
 
         if (!StudentAuth.validateStudentCode(studentCode)) {
             this.showMessage("올바른 코드 형식이 아닙니다. (예: A1001)", 'error');
+            return;
+        }
+
+        if (!apiKey) {
+            this.showMessage("API Key를 찾을 수 없습니다. 올바른 URL로 접속해주세요.", 'error');
             return;
         }
 

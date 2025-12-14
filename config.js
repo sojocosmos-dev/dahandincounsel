@@ -11,7 +11,6 @@ const CONFIG = {
         ERROR: false,
     },
     ROUTE_ENDPOINT: '/get/student/total',
-    STUDENT_API_KEY: 'your-api-key-here', // 학생 페이지용 API Key (환경변수로 관리 권장)
 };
 
 const BADGE_LIST = [

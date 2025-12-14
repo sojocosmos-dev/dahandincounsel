@@ -3,33 +3,30 @@
  * 학생용 상담 선택 페이지 로직
  */
 
-let studentApiKey = null;
 let studentCode = null;
 
 /**
  * 페이지 로드 시 초기화
  */
 document.addEventListener('DOMContentLoaded', async () => {
-    // URL 파라미터에서 API Key와 학생 코드 추출
+    // URL 파라미터에서 학생 코드 추출
     const params = new URLSearchParams(window.location.search);
-    studentApiKey = params.get('apiKey');
     studentCode = params.get('studentCode');
 
     // 검증
-    if (!studentApiKey || !studentCode) {
-        alert('잘못된 접근입니다. 로그인 화면으로 이동합니다.');
+    if (!studentCode) {
+        alert('학생 코드가 없습니다. 로그인 화면으로 이동합니다.');
         window.location.href = 'index.html';
         return;
     }
 
-    // 히든 필드에 저장
-    document.getElementById('hidden-api-key').value = studentApiKey;
-    document.getElementById('hidden-student-code').value = studentCode;
-
     // 학생 코드 표시
-    document.getElementById('display-student-code').textContent = studentCode;
+    const displayElement = document.getElementById('display-student-code');
+    if (displayElement) {
+        displayElement.textContent = studentCode;
+    }
 
-    // 상담 목록 로드
+    // 상담 목록 로드 (API Key 불필요)
     await loadCounselList();
 });
 
@@ -38,7 +35,8 @@ document.addEventListener('DOMContentLoaded', async () => {
  */
 async function loadCounselList() {
     try {
-        const counselList = await CounselStorageService.loadCounselList(studentApiKey);
+        // API Key 없이 로컬 스토리지에서 상담 목록 로드
+        const counselList = await CounselStorageService.loadCounselList();
         const container = document.getElementById('counsel-select-list');
 
         if (counselList.length === 0) {
@@ -90,10 +88,10 @@ function escapeHtml(text) {
  * 상담을 선택하여 리포트 페이지로 이동
  */
 function selectCounsel(counselId, counselTitle) {
+    // counselId와 studentCode 전달 (API Key는 상담 데이터에서 자동으로 가져옴)
     const params = new URLSearchParams({
-        apiKey: studentApiKey,
-        studentCode: studentCode,
-        counselId: counselId
+        counselId: counselId,
+        studentCode: studentCode
     });
 
     window.location.href = `student-report.html?${params.toString()}`;

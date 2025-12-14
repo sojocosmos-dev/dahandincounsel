@@ -30,15 +30,9 @@ function redirectToAuth() {
 
 // 학생 로그인 제출
 function submitStudentLogin() {
-    const apiKey = document.getElementById('student-api-key').value.trim();
     const studentCode = document.getElementById('student-code').value.trim();
 
     // 입력값 검증
-    if (!apiKey) {
-        alert('API Key를 입력해주세요.');
-        return;
-    }
-
     if (!studentCode) {
         alert('개인 코드를 입력해주세요.');
         return;
@@ -49,9 +43,8 @@ function submitStudentLogin() {
         return;
     }
 
-    // student-counsel-select.html로 이동하여 상담 선택
+    // 상담 선택 페이지로 이동 (학생 코드 전달, API Key 불필요)
     const params = new URLSearchParams({
-        apiKey: apiKey,
         studentCode: studentCode
     });
     window.location.href = `student-counsel-select.html?${params.toString()}`;

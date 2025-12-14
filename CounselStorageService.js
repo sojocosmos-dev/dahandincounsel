@@ -124,6 +124,7 @@ class CounselStorageService {
                 id: this.generateCounselId(),
                 title: counselData.title || `상담 ${counselList.length + 1}`,
                 config: counselData.config,
+                apiKey: apiKey, // API Key 저장
                 createdAt: new Date().toISOString(),
                 updatedAt: new Date().toISOString()
             };
@@ -174,6 +175,7 @@ class CounselStorageService {
             const updatedCounsel = {
                 ...counselList[counselIndex],
                 ...updates,
+                apiKey: apiKey || counselList[counselIndex].apiKey, // API Key 유지 또는 업데이트
                 updatedAt: new Date().toISOString()
             };
 
