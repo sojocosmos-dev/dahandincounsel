@@ -4,319 +4,494 @@
     <meta charset="UTF-8">
     <title>상담 준비 다했니? 성장 기록</title>
     <style>
-        /* (기본 스타일 유지) */
-        body { font-family: 'Malgun Gothic', 'Arial', sans-serif; max-width: 1000px; margin: 20px auto; padding: 0 20px; background-color: #f8f8f8; }
-        input[type="text"], textarea, input[type="file"] { 
-            padding: 10px; margin: 8px 0; width: 100%; box-sizing: border-box; font-size: 16px; border-radius: 4px; border: 1px solid #ddd; resize: vertical; 
+        /* ===== 색상 변수 ===== */
+        :root {
+            --color-primary: #2ecc71;
+            --color-primary-dark: #27ae60;
+            --color-secondary: #3498db;
+            --color-secondary-dark: #2980b9;
+            --color-bg-light: #f8f8f8;
+            --color-bg-white: #ffffff;
+            --color-border: #ddd;
+            --color-border-light: #e0e0e0;
+            --color-text-dark: #333;
+            --color-text-muted: #777;
+            --color-danger: #e74c3c;
+            --color-warning: #ffc107;
+            --color-info: #1e88e5;
+            --color-success: #2ecc71;
         }
 
-        .button-group button { padding: 12px 20px; margin: 5px; background-color: #2ecc71; color: white; border: none; cursor: pointer; border-radius: 6px; transition: background-color 0.3s; }
-        .button-group button:hover { background-color: #27ae60; }
-        .print-download-group button { 
-            background-color: #3498db; 
-            padding: 10px 18px; 
-            font-size: 1em;
-            margin: 5px;
+        /* ===== 기본 스타일 ===== */
+        body {
+            font-family: 'Malgun Gothic', 'Arial', sans-serif;
+            max-width: 1000px;
+            margin: 20px auto;
+            padding: 0 20px;
+            background-color: var(--color-bg-light);
         }
-        .print-download-group button:hover { background-color: #2980b9; }
-        .button-group, .print-download-group { text-align: center; margin-bottom: 20px; margin-top: 20px; }
-        
-        /* 1-3. 입력 UI 스타일 (칸 크기 비율 조정/여백 축소) */
-        #input-area { background-color: #ffffff; padding: 15px; border-radius: 8px; box-shadow: 0 2px 5px rgba(0,0,0,0.05); }
-        .config-section { margin-top: 15px; padding: 10px; border: 1px solid #e0e0e0; border-radius: 6px; background-color: #fefefe; }
-        .output-option-group { 
-            display: flex; flex-direction: column; 
-            margin-bottom: 10px; 
-            padding: 8px; 
-            border: 1px solid #b3e5fc; 
-            border-radius: 4px; 
+
+        input[type="text"],
+        textarea,
+        input[type="file"] {
+            padding: 10px;
+            margin: 8px 0;
+            width: 100%;
+            box-sizing: border-box;
+            font-size: 16px;
+            border-radius: 4px;
+            border: 1px solid var(--color-border);
+            resize: vertical;
+        }
+
+        /* ===== 버튼 스타일 ===== */
+        .button-group button,
+        .print-download-group button {
+            padding: 12px 20px;
+            margin: 5px;
+            color: white;
+            border: none;
+            cursor: pointer;
+            border-radius: 6px;
+            transition: background-color 0.3s ease;
+            font-weight: 600;
+        }
+
+        .button-group button {
+            background-color: var(--color-primary);
+        }
+
+        .button-group button:hover {
+            background-color: var(--color-primary-dark);
+        }
+
+        .print-download-group button {
+            background-color: var(--color-secondary);
+            padding: 10px 18px;
+            font-size: 1em;
+        }
+
+        .print-download-group button:hover {
+            background-color: var(--color-secondary-dark);
+        }
+
+        .button-group,
+        .print-download-group {
+            text-align: center;
+            margin-bottom: 20px;
+            margin-top: 20px;
+        }
+
+        /* ===== 입력 영역 스타일 ===== */
+        #input-area {
+            background-color: var(--color-bg-white);
+            padding: 15px;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+        }
+
+        .config-section {
+            margin-top: 15px;
+            padding: 10px;
+            border: 1px solid var(--color-border-light);
+            border-radius: 6px;
+            background-color: #fefefe;
+        }
+
+        .output-option-group {
+            display: flex;
+            flex-direction: column;
+            margin-bottom: 10px;
+            padding: 8px;
+            border: 1px solid #b3e5fc;
+            border-radius: 4px;
             background-color: #e1f5fe;
         }
 
-        /* 탭 스타일 */
-        .mode-selection { display: flex; margin-bottom: 15px; border-bottom: 2px solid #ddd; }
-        .mode-tab { flex: 1; padding: 10px 0; text-align: center; cursor: pointer; border-bottom: 2px solid transparent; font-weight: bold; color: #777; transition: all 0.3s; }
-        .mode-tab.active { border-bottom: 2px solid #2ecc71; color: #2ecc71; background-color: #e8f5e9; }
-        
-        /* 보고서 기본 스타일 */
-        #report-area { 
-            background-color: #ffffff; border-radius: 12px; 
-            padding: 40px; 
-            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1); 
-            margin-top: 30px; 
+        /* ===== 탭 스타일 ===== */
+        .mode-selection {
+            display: flex;
+            margin-bottom: 15px;
+            border-bottom: 2px solid var(--color-border);
         }
-        h1 { 
-            color: #4a4a4a; text-align: center; font-size: 2.5em; border-bottom: 3px solid #ff9800; padding-bottom: 15px; margin-bottom: 10px; 
-            display: flex; justify-content: center; align-items: center; white-space: nowrap;
+
+        .mode-tab {
+            flex: 1;
+            padding: 10px 0;
+            text-align: center;
+            cursor: pointer;
+            border-bottom: 2px solid transparent;
+            font-weight: bold;
+            color: var(--color-text-muted);
+            transition: all 0.3s ease;
         }
-        
-        /* 활용 방안 섹션 */
-        .usage-section { 
-            background-color: #fff8e1; 
-            padding: 10px 15px; 
-            border-radius: 8px; 
-            margin-bottom: 15px; 
-            border-left: 5px solid #ffc107; 
+
+        .mode-tab.active {
+            border-bottom: 2px solid var(--color-primary);
+            color: var(--color-primary);
+            background-color: #e8f5e9;
         }
-        
-        /* 총평 섹션 (2-3. 크기 줄이기 반영) */
-        .summary-section { 
-            background-color: #e0f7fa; 
-            border: 2px solid #00bcd4; 
-            padding: 15px; 
-            border-radius: 8px; 
-            margin-top: 20px; 
+
+        /* ===== 보고서 스타일 ===== */
+        #report-area {
+            background-color: var(--color-bg-white);
+            border-radius: 12px;
+            padding: 40px;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+            margin-top: 30px;
         }
-        .summary-section h2 { 
-            color: #00838f; 
-            font-size: 1.5em; 
-            margin-top: 0; 
-            margin-bottom: 10px; 
+
+        h1 {
+            color: #4a4a4a;
+            text-align: center;
+            font-size: 2.5em;
+            border-bottom: 3px solid #ff9800;
+            padding-bottom: 15px;
+            margin-bottom: 10px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            white-space: nowrap;
         }
-        .summary-section h3 { 
-            color: #00bcd4; 
-            font-size: 1.2em; 
-            margin-top: 10px; 
-            margin-bottom: 8px; 
+
+        /* ===== 섹션 스타일 ===== */
+        .usage-section {
+            background-color: #fff8e1;
+            padding: 10px 15px;
+            border-radius: 8px;
+            margin-bottom: 15px;
+            border-left: 5px solid var(--color-warning);
         }
-        .summary-textarea { 
-            width: 100%; 
-            min-height: 80px; 
-            padding: 10px; 
-            border: 1px solid #ccc; 
-            border-radius: 4px; 
-            resize: vertical; 
+
+        .summary-section {
+            background-color: #e0f7fa;
+            border: 2px solid #00bcd4;
+            padding: 15px;
+            border-radius: 8px;
+            margin-top: 20px;
+        }
+
+        .summary-section h2 {
+            color: #00838f;
+            font-size: 1.5em;
+            margin-top: 0;
+            margin-bottom: 10px;
+        }
+
+        .summary-section h3 {
+            color: #00bcd4;
+            font-size: 1.2em;
+            margin-top: 10px;
+            margin-bottom: 8px;
+        }
+
+        .summary-textarea {
+            width: 100%;
+            min-height: 80px;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            resize: vertical;
             font-size: 1em;
             box-sizing: border-box;
         }
 
-        /* 삼분할/이분할/단일 분할 레이아웃 (2-3. 여백 축소 반영) */
-        .asset-section-container { 
-            margin-bottom: 20px; 
-            padding: 10px; 
-            border: 1px solid #f0f0f0; 
-            border-radius: 8px; 
+        /* ===== 자산 섹션 스타일 ===== */
+        .asset-section-container {
+            margin-bottom: 20px;
+            padding: 10px;
+            border: 1px solid #f0f0f0;
+            border-radius: 8px;
         }
-        
-        .activity-title { 
-            font-size: 1.4em; 
-            font-weight: bold; 
-            color: #1e88e5; 
-            margin-top: 25px; 
-            margin-bottom: 15px; 
-            border-bottom: 2px solid #bbdefb; 
+
+        .activity-title {
+            font-size: 1.4em;
+            font-weight: bold;
+            color: var(--color-info);
+            margin-top: 25px;
+            margin-bottom: 15px;
+            border-bottom: 2px solid #bbdefb;
             padding-bottom: 5px;
         }
 
+        /* ===== 다중 칼럼 레이아웃 ===== */
         .dynamic-column-layout {
             display: flex;
-            gap: 15px; 
+            gap: 15px;
             margin-top: 10px;
         }
+
         .dynamic-column-layout > div {
-            /* 2-1. 칸 크기 늘리기를 위해 flex-direction 추가 */
             display: flex;
             flex-direction: column;
-            
-            padding: 8px; 
-            border: 1px dashed #e0e0e0;
+            padding: 8px;
+            border: 1px dashed var(--color-border-light);
             border-radius: 4px;
-            min-height: 220px; 
+            min-height: 220px;
             box-sizing: border-box;
         }
-        
-        .column-title { 
-            font-weight: bold; 
-            color: #333; 
-            margin-bottom: 10px; 
-            border-bottom: 1px solid #f0f0f0; 
+
+        .column-title {
+            font-weight: bold;
+            color: var(--color-text-dark);
+            margin-bottom: 10px;
+            border-bottom: 1px solid #f0f0f0;
             padding-bottom: 5px;
         }
 
-        /* 쿠키 현황 */
-        .center-asset-content { text-align: center; }
-        .cookie-asset-info { margin-top: 10px; font-size: 0.9em; text-align: left; padding: 0 15px; }
-        .cookie-asset-info strong { display: block; margin-bottom: 5px; font-size: 1em; }
-        .cookie-asset-item { display: flex; justify-content: space-between; margin-bottom: 5px; padding: 3px 0; border-bottom: 1px dotted #eee; }
+        /* ===== 쿠키 자산 스타일 ===== */
+        .center-asset-content {
+            text-align: center;
+        }
 
-        /* 학생 돌아보기 스타일 */
+        .cookie-asset-info {
+            margin-top: 10px;
+            font-size: 0.9em;
+            text-align: left;
+            padding: 0 15px;
+        }
+
+        .cookie-asset-info strong {
+            display: block;
+            margin-bottom: 5px;
+            font-size: 1em;
+        }
+
+        .cookie-asset-item {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 5px;
+            padding: 3px 0;
+            border-bottom: 1px dotted #eee;
+        }
+
+        /* ===== 학생 돌아보기 스타일 ===== */
         .student-review-area {
-            /* 2-1. 칸 크기 늘리기를 위해 flex 속성 추가 */
-            flex-grow: 1; 
+            flex-grow: 1;
             display: flex;
             flex-direction: column;
-            justify-content: space-between; 
-        }
-        .student-review-area textarea { 
-            /* 2-1. 칸 크기 늘리기를 위해 flex 속성 및 min-height 0 설정 */
-            flex-grow: 1; 
-            min-height: 0; 
-            
-            font-size: 0.95em; 
-            padding: 8px; 
-            margin: 0 0 10px 0; /* 텍스트 에어리어 간격 확보 */
-            box-sizing: border-box; 
-            border: 1px solid #ccc; 
-            border-radius: 4px;
-        }
-        .student-review-area textarea:last-child {
-            /* 2-1. 마지막 텍스트 에어리어 하단 여백 제거 */
-            margin-bottom: 0;
-        }
-        
-        /* 쿠키 원형 그래프 스타일 */
-        .graph-container { display: flex; justify-content: center; align-items: center; margin-top: 10px; }
-        .pie-chart { 
-            width: 120px; height: 120px; border-radius: 50%; 
-            position: relative;
-            display: flex; align-items: center; justify-content: center; 
-            flex-shrink: 0; 
-        }
-        
-        /* 뱃지 포트폴리오 스타일 */
-        .all-badges-container { 
-            display: flex; flex-wrap: wrap; 
-            gap: 10px; 
-            padding: 10px 0; 
-            justify-content: center; 
-        }
-        .badge-item-display { 
-            width: 80px; 
-            text-align: center; 
-            font-size: 0.85em; 
-            line-height: 1.2; 
-        }
-        .badge-item-display span { 
-            display: block; 
-            white-space: normal; 
-            overflow-wrap: break-word; 
-            word-wrap: break-word;
-        }
-        .badge-item-display img { 
-            width: 50px; height: 50px; margin-bottom: 3px; border-radius: 50%; object-fit: cover; 
-            border: 3px solid #2ecc71; 
-            box-shadow: 0 0 5px rgba(46, 204, 113, 0.5); 
+            justify-content: space-between;
         }
 
-        /* 조회 일시를 꼬리말 부분에 생성 */
+        .student-review-area textarea {
+            flex-grow: 1;
+            min-height: 0;
+            font-size: 0.95em;
+            padding: 8px;
+            margin: 0 0 10px 0;
+            box-sizing: border-box;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+
+        .student-review-area textarea:last-child {
+            margin-bottom: 0;
+        }
+
+        /* ===== 그래프 스타일 ===== */
+        .graph-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-top: 10px;
+        }
+
+        .pie-chart {
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+        }
+
+        /* ===== 뱃지 포트폴리오 스타일 ===== */
+        .all-badges-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            padding: 10px 0;
+            justify-content: center;
+        }
+
+        .badge-item-display {
+            width: 80px;
+            text-align: center;
+            font-size: 0.85em;
+            line-height: 1.2;
+        }
+
+        .badge-item-display span {
+            display: block;
+            white-space: normal;
+            overflow-wrap: break-word;
+            word-wrap: break-word;
+        }
+
+        .badge-item-display img {
+            width: 50px;
+            height: 50px;
+            margin-bottom: 3px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 3px solid var(--color-primary);
+            box-shadow: 0 0 5px rgba(46, 204, 113, 0.5);
+        }
+
+        /* ===== 하단 스타일 ===== */
         .report-footer {
-            text-align: right; 
-            margin-top: 30px; 
-            padding-top: 8px; 
-            border-top: 1px solid #ddd; 
-            color: #777; 
+            text-align: right;
+            margin-top: 30px;
+            padding-top: 8px;
+            border-top: 1px solid var(--color-border);
+            color: var(--color-text-muted);
             font-size: 0.85em;
         }
 
-        /* 2-2. 인쇄 시 최적화 (A4 한 장에 맞추기) */
+
+        /* ===== 인쇄 최적화 ===== */
         @media print {
-            body { 
-                padding: 0; margin: 0; 
-                /* 5. 전체 폰트 크기 추가 축소 */
-                font-size: 8.2pt; 
+            body {
+                padding: 0;
+                margin: 0;
+                font-size: 8.2pt;
             }
-            
-            /* 3-1. 제목 '상담 준비 다했니?' 제거 */
-            body > h1:first-of-type { 
-                display: none; 
+
+            body > h1:first-of-type {
+                display: none;
             }
-            
-            #input-area, .button-group, .print-download-group { display: none; }
-            #report-area { 
-                box-shadow: none; 
-                /* 5. 보고서 상하 패딩 축소 */
-                padding: 2mm 4mm; 
-                margin: 0; 
-                border-radius: 0; 
+
+            #input-area,
+            .button-group,
+            .print-download-group {
+                display: none;
+            }
+
+            #report-area {
+                box-shadow: none;
+                padding: 2mm 4mm;
+                margin: 0;
+                border-radius: 0;
                 background-color: white;
             }
-            /* 3-2. 보고서 내 제목 크기 및 여백 조정 */
-            #report-area h1 { font-size: 1.6em; padding-bottom: 6px; margin-bottom: 3px; }
-            
-            /* 여백 및 크기 조정 */
-            /* 5. 섹션 마진/패딩 축소 */
+
+            #report-area h1 {
+                font-size: 1.6em;
+                padding-bottom: 6px;
+                margin-bottom: 3px;
+            }
+
             .usage-section {
                 margin-bottom: 3px;
-                padding: 4px; 
-                page-break-inside: avoid; 
+                padding: 4px;
+                page-break-inside: avoid;
             }
-            .asset-section-container, .summary-section { 
-                margin-bottom: 2px; /* 3px에서 줄임 */
-                padding: 4px; 
-                page-break-inside: avoid; 
+
+            .asset-section-container,
+            .summary-section {
+                margin-bottom: 2px;
+                padding: 4px;
+                page-break-inside: avoid;
             }
-            
-            /* Column Layout Reduction */
-            /* 3-2. 컬럼 간격/마진 축소 */
-            .dynamic-column-layout { gap: 6px; margin-top: 5px; } 
-            .dynamic-column-layout > div { 
-                /* 5. 컬럼 최소 높이 축소 */
-                min-height: 110px; 
-                padding: 3px; 
+
+            .dynamic-column-layout {
+                gap: 6px;
+                margin-top: 5px;
+            }
+
+            .dynamic-column-layout > div {
+                min-height: 110px;
+                padding: 3px;
                 font-size: 0.85em;
             }
-            .column-title { font-size: 0.9em; margin-bottom: 5px; }
-            .activity-title { margin-top: 10px; margin-bottom: 8px; font-size: 1.2em; }
-            
-            /* 총평 항목 크기 조정 */
-            .summary-section { 
-                padding: 8px; 
-                margin-top: 10px; 
+
+            .column-title {
+                font-size: 0.9em;
+                margin-bottom: 5px;
             }
+
+            .activity-title {
+                margin-top: 10px;
+                margin-bottom: 8px;
+                font-size: 1.2em;
+            }
+
+            .summary-section {
+                padding: 8px;
+                margin-top: 10px;
+            }
+
             .summary-section h3 {
-                margin-top: 8px; 
+                margin-top: 8px;
                 margin-bottom: 3px;
-                font-size: 1.05em; 
+                font-size: 1.05em;
             }
-            .summary-textarea { 
-                /* 5. 총평 텍스트 에어리어 최소 높이 축소 */
-                min-height: 40px; 
+
+            .summary-textarea {
+                min-height: 40px;
                 font-size: 0.9em;
             }
+
             .auto-summary-area {
-                padding: 8px; 
-                font-size: 0.9em; 
+                padding: 8px;
+                font-size: 0.9em;
             }
-            
-            /* 돌아보기 텍스트 크기 조정 */
-            .student-review-area label { margin-top: 5px; margin-bottom: 3px; font-size: 0.85em; }
-            .student-review-area textarea { 
-                min-height: 35px; /* 40px에서 줄임 */
-                padding: 4px; 
-                font-size: 0.8em; 
-                margin-bottom: 5px !important; 
+
+            .student-review-area label {
+                margin-top: 5px;
+                margin-bottom: 3px;
+                font-size: 0.85em;
             }
+
+            .student-review-area textarea {
+                min-height: 35px;
+                padding: 4px;
+                font-size: 0.8em;
+                margin-bottom: 5px !important;
+            }
+
             .student-review-area textarea:last-child {
                 margin-bottom: 0 !important;
             }
-            
-            /* 꼬리말 */
+
             .report-footer {
-                margin-top: 10px; 
+                margin-top: 10px;
                 padding-top: 5px;
                 font-size: 8pt;
             }
-            /* 뱃지 크기 조정 */
-            .badge-item-display { width: 60px; font-size: 7pt; }
-            .badge-item-display img { width: 40px; height: 40px; }
-            
-            /* 원그래프 출력 오류 수정 및 크기 축소 */
-            .pie-chart { 
-                /* 5. 원그래프 크기 추가 축소 */
-                width: 70px; 
-                height: 70px; 
-                /* 원그래프 출력을 강제하는 속성 유지 */
-                -webkit-print-color-adjust: exact; 
-                print-color-adjust: exact; 
+
+            .badge-item-display {
+                width: 60px;
+                font-size: 7pt;
             }
+
+            .badge-item-display img {
+                width: 40px;
+                height: 40px;
+            }
+
+            .pie-chart {
+                width: 70px;
+                height: 70px;
+                -webkit-print-color-adjust: exact;
+                print-color-adjust: exact;
+            }
+
             .pie-chart > div {
-                 /* 원그래프 안의 텍스트 크기 조정 */
-                font-size: 0.9em !important; 
+                font-size: 0.9em !important;
             }
-            
-            .cookie-asset-info { padding: 0 5px; } /* 쿠키 정보 패딩 축소 */
-            .cookie-asset-item { font-size: 0.8em; } /* 쿠키 정보 폰트 축소 */
+
+            .cookie-asset-info {
+                padding: 0 5px;
+            }
+
+            .cookie-asset-item {
+                font-size: 0.8em;
+            }
         }
+
     </style>
 </head>
 <body>
@@ -473,12 +648,20 @@
 
 
     <script>
-        // ==========================================================
-        // 1. API 기본 설정 및 상수
-        // ==========================================================
-        const BASE_URL = "https://api.dahandin.com/openapi/v1";
-        
-        const ALL_BADGES_LIST = [
+        // ============================================================
+        // ★ 상수 정의
+        // ============================================================
+        const CONFIG = {
+            API_BASE_URL: "https://api.dahandin.com/openapi/v1",
+            DEFAULT_MODE: 'single',
+            RESPONSE_STATUS: {
+                SUCCESS: true,
+                ERROR: false,
+            },
+            ROUTE_ENDPOINT: '/get/student/total',
+        };
+
+        const BADGE_LIST = [
             { title: "성실", imgUrl: "https://i.imgur.com/badge_sungsil.png" },
             { title: "용기", imgUrl: "https://i.imgur.com/badge_yonggi.png" },
             { title: "책임", imgUrl: "https://i.imgur.com/badge_chaegim.png" },
@@ -489,273 +672,356 @@
             { title: "창의", imgUrl: "https://i.imgur.com/badge_changui.png" },
             { title: "봉사", imgUrl: "https://i.imgur.com/badge_bongsa.png" },
         ];
-        
-        // 1-1, 1-2, 1-3. 예시 텍스트 수정
-        const USAGE_EXAMPLE_TEXTS = {
+
+        const DEFAULT_USAGE_TEXTS = {
             general: "우리 학급은 다했니 다했어요를 태블릿 활용 수업의 메인 플랫폼으로 사용했습니다. 학생들은 학급 생활, 수업 참여, 과제 수행 등에 따라 쿠키, 초코칩, 뱃지를 획득했습니다.",
-            // 1-1. 쿠키 텍스트 수정
             cookieUsage: "획득: 주제글쓰기 제출 2쿠키, 받아쓰기 1쿠키~3쿠키, 놀이마당 1쿠키~2쿠키, 1인 1역 월급 7쿠키~15쿠키 \n사용: 자리 선택권 20쿠키, 간식교환 5쿠키~10쿠키, 음악재생권 10쿠키",
-            // 1-2. 초코칩 텍스트 수정
             chipUsage: "획득: 발표 내용이 좋은 학생에게 1초코칩, 경청 태도가 좋은 학생에게 1초코칩. \n사용: 10초코칩을 1쿠키로 교환할 수 있음.",
-            // 1-3. 뱃지 텍스트 수정
             badgeUsage: "소개: 아침 독서, 바르게 글씨 쓰기, 인사 잘하기, 환경보호 실천하기, 마음 다스리기, 효도미션 \n획득: 아침 한 줄 독서록 쓰기 완성, 바른 글씨 칭찬 10회 이상, 매달 학급회의 시간 인사왕 뽑기, 제로웨이스트 미션 통과, 현명하게 갈등 해결하기 5회, 효도 미션통과"
         };
 
-        let currentMode = 'single'; 
+        // ============================================================
+        // ★ 상태 관리
+        // ============================================================
+        const STATE = {
+            currentMode: CONFIG.DEFAULT_MODE,
+            cumulativeBadges: {},
+        };
 
-        // ==========================================================
-        // 2. 입력 선택 및 초기 로딩 함수
-        // ==========================================================
-        
-        function setMode(mode) {
-            currentMode = mode;
-            document.getElementById('tab-single').classList.remove('active');
-            document.getElementById('tab-batch').classList.remove('active');
-            document.getElementById('mode-single-content').style.display = 'none';
-            document.getElementById('mode-batch-content').style.display = 'none';
-            
+        const ELEMENT_IDS = {
+            apiKeyInput: 'api-key-input',
+            studentCodeInput: 'student-code-input',
+            codeListInput: 'code-list-input',
+            generateBtn: 'generate-report-btn',
+            reportArea: 'report-area',
+            modeTab: {
+                single: 'tab-single',
+                batch: 'tab-batch',
+            },
+            modeContent: {
+                single: 'mode-single-content',
+                batch: 'mode-batch-content',
+            },
+        }; 
+
+        // ============================================================
+        // ★ 모드 전환 함수
+        // ============================================================
+        const setMode = (mode) => {
+            STATE.currentMode = mode;
+
+            const { single: singleTabId, batch: batchTabId } = ELEMENT_IDS.modeTab;
+            const { single: singleContentId, batch: batchContentId } = ELEMENT_IDS.modeContent;
+
+            document.getElementById(singleTabId).classList.remove('active');
+            document.getElementById(batchTabId).classList.remove('active');
+            document.getElementById(singleContentId).style.display = 'none';
+            document.getElementById(batchContentId).style.display = 'none';
+
             if (mode === 'single') {
-                document.getElementById('tab-single').classList.add('active');
-                document.getElementById('mode-single-content').style.display = 'block';
+                document.getElementById(singleTabId).classList.add('active');
+                document.getElementById(singleContentId).style.display = 'block';
             } else {
-                document.getElementById('tab-batch').classList.add('active');
-                document.getElementById('mode-batch-content').style.display = 'block';
+                document.getElementById(batchTabId).classList.add('active');
+                document.getElementById(batchContentId).style.display = 'block';
             }
-            document.getElementById('generate-report-btn').innerText = (mode === 'single') 
-                ? '📋 성장 기록표 출력' 
-                : '📂 일괄 성장 기록표 출력';
-            document.getElementById('report-area').innerHTML = '<p class="alert alert-loading">출력 버튼을 누르면 선택한 방식에 따라 성장 기록 보고서가 생성됩니다.</p>';
-        }
-        
-        function toggleConfigGroup(groupName, isAssetGroup = true) {
-            const masterCheck = document.getElementById(`check-output-${groupName}`);
-            const detailContainer = document.getElementById(`${groupName}-config-details`);
-            
-            if (masterCheck.checked) {
-                detailContainer.style.display = 'block';
-            } else {
-                detailContainer.style.display = 'none';
-            }
+
+            const buttonText = mode === 'single' ? '📋 성장 기록표 출력' : '📂 일괄 성장 기록표 출력';
+            document.getElementById(ELEMENT_IDS.generateBtn).innerText = buttonText;
+            document.getElementById(ELEMENT_IDS.reportArea).innerHTML = '<p class="alert alert-loading">출력 버튼을 누르면 선택한 방식에 따라 성장 기록 보고서가 생성됩니다.</p>';
+        };
+
+        // ============================================================
+        // ★ 설정 그룹 토글 함수
+        // ============================================================
+        const toggleConfigGroup = (groupName, isAssetGroup = true) => {
+            const masterCheckId = `check-output-${groupName}`;
+            const detailContainerId = `${groupName}-config-details`;
+            const masterCheck = document.getElementById(masterCheckId);
+            const detailContainer = document.getElementById(detailContainerId);
+
+            detailContainer.style.display = masterCheck.checked ? 'block' : 'none';
 
             if (isAssetGroup) {
-                detailContainer.querySelectorAll('input[type="checkbox"]').forEach(subCheck => {
+                const subCheckboxes = detailContainer.querySelectorAll('input[type="checkbox"]');
+                subCheckboxes.forEach(subCheck => {
                     subCheck.checked = masterCheck.checked;
                 });
             }
-        }
-        
-        document.addEventListener('DOMContentLoaded', () => {
-            setMode('single'); 
-            
-            // 1-1, 1-2, 1-3. 예시 텍스트 초기값 설정
-            document.getElementById('input-usage-general').value = USAGE_EXAMPLE_TEXTS.general;
-            document.getElementById('input-cookie-usage').value = USAGE_EXAMPLE_TEXTS.cookieUsage;
-            document.getElementById('input-chip-usage').value = USAGE_EXAMPLE_TEXTS.chipUsage;
-            document.getElementById('input-badge-usage').value = USAGE_EXAMPLE_TEXTS.badgeUsage;
+        };
+
+        // ============================================================
+        // ★ DOM 초기화 함수
+        // ============================================================
+        const initializeDOM = () => {
+            setMode('single');
+
+            document.getElementById('input-usage-general').value = DEFAULT_USAGE_TEXTS.general;
+            document.getElementById('input-cookie-usage').value = DEFAULT_USAGE_TEXTS.cookieUsage;
+            document.getElementById('input-chip-usage').value = DEFAULT_USAGE_TEXTS.chipUsage;
+            document.getElementById('input-badge-usage').value = DEFAULT_USAGE_TEXTS.badgeUsage;
 
             toggleConfigGroup('cookie');
             toggleConfigGroup('chip');
             toggleConfigGroup('badge');
-            document.getElementById('check-output-badge-strength').checked = false; 
+            document.getElementById('check-output-badge-strength').checked = false;
             toggleConfigGroup('summary', false);
-        });
+        };
 
-        // ==========================================================
-        // 3. 데이터 로직 함수 
-        // ==========================================================
+        // ============================================================
+        // ★ 설정 조회 함수
+        // ============================================================
+        const getReportConfig = () => {
+            const cookieUsageElem = document.getElementById('input-cookie-usage');
+            const chipUsageElem = document.getElementById('input-chip-usage');
+            const badgeUsageElem = document.getElementById('input-badge-usage');
 
-        function getReportConfig() {
-            const cookieUsageElement = document.getElementById('input-cookie-usage');
-            const chipUsageElement = document.getElementById('input-chip-usage');
-            const badgeUsageElement = document.getElementById('input-badge-usage');
-            
-            const config = {
+            return {
                 generalUsage: document.getElementById('input-usage-general').value.trim(),
-
                 cookie: document.getElementById('check-output-cookie').checked ? {
-                    // Checkbox is for outputting the section, value is from the textarea
-                    usage: document.getElementById('check-output-cookie-usage').checked ? (cookieUsageElement ? cookieUsageElement.value.trim() : USAGE_EXAMPLE_TEXTS.cookieUsage) : null,
+                    usage: document.getElementById('check-output-cookie-usage').checked ? (cookieUsageElem?.value.trim() || DEFAULT_USAGE_TEXTS.cookieUsage) : null,
                     asset: document.getElementById('check-output-cookie-asset').checked,
                     review: document.getElementById('check-output-cookie-review').checked,
                 } : null,
-                
                 chip: document.getElementById('check-output-chip').checked ? {
-                    usage: document.getElementById('check-output-chip-usage').checked ? (chipUsageElement ? chipUsageElement.value.trim() : USAGE_EXAMPLE_TEXTS.chipUsage) : null,
+                    usage: document.getElementById('check-output-chip-usage').checked ? (chipUsageElem?.value.trim() || DEFAULT_USAGE_TEXTS.chipUsage) : null,
                     asset: document.getElementById('check-output-chip-asset').checked,
                     review: document.getElementById('check-output-chip-review').checked,
                 } : null,
-
                 badge: document.getElementById('check-output-badge').checked ? {
-                    usage: document.getElementById('check-output-badge-usage').checked ? (badgeUsageElement ? badgeUsageElement.value.trim() : USAGE_EXAMPLE_TEXTS.badgeUsage) : null,
+                    usage: document.getElementById('check-output-badge-usage').checked ? (badgeUsageElem?.value.trim() || DEFAULT_USAGE_TEXTS.badgeUsage) : null,
                     status: document.getElementById('check-output-badge-status').checked,
-                    strength: false, 
+                    strength: false,
                 } : null,
-                
                 summary: document.getElementById('check-output-summary').checked ? {
                     output: document.getElementById('check-output-summary').checked,
-                    summary: true, 
-                    praiseAndResolve: document.getElementById('check-output-summary-strength').checked, 
+                    summary: true,
+                    praiseAndResolve: document.getElementById('check-output-summary-strength').checked,
                     parentComment: document.getElementById('check-output-summary-parent').checked,
                 } : null,
             };
-            
-            if (!document.getElementById('check-output-cookie').checked) config.cookie = null;
-            if (!document.getElementById('check-output-chip').checked) config.chip = null;
-            if (!document.getElementById('check-output-badge').checked) config.badge = null;
-            if (!document.getElementById('check-output-summary').checked) config.summary = null;
+        };
 
-            return config;
-        }
+        // ============================================================
+        // ★ 뱃지 관리 함수
+        // ============================================================
+        const archiveAndRetrieveCumulativeBadges = (studentCode, liveBadges) => {
+            if (!STATE.cumulativeBadges[studentCode]) {
+                STATE.cumulativeBadges[studentCode] = {};
+            }
 
-        const CUMULATIVE_BADGES = {}; 
-        
-        function archiveAndRetrieveCumulativeBadges(studentCode, liveBadges) {
-            if (!CUMULATIVE_BADGES[studentCode]) { CUMULATIVE_BADGES[studentCode] = {}; }
             if (liveBadges && typeof liveBadges === 'object') {
                 Object.values(liveBadges).forEach(badge => {
-                    if (badge && badge.hasBadge) {
-                        CUMULATIVE_BADGES[studentCode][badge.title] = {
+                    if (badge?.hasBadge) {
+                        STATE.cumulativeBadges[studentCode][badge.title] = {
                             title: badge.title,
-                            imgUrl: badge.imgUrl || ALL_BADGES_LIST.find(b => b.title === badge.title)?.imgUrl || 'placeholder_badge.png', 
+                            imgUrl: badge.imgUrl || BADGE_LIST.find(b => b.title === badge.title)?.imgUrl || 'placeholder_badge.png',
                             hasBadge: true
                         };
                     }
                 });
             }
-            return Object.values(CUMULATIVE_BADGES[studentCode]);
-        }
-        
-        function generatePraiseSummary(studentName, report) {
-            const { totalCookieIncome, currentChocoChips, allAcquiredBadges } = report;
-            const earnedTitles = allAcquiredBadges.map(b => b.title);
-            const badgeTitlesString = earnedTitles.length > 0 ? `(${earnedTitles.join(', ')})` : '(획득한 뱃지 없음)';
 
-            const autoSummaryText = `${studentName} 학생은 우리 학급 다했니 다했어요 활동을 통해
-*쿠키(${totalCookieIncome}개), *초코칩(${currentChocoChips}개), *뱃지${badgeTitlesString}를 획득하였습니다.`;
-            
-            const praiseAndResolveText = `[교사 참고] 이 자리에 선생님이 대신 칭찬과 격려의 메시지를 적거나, 학생이 직접 잘한 점과 다짐을 적을 수 있도록 안내해주세요.`;
-            
-            return { 
-                autoSummary: autoSummaryText, 
-                praiseAndResolve: praiseAndResolveText,
+            return Object.values(STATE.cumulativeBadges[studentCode]);
+        };
+
+        // ============================================================
+        // ★ 보고서 데이터 생성 함수
+        // ============================================================
+        const generatePraiseSummary = (studentName, report) => {
+            const { totalCookieIncome, currentChocoChips, allAcquiredBadges } = report;
+            const earnedBadgeTitles = allAcquiredBadges.map(badge => badge.title);
+            const badgeTitlesString = earnedBadgeTitles.length > 0 
+                ? `(${earnedBadgeTitles.join(', ')})` 
+                : '(획득한 뱃지 없음)';
+
+            return {
+                autoSummary: `${studentName} 학생은 우리 학급 다했니 다했어요 활동을 통해\n*쿠키(${totalCookieIncome}개), *초코칩(${currentChocoChips}개), *뱃지${badgeTitlesString}를 획득하였습니다.`,
+                praiseAndResolve: `[교사 참고] 이 자리에 선생님이 대신 칭찬과 격려의 메시지를 적거나, 학생이 직접 잘한 점과 다짐을 적을 수 있도록 안내해주세요.`,
             };
-        }
-        
-        async function getStudentDataWithKey(studentCode, apiKey) {
-             const endpoint = `${BASE_URL}/get/student/total?code=${studentCode}`;
-             try {
-                 if (!apiKey || !studentCode) { return { error: "API Key와 학생 코드가 누락되었습니다." }; }
-                 const response = await fetch(endpoint, { method: "GET", headers: { "X-API-Key": apiKey } });
-                 if (!response.ok) {
-                     const errorText = await response.text();
-                     return { error: `API 호출 실패 (상태 코드: ${response.status})` };
-                 }
-                 const json = await response.json();
-                 if (json.result === true) { return json.data; } else { return { error: json.message || "알 수 없는 API 응답 오류" }; }
-             } catch (error) { 
-                 return { error: "네트워크 오류 또는 서버 접속 실패" }; 
-             }
-        }
-        
-        async function generateCumulativeReport(studentCode, apiKey, config) {
-            const liveData = await getStudentDataWithKey(studentCode, apiKey);
-            if (liveData.error) return { error: liveData.error };
-            
+        };
+
+        const calculateCookieRatio = (cookieIncome, cookieUsed) => {
+            if (cookieIncome <= 0) {
+                return { usage: 0, saving: 0 };
+            }
+
+            const usageRatio = (cookieUsed / cookieIncome) * 100;
+            return {
+                usage: parseFloat(usageRatio.toFixed(1)),
+                saving: parseFloat((100 - usageRatio).toFixed(1)),
+            };
+        };
+
+        // ============================================================
+        // ★ API 호출 함수
+        // ============================================================
+        const fetchStudentData = async (studentCode, apiKey) => {
+            const endpoint = `${CONFIG.API_BASE_URL}${CONFIG.ROUTE_ENDPOINT}?code=${studentCode}`;
+
+            try {
+                if (!apiKey || !studentCode) {
+                    return { error: "API Key와 학생 코드가 누락되었습니다." };
+                }
+
+                const response = await fetch(endpoint, {
+                    method: "GET",
+                    headers: { "X-API-Key": apiKey }
+                });
+
+                if (!response.ok) {
+                    return { error: `API 호출 실패 (상태 코드: ${response.status})` };
+                }
+
+                const json = await response.json();
+                return json.result === true
+                    ? json.data
+                    : { error: json.message || "알 수 없는 API 응답 오류" };
+            } catch (error) {
+                return { error: "네트워크 오류 또는 서버 접속 실패" };
+            }
+        };
+
+        const generateStudentReport = async (studentCode, apiKey, config) => {
+            const liveData = await fetchStudentData(studentCode, apiKey);
+
+            if (liveData.error) {
+                return { error: liveData.error };
+            }
+
             const totalCookieIncome = liveData.cookie || 0;
             const totalCookieUsed = liveData.usedCookie || 0;
             const currentChocoChips = liveData.chocoChips || 0;
-            
             const allAcquiredBadges = archiveAndRetrieveCumulativeBadges(studentCode, liveData.badges);
+            const { usage: cookieUsageRatio, saving: cookieSavingRatio } = calculateCookieRatio(totalCookieIncome, totalCookieUsed);
 
-            let usageRatio = 0;
-            let savingRatio = 0;
-            if (totalCookieIncome > 0) {
-                usageRatio = (totalCookieUsed / totalCookieIncome) * 100;
-                savingRatio = (100 - usageRatio);
-            }
-            
             const report = {
-                student: liveData.name || "학생", 
-                reportDate: new Date().toLocaleDateString('ko-KR', { year: 'numeric', month: 'long', day: 'numeric', hour: '2-digit', minute: '2-digit' }),
-                config: config, 
-                allAcquiredBadges: allAcquiredBadges, 
-                studentCode: studentCode, 
-                
-                totalCookieIncome: totalCookieIncome,
-                totalCookieUsed: totalCookieUsed,
-                currentChocoChips: currentChocoChips,
-                cookieSavingRatio: savingRatio.toFixed(1),
-                cookieUsageRatio: usageRatio.toFixed(1),
+                student: liveData.name || "학생",
+                reportDate: new Date().toLocaleDateString('ko-KR', {
+                    year: 'numeric',
+                    month: 'long',
+                    day: 'numeric',
+                    hour: '2-digit',
+                    minute: '2-digit'
+                }),
+                config,
+                allAcquiredBadges,
+                studentCode,
+                totalCookieIncome,
+                totalCookieUsed,
+                currentChocoChips,
+                cookieUsageRatio,
+                cookieSavingRatio,
             };
-            
+
             report.analysis = generatePraiseSummary(report.student, report);
-            
             return report;
-        }
+        };
 
-        // ==========================================================
-        // 4. 출력 헬퍼 함수
-        // ==========================================================
-        
-        function shareUrl() {
+        // ============================================================
+        // ★ URL 공유 함수
+        // ============================================================
+        const shareUrl = async () => {
             const url = window.location.href;
-            if (navigator.clipboard) {
-                navigator.clipboard.writeText(url).then(() => {
-                    alert("현재 보고서의 URL이 클립보드에 복사되었습니다! (주의: 로컬 파일 실행 시 URL 공유가 불가할 수 있습니다)");
-                }).catch(err => {
-                    alert(`URL 복사 실패. 수동으로 복사해주세요: ${url}`);
-                });
-            } else {
+            
+            if (!navigator.clipboard) {
                 alert(`클립보드 API를 지원하지 않는 환경입니다. 수동으로 복사해주세요: ${url}`);
+                return;
             }
-        }
 
-        async function handleReport() {
-            const apiKey = document.getElementById('api-key-input').value.trim();
-            const reportArea = document.getElementById('report-area');
-            const config = getReportConfig(); 
-            
-            if (!apiKey) { reportArea.innerHTML = '<p class="alert alert-error">API Key를 입력해주세요.</p>'; return; }
-            if (!config.generalUsage) { reportArea.innerHTML = '<p class="alert alert-error">필수 입력 항목인 "활용 방안"을 입력해주세요.</p>'; return; }
-            
-            let studentCodes = [];
-            if (currentMode === 'single') {
-                const studentCode = document.getElementById('student-code-input').value.trim();
-                if (!studentCode) { reportArea.innerHTML = '<p class="alert alert-error">학생 코드를 입력해주세요.</p>'; return; }
-                studentCodes.push(studentCode);
-            } else if (currentMode === 'batch') {
-                const codeListText = document.getElementById('code-list-input').value.trim();
-                if (!codeListText) { reportArea.innerHTML = '<p class="alert alert-error">학생 코드 목록을 입력해주세요.</p>'; return; }
-                studentCodes = codeListText.split(',').map(code => code.trim()).filter(code => code.length > 0);
+            try {
+                await navigator.clipboard.writeText(url);
+                alert("현재 보고서의 URL이 클립보드에 복사되었습니다! (주의: 로컬 파일 실행 시 URL 공유가 불가할 수 있습니다)");
+            } catch (err) {
+                alert(`URL 복사 실패. 수동으로 복사해주세요: ${url}`);
             }
-            
-            document.getElementById('generate-report-btn').disabled = true;
+        };
+
+        // ============================================================
+        // ★ 보고서 생성 핸들러
+        // ============================================================
+        const handleReport = async () => {
+            const apiKey = document.getElementById(ELEMENT_IDS.apiKeyInput).value.trim();
+            const reportArea = document.getElementById(ELEMENT_IDS.reportArea);
+            const config = getReportConfig();
+
+            const setErrorMessage = (message) => {
+                reportArea.innerHTML = `<p class="alert alert-error">${message}</p>`;
+            };
+
+            if (!apiKey) {
+                setErrorMessage("API Key를 입력해주세요.");
+                return;
+            }
+
+            if (!config.generalUsage) {
+                setErrorMessage("필수 입력 항목인 \"활용 방안\"을 입력해주세요.");
+                return;
+            }
+
+            let studentCodes = [];
+
+            if (STATE.currentMode === 'single') {
+                const studentCode = document.getElementById(ELEMENT_IDS.studentCodeInput).value.trim();
+                if (!studentCode) {
+                    setErrorMessage("학생 코드를 입력해주세요.");
+                    return;
+                }
+                studentCodes.push(studentCode);
+            } else if (STATE.currentMode === 'batch') {
+                const codeListText = document.getElementById(ELEMENT_IDS.codeListInput).value.trim();
+                if (!codeListText) {
+                    setErrorMessage("학생 코드 목록을 입력해주세요.");
+                    return;
+                }
+                studentCodes = codeListText
+                    .split(',')
+                    .map(code => code.trim())
+                    .filter(code => code.length > 0);
+            }
+
+            const generateBtn = document.getElementById(ELEMENT_IDS.generateBtn);
+            generateBtn.disabled = true;
             reportArea.innerHTML = '<p class="alert alert-loading">데이터를 불러오는 중입니다... 잠시만 기다려주세요.</p>';
+
             let allReportsHtml = '';
-            
+
             for (const code of studentCodes) {
-                const reportData = await generateCumulativeReport(code, apiKey, config);
+                const reportData = await generateStudentReport(code, apiKey, config);
                 if (reportData.error) {
                     allReportsHtml += `<div class="report-error-block"><h2>⚠️ 오류: 학생 코드 ${code}</h2><p>${reportData.error}</p></div>`;
                 } else {
                     allReportsHtml += generateReportHtml(reportData, studentCodes.length > 1);
                 }
             }
-            
-            reportArea.innerHTML = allReportsHtml;
-            document.getElementById('generate-report-btn').disabled = false;
-        }
 
-        function generatePieChartStyle(saving, usage) {
-            const saveColor = '#2ecc71';
-            const useColor = '#e74c3c';
-            return `background: conic-gradient(${saveColor} 0% ${saving}%, ${useColor} ${saving}% 100%);`;
-        }
-        
+            reportArea.innerHTML = allReportsHtml;
+            generateBtn.disabled = false;
+        };
+
+        // ============================================================
+        // ★ 파이 차트 스타일 생성 함수
+        // ============================================================
+        const COLOR_PALETTE = {
+            SAVE: '#2ecc71',
+            USE: '#e74c3c',
+        };
+
+        const generatePieChartStyle = (savingRatio, usageRatio) => {
+            return `background: conic-gradient(${COLOR_PALETTE.SAVE} 0% ${savingRatio}%, ${COLOR_PALETTE.USE} ${savingRatio}% 100%);`;
+        };
+
+        // ============================================================
+        // ★ 텍스트 분할 함수
+        // ============================================================
         /**
-         * 입력 텍스트를 특정 키워드를 기준으로 획득/사용(또는 소개/획득)으로 분리합니다.
+         * 입력 텍스트를 특정 키워드를 기준으로 분리합니다.
+         * @param {string} inputText - 입력 텍스트
+         * @param {string} primaryKeyword - 첫 번째 키워드 (예: '획득')
+         * @param {string} secondaryKeyword - 두 번째 키워드 (예: '사용')
+         * @returns {Object} { primary, secondary } 분리된 텍스트
          */
-        function splitUsageText(inputText, primaryKeyword, secondaryKeyword) {
+        const splitUsageText = (inputText, primaryKeyword, secondaryKeyword) => {
             const input = inputText || '';
             let primaryContent = '내용 없음';
             let secondaryContent = '내용 없음';
@@ -766,57 +1032,55 @@
             const matchPrimary = input.match(primaryRegex);
             const matchSecondary = input.match(secondaryRegex);
 
-            if (matchPrimary && matchPrimary[1]) {
+            if (matchPrimary?.at(1)) {
                 primaryContent = matchPrimary[1].trim();
             } else if (input.trim().startsWith(`${primaryKeyword}:`)) {
                 primaryContent = input.replace(`${primaryKeyword}:`, '').trim();
             }
-            
-            if (matchSecondary && matchSecondary[1]) {
+
+            if (matchSecondary?.at(1)) {
                 secondaryContent = matchSecondary[1].trim();
             }
 
             return { primary: primaryContent, secondary: secondaryContent };
-        }
+        };
 
-        // 3. 출력 화면 HTML 생성 함수 수정
-        function generateReportHtml(report, isBatchMode) {
+        // ============================================================
+        // ★ 보고서 HTML 생성 함수
+        // ============================================================
+        const generateReportHtml = (report, isBatchMode) => {
             const { student, reportDate, config, allAcquiredBadges, totalCookieIncome, totalCookieUsed, currentChocoChips, cookieSavingRatio, cookieUsageRatio } = report;
             const { cookie, chip, badge, summary } = config;
-            
-            let html = `
+
+            const createReportHeader = () => `
                 <div class="report-page" style="page-break-after: ${isBatchMode ? 'always' : 'auto'};">
                     <h1>✨ ${student} 학생의 성장 기록 ✨</h1>
-                    
                     <div class="usage-section">
                         <h2>📌 우리 학급의 다했니 다했어요 활용 방안</h2>
                         <div class="usage-text">${config.generalUsage}</div>
                     </div>
             `;
 
-            // ==========================================================
-            // 쿠키 활동 섹션 (Cookie)
-            // ==========================================================
-            if (cookie) {
-                html += `
+            const createCookieSection = () => {
+                if (!cookie) return '';
+
+                const { primary: acquisition, secondary: use } = splitUsageText(cookie.usage, '획득', '사용');
+                const cookieBalance = totalCookieIncome - totalCookieUsed;
+
+                let section = `
                     <div class="asset-section-container">
                         <h2 class="activity-title">🍪 ${student} 학생의 쿠키 활동</h2>
+                        <div class="dynamic-column-layout">
                 `;
-                
-                html += '<div class="dynamic-column-layout">';
-                
+
                 if (cookie.usage) {
-                    const { primary: acquisition, secondary: use } = splitUsageText(cookie.usage, '획득', '사용');
-                    
-                    html += `
+                    section += `
                         <div style="flex: 1 1 30%;">
                             <div class="column-title">🍪 우리 학급 쿠키 획득 및 사용</div>
-                            
                             <div class="usage-content-block" style="border-bottom: 1px dashed #ccc; padding-bottom: 10px; margin-bottom: 10px; line-height: 1.4;">
                                 <p style="font-weight: bold; color: #2ecc71; margin-bottom: 5px; font-size: 1em;">획득</p>
                                 <p style="white-space: pre-wrap; font-size: 0.9em;">${acquisition}</p>
                             </div>
-                            
                             <div class="usage-content-block" style="border-bottom: none; margin-bottom: 0; padding-bottom: 0; line-height: 1.4;">
                                 <p style="font-weight: bold; color: #e74c3c; margin-bottom: 5px; font-size: 1em;">사용</p>
                                 <p style="white-space: pre-wrap; font-size: 0.9em;">${use}</p>
@@ -825,9 +1089,8 @@
                     `;
                 }
 
-                // 쿠키 자산 현황 (원 그래프 복구)
                 if (cookie.asset) {
-                    html += `
+                    section += `
                         <div style="flex: 1 1 30%;">
                             <div class="column-title">💰 쿠키 자산 현황</div>
                             <div class="center-asset-content">
@@ -842,16 +1105,15 @@
                                 <div class="cookie-asset-info">
                                     <div class="cookie-asset-item"><span>총 획득 (수입)</span> <span>${totalCookieIncome}개</span></div>
                                     <div class="cookie-asset-item"><span>총 사용 (지출)</span> <span>${totalCookieUsed}개</span></div>
-                                    <div class="cookie-asset-item"><span>남은 쿠키 (잔여)</span> <span>${totalCookieIncome - totalCookieUsed}개</span></div>
+                                    <div class="cookie-asset-item"><span>남은 쿠키 (잔여)</span> <span>${cookieBalance}개</span></div>
                                 </div>
                             </div>
                         </div>
                     `;
                 }
 
-                // 나의 쿠키 활동 돌아보기 (학생 입력칸)
                 if (cookie.review) {
-                    html += `
+                    section += `
                         <div style="flex: 1 1 40%;">
                             <div class="column-title">🍪 나의 쿠키 활동 돌아보기</div>
                             <div class="student-review-area">
@@ -863,33 +1125,30 @@
                         </div>
                     `;
                 }
-                
-                html += '</div></div>';
-            }
 
-            // ==========================================================
-            // 초코칩 활동 섹션 (Chip)
-            // ==========================================================
-            if (chip) {
-                html += `
+                section += '</div></div>';
+                return section;
+            };
+
+            const createChipSection = () => {
+                if (!chip) return '';
+
+                const { primary: acquisition, secondary: use } = splitUsageText(chip.usage, '획득', '사용');
+
+                let section = `
                     <div class="asset-section-container">
                         <h2 class="activity-title">🍫 ${student} 학생의 초코칩 활동</h2>
+                        <div class="dynamic-column-layout">
                 `;
-                
-                html += '<div class="dynamic-column-layout">';
-                
-                // 1. 우리 학급 초코칩 획득 및 사용 항목 양분 구성
+
                 if (chip.usage) {
-                    const { primary: acquisition, secondary: use } = splitUsageText(chip.usage, '획득', '사용');
-                    html += `
+                    section += `
                         <div style="flex: 1 1 30%;">
                             <div class="column-title">🍫 우리 학급 초코칩 획득 및 사용</div>
-                            
                             <div class="usage-content-block" style="border-bottom: 1px dashed #ccc; padding-bottom: 10px; margin-bottom: 10px; line-height: 1.4;">
                                 <p style="font-weight: bold; color: #2ecc71; margin-bottom: 5px; font-size: 1em;">획득</p>
                                 <p style="white-space: pre-wrap; font-size: 0.9em;">${acquisition}</p>
                             </div>
-                            
                             <div class="usage-content-block" style="border-bottom: none; margin-bottom: 0; padding-bottom: 0; line-height: 1.4;">
                                 <p style="font-weight: bold; color: #e74c3c; margin-bottom: 5px; font-size: 1em;">사용</p>
                                 <p style="white-space: pre-wrap; font-size: 0.9em;">${use}</p>
@@ -898,9 +1157,8 @@
                     `;
                 }
 
-                // 초코칩 자산 현황
                 if (chip.asset) {
-                    html += `
+                    section += `
                         <div style="flex: 1 1 30%;">
                             <div class="column-title">🍫 초코칩 자산 현황 (잔액)</div>
                             <div class="center-asset-content">
@@ -910,9 +1168,8 @@
                     `;
                 }
 
-                // 나의 초코칩 활동 돌아보기 (학생 입력칸)
                 if (chip.review) {
-                    html += `
+                    section += `
                         <div style="flex: 1 1 40%;">
                             <div class="column-title">🍫 나의 초코칩 활동 돌아보기</div>
                             <div class="student-review-area">
@@ -924,33 +1181,38 @@
                         </div>
                     `;
                 }
-                
-                html += '</div></div>';
-            }
 
-            // ==========================================================
-            // 뱃지 활동 섹션 (Badge)
-            // ==========================================================
-            if (badge) {
-                html += `
+                section += '</div></div>';
+                return section;
+            };
+
+            const createBadgeSection = () => {
+                if (!badge) return '';
+
+                const { primary: introduction, secondary: acquisition } = splitUsageText(badge.usage, '소개', '획득');
+                const badgesHtml = allAcquiredBadges.length > 0
+                    ? allAcquiredBadges.map(b => `
+                        <div class="badge-item-display acquired">
+                            <img src="${b.imgUrl}" alt="${b.title} 뱃지">
+                            <span>${b.title}</span>
+                        </div>
+                    `).join('')
+                    : '<p style="text-align: center; font-size: 0.9em; color: #777; width: 100%; margin: 10px 0;">아직 획득한 뱃지가 없습니다.</p>';
+
+                let section = `
                     <div class="asset-section-container">
                         <h2 class="activity-title">🏅 ${student} 학생의 뱃지 활동</h2>
+                        <div class="dynamic-column-layout">
                 `;
-                
-                html += '<div class="dynamic-column-layout">';
-                
-                // 1. 뱃지 소개 및 획득 양분 구성
+
                 if (badge.usage) {
-                    const { primary: introduction, secondary: acquisition } = splitUsageText(badge.usage, '소개', '획득');
-                    html += `
+                    section += `
                         <div style="flex: 1 1 30%;">
                             <div class="column-title">🏅 우리 학급 뱃지 소개 및 획득</div>
-                            
                             <div class="usage-content-block" style="border-bottom: 1px dashed #ccc; padding-bottom: 10px; margin-bottom: 10px; line-height: 1.4;">
                                 <p style="font-weight: bold; color: #1e88e5; margin-bottom: 5px; font-size: 1em;">소개</p>
                                 <p style="white-space: pre-wrap; font-size: 0.9em;">${introduction}</p>
                             </div>
-                            
                             <div class="usage-content-block" style="border-bottom: none; margin-bottom: 0; padding-bottom: 0; line-height: 1.4;">
                                 <p style="font-weight: bold; color: #2ecc71; margin-bottom: 5px; font-size: 1em;">획득</p>
                                 <p style="white-space: pre-wrap; font-size: 0.9em;">${acquisition}</p>
@@ -959,38 +1221,12 @@
                     `;
                 }
 
-                // 뱃지 획득 현황 (포트폴리오 복구)
                 if (badge.status) {
-                    html += `
+                    section += `
                         <div style="flex: 1 1 30%;">
                             <div class="column-title">🏅 학생의 뱃지 획득 현황</div>
-                            <div class="all-badges-container">
-                    `;
-                    
-                    if (allAcquiredBadges.length > 0) {
-                        allAcquiredBadges.forEach(b => {
-                            html += `
-                                <div class="badge-item-display acquired">
-                                    <img src="${b.imgUrl}" alt="${b.title} 뱃지">
-                                    <span>${b.title}</span>
-                                </div>
-                            `;
-                        });
-                    } else {
-                         html += `
-                            <p style="text-align: center; font-size: 0.9em; color: #777; width: 100%; margin: 10px 0;">아직 획득한 뱃지가 없습니다.</p>
-                        `;
-                    }
-
-                    html += `
-                            </div>
+                            <div class="all-badges-container">${badgesHtml}</div>
                         </div>
-                    `;
-                }
-
-                // 나의 뱃지 활동 돌아보기 
-                if (badge.status) {
-                    html += `
                         <div style="flex: 1 1 40%;">
                             <div class="column-title">🏅 나의 뱃지 활동 돌아보기</div>
                             <div class="student-review-area">
@@ -1002,58 +1238,60 @@
                         </div>
                     `;
                 }
-                
-                html += '</div>'; // dynamic-column-layout 종료
-                
-                html += '</div>';
-            }
-            
-            // ==========================================================
-            // 총평 섹션 (Summary)
-            // ==========================================================
-            if (summary) {
-                html += `<div class="summary-section">
-                    <h2>📊 총평</h2>`;
 
-                // 활동 요약
+                section += '</div></div>';
+                return section;
+            };
+
+            const createSummarySection = () => {
+                if (!summary) return '';
+
+                let section = '<div class="summary-section"><h2>📊 총평</h2>';
+
                 if (summary.summary) {
-                    html += `
+                    section += `
                         <h3>1. 활동 요약</h3>
                         <div class="auto-summary-area">${report.analysis.autoSummary}</div>
                     `;
                 }
-                
-                // 칭찬과 다짐
+
                 if (summary.praiseAndResolve) {
-                    html += `
+                    section += `
                         <h3>2. 칭찬과 다짐</h3>
                         <textarea class="summary-textarea" rows="4" placeholder="학생 입력: 스스로 잘한 부분을 칭찬하고 앞으로의 다짐을 적어봅시다."></textarea>
                     `;
                 }
-                
-                // 격려의 한 마디
+
                 if (summary.parentComment) {
-                    html += `
+                    section += `
                         <h3>3. 격려의 한 마디</h3>
                         <textarea class="summary-textarea" rows="4" placeholder="학부모 입력 : 자녀를 위한 격려의 한 마디를 남겨주세요."></textarea>
                     `;
                 }
-                
-                html += `</div>`;
-            }
 
-            // 조회 일시를 꼬리말 부분에 생성
-            html += `
-                <div class="report-footer">
-                    조회 일시: ${reportDate}
+                section += '</div>';
+                return section;
+            };
+
+            const createFooter = () => `
+                <div class="report-footer">조회 일시: ${reportDate}</div>
                 </div>
             `;
 
+            return (
+                createReportHeader() +
+                createCookieSection() +
+                createChipSection() +
+                createBadgeSection() +
+                createSummarySection() +
+                createFooter()
+            );
+        };
 
-            html += `</div>`;
-            return html;
-        }
-
+        // ============================================================
+        // ★ DOM 로드 완료 시 초기화
+        // ============================================================
+        document.addEventListener('DOMContentLoaded', initializeDOM);
     </script>
 </body>
 </html>
