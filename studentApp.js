@@ -35,10 +35,13 @@ class StudentApp {
         const params = new URLSearchParams(window.location.search);
         const apiKey = params.get('apiKey');
         const studentCode = params.get('studentCode');
+        const counselId = params.get('counselId');
 
         if (apiKey && studentCode) {
             // API Key와 학생 코드가 URL에 있으면 자동으로 조회
             this.apiKey = apiKey;
+            this.counselId = counselId; // 상담 ID 저장
+
             const codeInput = document.getElementById('student-code-input');
             if (codeInput) {
                 codeInput.value = studentCode;
@@ -47,21 +50,22 @@ class StudentApp {
             if (inputArea) {
                 inputArea.style.display = 'none';
             }
-            
+
             // 자동으로 보고서 생성
-            this.handleStudentQuery(apiKey);
+            this.handleStudentQuery(apiKey, counselId);
         }
     }
 
     /**
      * 학생 보고서 조회 처리
      */
-    async handleStudentQuery(providedApiKey = null) {
+    async handleStudentQuery(providedApiKey = null, providedCounselId = null) {
         const studentCodeInput = document.getElementById('student-code-input');
         if (!studentCodeInput) return;
-        
+
         const studentCode = studentCodeInput.value.trim();
         const apiKey = providedApiKey || (this.apiKey ? this.apiKey : CONFIG.STUDENT_API_KEY);
+        const counselId = providedCounselId || this.counselId || null;
 
         // 입력값 검증
         if (!studentCode) {
@@ -81,7 +85,8 @@ class StudentApp {
         try {
             const reportData = await StudentReportService.fetchStudentReport(
                 studentCode,
-                apiKey
+                apiKey,
+                counselId
             );
 
             if (reportData.error) {

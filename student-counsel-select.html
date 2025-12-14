@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>상담 선택 - 학생용</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body class="auth-page">
+    <div class="auth-container">
+        <div class="auth-logo">🎓 성장 기록 보고서</div>
+        <div class="auth-subtitle">상담 선택</div>
+
+        <div id="student-info" class="student-info-box">
+            <p><strong>학생 코드:</strong> <span id="display-student-code"></span></p>
+        </div>
+
+        <div class="counsel-select-container">
+            <h3>📚 조회할 상담을 선택하세요</h3>
+            <div id="counsel-select-list" class="counsel-select-list">
+                <p class="loading-message">상담 목록을 불러오는 중...</p>
+            </div>
+        </div>
+
+        <button class="btn-back" onclick="redirectToAuth()">← 로그인 화면으로</button>
+    </div>
+
+    <!-- 히든 필드 -->
+    <input type="hidden" id="hidden-api-key">
+    <input type="hidden" id="hidden-student-code">
+
+    <script src="auth.js"></script>
+    <script src="CounselStorageService.js"></script>
+    <script src="studentCounselSelect.js"></script>
+</body>
+</html>

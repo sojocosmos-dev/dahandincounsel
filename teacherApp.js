@@ -10,6 +10,7 @@ class TeacherApp {
         this.stateManager = new StateManager(CONFIG.DEFAULT_MODE);
         this.uiController = new UIController(this.stateManager);
         this.reportService = new ReportService(this.stateManager, this.uiController);
+        this.counselManager = new CounselManager(this.uiController);
         this.setupEventListeners();
         this.loadApiKeyFromUrl();
     }
@@ -17,7 +18,7 @@ class TeacherApp {
     /**
      * URL 파라미터에서 API Key를 불러와 자동 입력
      */
-    loadApiKeyFromUrl() {
+    async loadApiKeyFromUrl() {
         const params = new URLSearchParams(window.location.search);
         const apiKey = params.get('apiKey');
 
@@ -26,6 +27,10 @@ class TeacherApp {
             if (apiKeyInput) {
                 apiKeyInput.value = apiKey;
             }
+
+            // CounselManager에 API Key 설정 및 상담 목록 로드
+            this.counselManager.setApiKey(apiKey);
+            await this.counselManager.loadAndDisplayCounselList();
         }
     }
 
@@ -78,4 +83,11 @@ document.addEventListener('DOMContentLoaded', () => {
     window.toggleConfigGroup = (groupName, isAssetGroup = true) =>
         app.uiController.toggleConfigGroup(groupName, isAssetGroup);
     window.shareUrl = () => app.reportService.shareUrl();
+
+    // 상담 관리 전역 함수
+    window.handleCreateCounsel = () => app.counselManager.createNewCounsel();
+    window.handleSelectCounsel = (counselId) => app.counselManager.selectCounsel(counselId);
+    window.handleSaveCounsel = () => app.counselManager.saveCurrentCounsel();
+    window.handleDeleteCurrentCounsel = () => app.counselManager.deleteCurrentCounsel();
+    window.handleBackToList = () => app.counselManager.backToList();
 });

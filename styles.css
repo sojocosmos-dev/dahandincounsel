@@ -1151,3 +1151,297 @@ h1 {
         opacity: 0;
     }
 }
+
+/* ===== 상담 관리 페이지 레이아웃 ===== */
+body {
+    max-width: 1200px;
+}
+
+/* 상담 목록 뷰 (전체 화면) */
+.counsel-list-view {
+    background: white;
+    border-radius: 8px;
+    padding: 30px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    margin-top: 20px;
+}
+
+.counsel-list-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 30px;
+    padding-bottom: 20px;
+    border-bottom: 2px solid #e0e0e0;
+}
+
+.counsel-list-header h2 {
+    margin: 0;
+    color: #333;
+}
+
+.btn-create-counsel {
+    padding: 14px 28px;
+    background-color: #2ecc71;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    font-size: 1.1em;
+    font-weight: bold;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 2px 6px rgba(46, 204, 113, 0.3);
+}
+
+.btn-create-counsel:hover {
+    background-color: #27ae60;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(46, 204, 113, 0.4);
+}
+
+/* 상담 입력 폼 뷰 */
+.counsel-form-view {
+    background: white;
+    border-radius: 8px;
+    padding: 30px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    margin-top: 20px;
+}
+
+.counsel-form-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 25px;
+    padding-bottom: 15px;
+    border-bottom: 2px solid #e0e0e0;
+}
+
+.btn-back-to-list {
+    padding: 10px 20px;
+    background-color: #95a5a6;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    font-size: 1em;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.btn-back-to-list:hover {
+    background-color: #7f8c8d;
+}
+
+.current-counsel-info {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    padding: 10px 20px;
+    background-color: #fff3e0;
+    border-radius: 6px;
+    border: 2px solid #ff9800;
+}
+
+.current-counsel-info span {
+    font-weight: bold;
+    font-size: 1.1em;
+    color: #e65100;
+}
+
+.btn-delete-counsel {
+    padding: 8px 16px;
+    background-color: #e74c3c;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    font-size: 0.95em;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.btn-delete-counsel:hover {
+    background-color: #c0392b;
+}
+
+.counsel-list-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+    gap: 20px;
+}
+
+.empty-counsel-message {
+    text-align: center;
+    color: #999;
+    padding: 60px 20px;
+    line-height: 1.8;
+    font-size: 1.1em;
+    grid-column: 1 / -1;
+}
+
+.counsel-card {
+    padding: 25px;
+    border: 2px solid #e0e0e0;
+    border-radius: 12px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    background-color: white;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+}
+
+.counsel-card:hover {
+    border-color: #2ecc71;
+    background-color: #f1f8f4;
+    transform: translateY(-4px);
+    box-shadow: 0 6px 16px rgba(46, 204, 113, 0.25);
+}
+
+.counsel-card.active {
+    border-color: #2ecc71;
+    background-color: #e8f5e9;
+    box-shadow: 0 6px 16px rgba(46, 204, 113, 0.3);
+}
+
+.counsel-card-title {
+    font-weight: bold;
+    font-size: 1.3em;
+    color: #333;
+    margin-bottom: 15px;
+    line-height: 1.4;
+}
+
+.counsel-card.active .counsel-card-title {
+    color: #27ae60;
+}
+
+.counsel-card-meta {
+    font-size: 0.9em;
+    color: #777;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.counsel-card-date {
+    color: #999;
+}
+
+.counsel-card-updated {
+    color: #666;
+    font-style: italic;
+}
+
+/* 반응형 디자인 */
+@media (max-width: 768px) {
+    .counsel-list-container {
+        grid-template-columns: 1fr;
+    }
+}
+
+/* ===== 학생용 상담 선택 페이지 ===== */
+.student-info-box {
+    background-color: #e8f5e9;
+    border: 2px solid #66bb6a;
+    border-radius: 8px;
+    padding: 15px;
+    margin: 20px 0;
+    text-align: center;
+}
+
+.student-info-box strong {
+    color: #2e7d32;
+}
+
+.counsel-select-container {
+    margin: 30px 0;
+}
+
+.counsel-select-container h3 {
+    color: #333;
+    margin-bottom: 20px;
+    padding-bottom: 10px;
+    border-bottom: 2px solid #e0e0e0;
+}
+
+.counsel-select-list {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.counsel-select-card {
+    background: white;
+    border: 2px solid #e0e0e0;
+    border-radius: 8px;
+    padding: 20px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    position: relative;
+}
+
+.counsel-select-card:hover {
+    border-color: #2ecc71;
+    background-color: #f1f8f4;
+    transform: translateX(5px);
+    box-shadow: 0 4px 12px rgba(46, 204, 113, 0.2);
+}
+
+.counsel-select-card-title {
+    font-weight: bold;
+    font-size: 1.2em;
+    color: #333;
+    margin-bottom: 10px;
+}
+
+.counsel-select-card-meta {
+    font-size: 0.9em;
+    color: #777;
+}
+
+.counsel-select-card-date,
+.counsel-select-card-updated {
+    margin: 4px 0;
+}
+
+.counsel-select-card-arrow {
+    font-size: 2em;
+    color: #2ecc71;
+    font-weight: bold;
+    transition: transform 0.3s ease;
+}
+
+.counsel-select-card:hover .counsel-select-card-arrow {
+    transform: translateX(10px);
+}
+
+.loading-message,
+.empty-message,
+.error-message {
+    text-align: center;
+    padding: 40px 20px;
+    color: #999;
+    line-height: 1.6;
+}
+
+.error-message {
+    color: #e74c3c;
+}
+
+.btn-back {
+    margin-top: 30px;
+    padding: 12px 24px;
+    background-color: #95a5a6;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    font-size: 1em;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    width: 100%;
+}
+
+.btn-back:hover {
+    background-color: #7f8c8d;
+}

@@ -6,14 +6,31 @@
 class StudentReportService {
     /**
      * 학생 개인 보고서를 조회합니다
+     * @param {string} studentCode - 학생 코드
+     * @param {string} apiKey - API Key
+     * @param {string} counselId - 상담 ID (선택)
      */
-    static async fetchStudentReport(studentCode, apiKey) {
+    static async fetchStudentReport(studentCode, apiKey, counselId = null) {
         try {
-            // 교사가 저장한 설정을 불러옴 (없으면 기본값 사용)
-            const savedConfig = await ConfigStorageService.loadConfig(apiKey);
+            let config = null;
 
-            const config = savedConfig || {
-                generalUsage: "학생 개인 성장 기록 조회",
+            // counselId가 있으면 해당 상담의 설정을 불러옴
+            if (counselId) {
+                const counsel = await CounselStorageService.getCounselById(counselId, apiKey);
+                if (counsel && counsel.config) {
+                    config = counsel.config;
+                } else {
+                    return { error: "선택한 상담을 찾을 수 없습니다." };
+                }
+            } else {
+                // 하위 호환성: counselId가 없으면 기존 방식 사용 (ConfigStorageService)
+                config = await ConfigStorageService.loadConfig(apiKey);
+            }
+
+            // config가 없으면 기본값 사용
+            if (!config) {
+                config = {
+                    generalUsage: "학생 개인 성장 기록 조회",
                 cookie: {
                     usage: "다했니 플랫폼에서 제공하는 쿠키 시스템을 통해 학생의 활동을 추적했습니다.",
                     asset: true,
@@ -35,7 +52,8 @@ class StudentReportService {
                     praiseAndResolve: true,
                     parentComment: true,
                 }
-            };
+                };
+            }
 
             const stateManager = new StateManager();
             stateManager.setMode('single');

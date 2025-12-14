@@ -49,10 +49,10 @@ function submitStudentLogin() {
         return;
     }
 
-    // student-report.html로 이동하며 파라미터 전달
+    // student-counsel-select.html로 이동하여 상담 선택
     const params = new URLSearchParams({
         apiKey: apiKey,
         studentCode: studentCode
     });
-    window.location.href = `student-report.html?${params.toString()}`;
+    window.location.href = `student-counsel-select.html?${params.toString()}`;
 }
