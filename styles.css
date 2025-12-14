@@ -1,0 +1,487 @@
+/* ===== 색상 변수 ===== */
+:root {
+    --color-primary: #2ecc71;
+    --color-primary-dark: #27ae60;
+    --color-secondary: #3498db;
+    --color-secondary-dark: #2980b9;
+    --color-bg-light: #f8f8f8;
+    --color-bg-white: #ffffff;
+    --color-border: #ddd;
+    --color-border-light: #e0e0e0;
+    --color-text-dark: #333;
+    --color-text-muted: #777;
+    --color-danger: #e74c3c;
+    --color-warning: #ffc107;
+    --color-info: #1e88e5;
+    --color-success: #2ecc71;
+}
+
+/* ===== 기본 스타일 ===== */
+body {
+    font-family: 'Malgun Gothic', 'Arial', sans-serif;
+    max-width: 1000px;
+    margin: 20px auto;
+    padding: 0 20px;
+    background-color: var(--color-bg-light);
+}
+
+input[type="text"],
+textarea,
+input[type="file"] {
+    padding: 10px;
+    margin: 8px 0;
+    width: 100%;
+    box-sizing: border-box;
+    font-size: 16px;
+    border-radius: 4px;
+    border: 1px solid var(--color-border);
+    resize: vertical;
+}
+
+/* ===== 버튼 스타일 ===== */
+.button-group button,
+.print-download-group button {
+    padding: 12px 20px;
+    margin: 5px;
+    color: white;
+    border: none;
+    cursor: pointer;
+    border-radius: 6px;
+    transition: background-color 0.3s ease;
+    font-weight: 600;
+}
+
+.button-group button {
+    background-color: var(--color-primary);
+}
+
+.button-group button:hover {
+    background-color: var(--color-primary-dark);
+}
+
+.print-download-group button {
+    background-color: var(--color-secondary);
+    padding: 10px 18px;
+    font-size: 1em;
+}
+
+.print-download-group button:hover {
+    background-color: var(--color-secondary-dark);
+}
+
+.button-group,
+.print-download-group {
+    text-align: center;
+    margin-bottom: 20px;
+    margin-top: 20px;
+}
+
+/* ===== 입력 영역 스타일 ===== */
+#input-area {
+    background-color: var(--color-bg-white);
+    padding: 15px;
+    border-radius: 8px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+}
+
+.config-section {
+    margin-top: 15px;
+    padding: 10px;
+    border: 1px solid var(--color-border-light);
+    border-radius: 6px;
+    background-color: #fefefe;
+}
+
+.output-option-group {
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 10px;
+    padding: 8px;
+    border: 1px solid #b3e5fc;
+    border-radius: 4px;
+    background-color: #e1f5fe;
+}
+
+/* ===== 탭 스타일 ===== */
+.mode-selection {
+    display: flex;
+    margin-bottom: 15px;
+    border-bottom: 2px solid var(--color-border);
+}
+
+.mode-tab {
+    flex: 1;
+    padding: 10px 0;
+    text-align: center;
+    cursor: pointer;
+    border-bottom: 2px solid transparent;
+    font-weight: bold;
+    color: var(--color-text-muted);
+    transition: all 0.3s ease;
+}
+
+.mode-tab.active {
+    border-bottom: 2px solid var(--color-primary);
+    color: var(--color-primary);
+    background-color: #e8f5e9;
+}
+
+/* ===== 보고서 스타일 ===== */
+#report-area {
+    background-color: var(--color-bg-white);
+    border-radius: 12px;
+    padding: 40px;
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+    margin-top: 30px;
+}
+
+h1 {
+    color: #4a4a4a;
+    text-align: center;
+    font-size: 2.5em;
+    border-bottom: 3px solid #ff9800;
+    padding-bottom: 15px;
+    margin-bottom: 10px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    white-space: nowrap;
+}
+
+/* ===== 섹션 스타일 ===== */
+.usage-section {
+    background-color: #fff8e1;
+    padding: 10px 15px;
+    border-radius: 8px;
+    margin-bottom: 15px;
+    border-left: 5px solid var(--color-warning);
+}
+
+.summary-section {
+    background-color: #e0f7fa;
+    border: 2px solid #00bcd4;
+    padding: 15px;
+    border-radius: 8px;
+    margin-top: 20px;
+}
+
+.summary-section h2 {
+    color: #00838f;
+    font-size: 1.5em;
+    margin-top: 0;
+    margin-bottom: 10px;
+}
+
+.summary-section h3 {
+    color: #00bcd4;
+    font-size: 1.2em;
+    margin-top: 10px;
+    margin-bottom: 8px;
+}
+
+.summary-textarea {
+    width: 100%;
+    min-height: 80px;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    resize: vertical;
+    font-size: 1em;
+    box-sizing: border-box;
+}
+
+/* ===== 자산 섹션 스타일 ===== */
+.asset-section-container {
+    margin-bottom: 20px;
+    padding: 10px;
+    border: 1px solid #f0f0f0;
+    border-radius: 8px;
+}
+
+.activity-title {
+    font-size: 1.4em;
+    font-weight: bold;
+    color: var(--color-info);
+    margin-top: 25px;
+    margin-bottom: 15px;
+    border-bottom: 2px solid #bbdefb;
+    padding-bottom: 5px;
+}
+
+/* ===== 다중 칼럼 레이아웃 ===== */
+.dynamic-column-layout {
+    display: flex;
+    gap: 15px;
+    margin-top: 10px;
+}
+
+.dynamic-column-layout > div {
+    display: flex;
+    flex-direction: column;
+    padding: 8px;
+    border: 1px dashed var(--color-border-light);
+    border-radius: 4px;
+    min-height: 220px;
+    box-sizing: border-box;
+}
+
+.column-title {
+    font-weight: bold;
+    color: var(--color-text-dark);
+    margin-bottom: 10px;
+    border-bottom: 1px solid #f0f0f0;
+    padding-bottom: 5px;
+}
+
+/* ===== 쿠키 자산 스타일 ===== */
+.center-asset-content {
+    text-align: center;
+}
+
+.cookie-asset-info {
+    margin-top: 10px;
+    font-size: 0.9em;
+    text-align: left;
+    padding: 0 15px;
+}
+
+.cookie-asset-info strong {
+    display: block;
+    margin-bottom: 5px;
+    font-size: 1em;
+}
+
+.cookie-asset-item {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 5px;
+    padding: 3px 0;
+    border-bottom: 1px dotted #eee;
+}
+
+/* ===== 학생 돌아보기 스타일 ===== */
+.student-review-area {
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+.student-review-area textarea {
+    flex-grow: 1;
+    min-height: 0;
+    font-size: 0.95em;
+    padding: 8px;
+    margin: 0 0 10px 0;
+    box-sizing: border-box;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+}
+
+.student-review-area textarea:last-child {
+    margin-bottom: 0;
+}
+
+/* ===== 그래프 스타일 ===== */
+.graph-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: 10px;
+}
+
+.pie-chart {
+    width: 120px;
+    height: 120px;
+    border-radius: 50%;
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+}
+
+/* ===== 뱃지 포트폴리오 스타일 ===== */
+.all-badges-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    padding: 10px 0;
+    justify-content: center;
+}
+
+.badge-item-display {
+    width: 80px;
+    text-align: center;
+    font-size: 0.85em;
+    line-height: 1.2;
+}
+
+.badge-item-display span {
+    display: block;
+    white-space: normal;
+    overflow-wrap: break-word;
+    word-wrap: break-word;
+}
+
+.badge-item-display img {
+    width: 50px;
+    height: 50px;
+    margin-bottom: 3px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 3px solid var(--color-primary);
+    box-shadow: 0 0 5px rgba(46, 204, 113, 0.5);
+}
+
+/* ===== 하단 스타일 ===== */
+.report-footer {
+    text-align: right;
+    margin-top: 30px;
+    padding-top: 8px;
+    border-top: 1px solid var(--color-border);
+    color: var(--color-text-muted);
+    font-size: 0.85em;
+}
+
+
+/* ===== 인쇄 최적화 ===== */
+@media print {
+    body {
+        padding: 0;
+        margin: 0;
+        font-size: 8.2pt;
+    }
+
+    body > h1:first-of-type {
+        display: none;
+    }
+
+    #input-area,
+    .button-group,
+    .print-download-group {
+        display: none;
+    }
+
+    #report-area {
+        box-shadow: none;
+        padding: 2mm 4mm;
+        margin: 0;
+        border-radius: 0;
+        background-color: white;
+    }
+
+    #report-area h1 {
+        font-size: 1.6em;
+        padding-bottom: 6px;
+        margin-bottom: 3px;
+    }
+
+    .usage-section {
+        margin-bottom: 3px;
+        padding: 4px;
+        page-break-inside: avoid;
+    }
+
+    .asset-section-container,
+    .summary-section {
+        margin-bottom: 2px;
+        padding: 4px;
+        page-break-inside: avoid;
+    }
+
+    .dynamic-column-layout {
+        gap: 6px;
+        margin-top: 5px;
+    }
+
+    .dynamic-column-layout > div {
+        min-height: 110px;
+        padding: 3px;
+        font-size: 0.85em;
+    }
+
+    .column-title {
+        font-size: 0.9em;
+        margin-bottom: 5px;
+    }
+
+    .activity-title {
+        margin-top: 10px;
+        margin-bottom: 8px;
+        font-size: 1.2em;
+    }
+
+    .summary-section {
+        padding: 8px;
+        margin-top: 10px;
+    }
+
+    .summary-section h3 {
+        margin-top: 8px;
+        margin-bottom: 3px;
+        font-size: 1.05em;
+    }
+
+    .summary-textarea {
+        min-height: 40px;
+        font-size: 0.9em;
+    }
+
+    .auto-summary-area {
+        padding: 8px;
+        font-size: 0.9em;
+    }
+
+    .student-review-area label {
+        margin-top: 5px;
+        margin-bottom: 3px;
+        font-size: 0.85em;
+    }
+
+    .student-review-area textarea {
+        min-height: 35px;
+        padding: 4px;
+        font-size: 0.8em;
+        margin-bottom: 5px !important;
+    }
+
+    .student-review-area textarea:last-child {
+        margin-bottom: 0 !important;
+    }
+
+    .report-footer {
+        margin-top: 10px;
+        padding-top: 5px;
+        font-size: 8pt;
+    }
+
+    .badge-item-display {
+        width: 60px;
+        font-size: 7pt;
+    }
+
+    .badge-item-display img {
+        width: 40px;
+        height: 40px;
+    }
+
+    .pie-chart {
+        width: 70px;
+        height: 70px;
+        -webkit-print-color-adjust: exact;
+        print-color-adjust: exact;
+    }
+
+    .pie-chart > div {
+        font-size: 0.9em !important;
+    }
+
+    .cookie-asset-info {
+        padding: 0 5px;
+    }
+
+    .cookie-asset-item {
+        font-size: 0.8em;
+    }
+}

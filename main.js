@@ -1,0 +1,78 @@
+/**
+ * main.js
+ * 애플리케이션 진입점 및 초기화
+ */
+
+import { StateManager } from './StateManager.js';
+import { UIController } from './UIController.js';
+import { ReportService } from './ReportService.js';
+import { CONFIG } from './config.js';
+
+class App {
+    constructor() {
+        this.stateManager = new StateManager(CONFIG.DEFAULT_MODE);
+        this.uiController = new UIController(this.stateManager);
+        this.reportService = new ReportService(this.stateManager, this.uiController);
+        this.setupEventListeners();
+    }
+
+    /**
+     * 이벤트 리스너를 설정합니다
+     */
+    setupEventListeners() {
+        // 모드 탭 이벤트
+        document.addEventListener('click', (e) => {
+            if (e.target.classList.contains('mode-tab')) {
+                const mode = e.target.id === 'tab-single' ? 'single' : 'batch';
+                this.uiController.setMode(mode);
+            }
+        });
+
+        // 보고서 생성 버튼
+        document.getElementById('generate-report-btn').addEventListener('click', () => {
+            this.reportService.handleReport();
+        });
+
+        // 설정 그룹 토글
+        const toggleGroups = ['cookie', 'chip', 'badge', 'summary'];
+        toggleGroups.forEach(group => {
+            const checkboxId = `check-output-${group}`;
+            const checkbox = document.getElementById(checkboxId);
+            if (checkbox) {
+                checkbox.addEventListener('change', () => {
+                    const isAssetGroup = group !== 'summary';
+                    this.uiController.toggleConfigGroup(group, isAssetGroup);
+                });
+            }
+        });
+
+        // 인쇄/PDF 저장
+        document.querySelector('.print-download-group button:nth-child(1)')?.addEventListener('click', () => {
+            window.print();
+        });
+
+        // URL 공유
+        document.querySelector('.print-download-group button:nth-child(2)')?.addEventListener('click', () => {
+            this.reportService.shareUrl();
+        });
+    }
+
+    /**
+     * 애플리케이션을 초기화합니다
+     */
+    initialize() {
+        this.uiController.initializeDOM();
+    }
+}
+
+// DOM이 로드되면 앱을 초기화합니다
+document.addEventListener('DOMContentLoaded', () => {
+    const app = new App();
+    app.initialize();
+
+    // 전역 함수로 노출 (기존 HTML inline handlers와 호환성)
+    window.setMode = (mode) => app.uiController.setMode(mode);
+    window.handleReport = () => app.reportService.handleReport();
+    window.toggleConfigGroup = (groupName, isAssetGroup = true) => app.uiController.toggleConfigGroup(groupName, isAssetGroup);
+    window.shareUrl = () => app.reportService.shareUrl();
+});
