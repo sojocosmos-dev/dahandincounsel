@@ -11,20 +11,31 @@ class TeacherApp {
         this.uiController = new UIController(this.stateManager);
         this.reportService = new ReportService(this.stateManager, this.uiController);
         this.setupEventListeners();
+        this.loadApiKeyFromUrl();
+    }
+
+    /**
+     * URL 파라미터에서 API Key를 불러와 자동 입력
+     */
+    loadApiKeyFromUrl() {
+        const params = new URLSearchParams(window.location.search);
+        const apiKey = params.get('apiKey');
+
+        if (apiKey) {
+            const apiKeyInput = document.getElementById('api-key-input');
+            if (apiKeyInput) {
+                apiKeyInput.value = apiKey;
+            }
+        }
     }
 
     setupEventListeners() {
-        // 모드 탭 이벤트
+        // 모드 탭 이벤트 (교사용 페이지에서는 사용하지 않음)
         document.addEventListener('click', (e) => {
             if (e.target.classList.contains('mode-tab')) {
                 const mode = e.target.id === 'tab-single' ? 'single' : 'batch';
                 this.uiController.setMode(mode);
             }
-        });
-
-        // 보고서 생성 버튼
-        document.getElementById('generate-report-btn').addEventListener('click', () => {
-            this.reportService.handleReport();
         });
 
         // 설정 그룹 토글
@@ -63,7 +74,8 @@ document.addEventListener('DOMContentLoaded', () => {
     // 전역 함수 노출
     window.setMode = (mode) => app.uiController.setMode(mode);
     window.handleReport = () => app.reportService.handleReport();
-    window.toggleConfigGroup = (groupName, isAssetGroup = true) => 
+    window.handleSaveConfig = () => app.reportService.handleSaveConfigOnly();
+    window.toggleConfigGroup = (groupName, isAssetGroup = true) =>
         app.uiController.toggleConfigGroup(groupName, isAssetGroup);
     window.shareUrl = () => app.reportService.shareUrl();
 });

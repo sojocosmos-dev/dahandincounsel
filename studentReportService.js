@@ -10,7 +10,7 @@ class StudentReportService {
     static async fetchStudentReport(studentCode, apiKey) {
         try {
             // 교사가 저장한 설정을 불러옴 (없으면 기본값 사용)
-            const savedConfig = ReportService.loadTeacherConfig();
+            const savedConfig = await ConfigStorageService.loadConfig(apiKey);
 
             const config = savedConfig || {
                 generalUsage: "학생 개인 성장 기록 조회",

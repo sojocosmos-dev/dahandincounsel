@@ -1072,3 +1072,82 @@ h1 {
     color: #1565c0;
     border: 1px solid #42a5f5;
 }
+
+/* ===== 스낵바 스타일 ===== */
+.snackbar {
+    visibility: hidden;
+    min-width: 300px;
+    max-width: 600px;
+    background-color: #323232;
+    color: #fff;
+    text-align: left;
+    border-radius: 8px;
+    padding: 16px 24px;
+    position: fixed;
+    z-index: 10000;
+    left: 50%;
+    bottom: 30px;
+    transform: translateX(-50%);
+    font-size: 14px;
+    line-height: 1.6;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+}
+
+.snackbar.show {
+    visibility: visible;
+    animation: snackbar-fadein 0.3s, snackbar-fadeout 0.3s 4.7s;
+}
+
+.snackbar.success {
+    background-color: #2e7d32;
+}
+
+.snackbar.error {
+    background-color: #c62828;
+}
+
+.snackbar.info {
+    background-color: #1565c0;
+}
+
+.snackbar-title {
+    font-weight: bold;
+    margin-bottom: 8px;
+    font-size: 15px;
+}
+
+.snackbar-content {
+    font-size: 13px;
+    opacity: 0.95;
+}
+
+.snackbar-list {
+    margin: 8px 0 0 0;
+    padding-left: 20px;
+}
+
+.snackbar-list li {
+    margin: 4px 0;
+}
+
+@keyframes snackbar-fadein {
+    from {
+        bottom: 0;
+        opacity: 0;
+    }
+    to {
+        bottom: 30px;
+        opacity: 1;
+    }
+}
+
+@keyframes snackbar-fadeout {
+    from {
+        bottom: 30px;
+        opacity: 1;
+    }
+    to {
+        bottom: 0;
+        opacity: 0;
+    }
+}

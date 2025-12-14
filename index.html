@@ -16,8 +16,15 @@
             <div class="auth-option">
                 <div class="auth-option-icon">👨‍🏫</div>
                 <div class="auth-option-title">교사용</div>
-                <div class="auth-option-desc">API Key로 전체 학급 학생들의<br>성장 기록 보고서를 생성합니다</div>
-                <button class="btn-teacher" onclick="redirectToTeacherReport()">
+                <div class="auth-option-desc">API Key로 보고서 항목을 설정합니다</div>
+                <div class="form-group" style="margin-top: 15px; margin-bottom: 0;">
+                    <input
+                        type="password"
+                        id="teacher-api-key"
+                        placeholder="API Key를 입력하세요"
+                        required>
+                </div>
+                <button class="btn-teacher" onclick="submitTeacherLogin()">
                     교사 로그인
                 </button>
             </div>
@@ -26,42 +33,26 @@
                 <div class="auth-option-icon">👨‍🎓</div>
                 <div class="auth-option-title">학생용</div>
                 <div class="auth-option-desc">개인 코드로 자신의<br>성장 기록을 조회합니다</div>
-                <button class="btn-student" onclick="showStudentLoginForm()">
+                <div style="margin-top: 15px; text-align: left;">
+                    <div class="form-group" style="margin-bottom: 10px;">
+                        <input
+                            type="password"
+                            id="student-api-key"
+                            placeholder="API Key를 입력하세요"
+                            required>
+                    </div>
+                    <div class="form-group" style="margin-bottom: 0;">
+                        <input
+                            type="text"
+                            id="student-code"
+                            placeholder="개인 코드를 입력하세요 (예: A1001)"
+                            required>
+                    </div>
+                </div>
+                <button class="btn-student" onclick="submitStudentLogin()">
                     학생 로그인
                 </button>
             </div>
-        </div>
-
-        <!-- 학생 로그인 폼 -->
-        <div class="student-login-form" id="student-login-form" style="display: none;">
-            <div class="form-header">
-                <button class="back-button" onclick="hideStudentLoginForm()">← 뒤로</button>
-                <h2>학생 성장 기록 조회</h2>
-            </div>
-
-            <div class="form-group">
-                <label for="student-api-key">API Key</label>
-                <input 
-                    type="password" 
-                    id="student-api-key" 
-                    placeholder="API Key를 입력하세요"
-                    required>
-            </div>
-
-            <div class="form-group">
-                <label for="student-code">개인 코드</label>
-                <input 
-                    type="text" 
-                    id="student-code" 
-                    placeholder="개인 코드를 입력하세요 (예: A1001)"
-                    required>
-            </div>
-
-            <div class="form-message" id="form-message" style="display: none;"></div>
-
-            <button class="btn-student" onclick="submitStudentLogin()" style="width: 100%; margin-top: 20px;">
-                성장 기록 조회
-            </button>
         </div>
     </div>
 
