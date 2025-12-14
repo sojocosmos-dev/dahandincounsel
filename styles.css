@@ -529,15 +529,16 @@ h1 {
 .auth-subtitle {
     color: #666;
     font-size: 1.1em;
-    margin-bottom: 40px;
+    margin-bottom: 0;
     line-height: 1.5;
+    display: none;
 }
 
 .auth-selection {
     display: flex;
     flex-direction: column;
     gap: 20px;
-    margin-top: 30px;
+    margin-top: 0;
 }
 
 .auth-option {
@@ -560,6 +561,12 @@ h1 {
 .auth-option-icon {
     font-size: 3em;
     margin-bottom: 15px;
+}
+
+.auth-option-icon-img {
+    width: 3em;
+    height: 3em;
+    object-fit: contain;
 }
 
 .auth-option-title {
