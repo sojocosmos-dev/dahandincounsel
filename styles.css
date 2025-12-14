@@ -564,9 +564,10 @@ h1 {
 }
 
 .auth-option-icon-img {
-    width: 3em;
-    height: 3em;
+    width: 120px;
+    height: 120px;
     object-fit: contain;
+    display: block;
 }
 
 .auth-option-title {
