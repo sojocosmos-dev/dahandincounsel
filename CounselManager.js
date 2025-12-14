@@ -29,7 +29,7 @@ class CounselManager {
     /**
      * 상담 목록을 화면에 렌더링합니다
      */
-    renderCounselList() {
+    async renderCounselList() {
         const container = document.getElementById('counsel-list-container');
 
         if (this.counselList.length === 0) {
@@ -37,19 +37,33 @@ class CounselManager {
             return;
         }
 
-        container.innerHTML = this.counselList
-            .sort((a, b) => new Date(b.updatedAt) - new Date(a.updatedAt))
-            .map(counsel => this.createCounselCardHtml(counsel))
-            .join('');
+        const sortedCounsels = this.counselList.sort((a, b) => new Date(b.updatedAt) - new Date(a.updatedAt));
+        const htmlArray = await Promise.all(sortedCounsels.map(counsel => this.createCounselCardHtml(counsel)));
+        container.innerHTML = htmlArray.join('');
     }
 
     /**
      * 상담 카드 HTML을 생성합니다
      */
-    createCounselCardHtml(counsel) {
+    async createCounselCardHtml(counsel) {
         const isActive = counsel.id === this.currentCounselId;
         const createdDate = new Date(counsel.createdAt).toLocaleDateString('ko-KR');
         const updatedDate = new Date(counsel.updatedAt).toLocaleDateString('ko-KR');
+        
+        // 학생 제출 데이터 조회
+        const submissions = await StudentSubmissionService.getSubmissionsByCounselId(counsel.id);
+        
+        // 학생 제출 인원수만 표시하는 버튼
+        let submissionsHtml = '';
+        if (submissions.length > 0) {
+            submissionsHtml = `
+                <div class="submissions-section" style="margin-top: 12px; padding-top: 12px; border-top: 1px solid #e0e0e0;">
+                    <button onclick="handleViewSubmissionsForCounsel('${counsel.id}')" style="background: #2196f3; color: white; border: none; padding: 8px 12px; border-radius: 4px; cursor: pointer; font-size: 0.9em; font-weight: 500;">
+                        📋 학생 제출 (${submissions.length}명)
+                    </button>
+                </div>
+            `;
+        }
 
         return `
             <div class="counsel-card ${isActive ? 'active' : ''}" onclick="handleSelectCounsel('${counsel.id}')">
@@ -58,6 +72,7 @@ class CounselManager {
                     <div class="counsel-card-date">생성일: ${createdDate}</div>
                     <div class="counsel-card-updated">최종 수정: ${updatedDate}</div>
                 </div>
+                ${submissionsHtml}
             </div>
         `;
     }
@@ -134,6 +149,9 @@ class CounselManager {
         }
 
         this.currentCounselId = counselId;
+        // 선택된 상담 ID를 세션에 저장
+        sessionStorage.setItem('selectedCounselId', counselId);
+        
         this.loadCounselToForm(counsel);
         this.renderCounselList();
         this.updateCurrentCounselInfo(counsel.title);
@@ -218,6 +236,24 @@ class CounselManager {
             titleSpan.textContent = `편집 중: ${title}`;
         } else {
             infoDiv.style.display = 'none';
+        }
+    }
+
+    /**
+     * 학생 제출 조회 버튼 표시 여부를 업데이트합니다
+     */
+    updateViewSubmissionsButton() {
+        const viewBtn = document.getElementById('view-submissions-btn');
+        if (viewBtn) {
+            if (this.currentCounselId) {
+                viewBtn.style.display = 'block';
+                console.log('[updateViewSubmissionsButton] 버튼 표시됨. currentCounselId:', this.currentCounselId);
+            } else {
+                viewBtn.style.display = 'none';
+                console.log('[updateViewSubmissionsButton] 버튼 숨김');
+            }
+        } else {
+            console.error('[updateViewSubmissionsButton] view-submissions-btn 요소를 찾을 수 없습니다');
         }
     }
 

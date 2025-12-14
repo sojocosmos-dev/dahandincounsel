@@ -1,0 +1,326 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>학생 제출 보고서 - 교사용</title>
+    <link rel="stylesheet" href="styles.css">
+    <style>
+        .submissions-page {
+            display: flex;
+            height: 100vh;
+        }
+
+        .submissions-list-panel {
+            width: 30%;
+            background: #f5f5f5;
+            border-right: 2px solid #ddd;
+            overflow-y: auto;
+            padding: 20px;
+        }
+
+        .submissions-detail-panel {
+            width: 70%;
+            overflow-y: auto;
+            padding: 30px;
+            background: white;
+        }
+
+        .submission-item {
+            background: white;
+            padding: 12px;
+            margin-bottom: 10px;
+            border-radius: 6px;
+            cursor: pointer;
+            border: 2px solid transparent;
+            transition: all 0.3s;
+        }
+
+        .submission-item:hover {
+            background: #e3f2fd;
+            border-color: #2196f3;
+        }
+
+        .submission-item.active {
+            background: #2196f3;
+            color: white;
+            border-color: #1976d2;
+        }
+
+        .submission-item-name {
+            font-weight: 600;
+            font-size: 1.05em;
+            margin-bottom: 4px;
+        }
+
+        .submission-item-code {
+            font-size: 0.85em;
+            opacity: 0.8;
+        }
+
+        .back-button {
+            display: inline-block;
+            padding: 10px 16px;
+            background: #757575;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            margin-bottom: 15px;
+            font-size: 0.95em;
+        }
+
+        .back-button:hover {
+            background: #616161;
+        }
+
+        .submissions-list-title {
+            font-size: 1.3em;
+            font-weight: 600;
+            margin-bottom: 15px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .submissions-list-title span {
+            font-size: 0.9em;
+            opacity: 0.7;
+        }
+
+        .empty-message {
+            text-align: center;
+            padding: 40px 20px;
+            color: #999;
+        }
+
+        .report-container {
+            background: white;
+        }
+
+        @media print {
+            .submissions-page {
+                display: block;
+            }
+            .submissions-list-panel {
+                display: none;
+            }
+            .submissions-detail-panel {
+                width: 100%;
+                padding: 0;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="submissions-page">
+        <!-- 학생 목록 패널 -->
+        <div class="submissions-list-panel">
+            <button class="back-button" onclick="goBackToList()">← 상담 목록으로</button>
+            <div class="submissions-list-title">
+                📋 제출한 학생
+                <span id="submission-count">0명</span>
+            </div>
+            <div id="submissions-list" class="submissions-list">
+                <!-- 학생 목록이 여기에 표시됨 -->
+            </div>
+        </div>
+
+        <!-- 보고서 표시 패널 -->
+        <div class="submissions-detail-panel">
+            <div id="report-content">
+                <div style="text-align: center; padding: 40px; color: #999;">
+                    <p>좌측 목록에서 학생을 선택하면 제출 보고서를 확인할 수 있습니다.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 스크립트 순서대로 로드 -->
+    <script src="config.js"></script>
+    <script src="ConfigStorageService.js"></script>
+    <script src="CounselStorageService.js"></script>
+    <script src="StudentSubmissionService.js"></script>
+    <script src="StateManager.js"></script>
+    <script src="TextUtility.js"></script>
+    <script src="APIManager.js"></script>
+    <script src="ReportDataGenerator.js"></script>
+    <script src="ReportSectionGenerator.js"></script>
+    <script src="ReportGenerator.js"></script>
+    <script src="UIController.js"></script>
+    <script src="ReportService.js"></script>
+
+    <script>
+        let currentCounselId = null;
+        let currentCounsels = [];
+        let submissions = [];
+        let selectedSubmission = null;
+
+        /**
+         * 페이지 로드 시 URL 파라미터에서 상담 ID를 받아 처리
+         */
+        async function initPage() {
+            const params = new URLSearchParams(window.location.search);
+            currentCounselId = params.get('counselId');
+
+            if (!currentCounselId) {
+                document.getElementById('submissions-list').innerHTML = '<div class="empty-message">상담 정보를 찾을 수 없습니다.</div>';
+                return;
+            }
+
+            // 상담 정보 로드
+            currentCounsels = await CounselStorageService.loadCounselList();
+            const counsel = currentCounsels.find(c => c.id === currentCounselId);
+            
+            if (!counsel) {
+                document.getElementById('submissions-list').innerHTML = '<div class="empty-message">상담을 찾을 수 없습니다.</div>';
+                return;
+            }
+
+            // 학생 제출 데이터 로드
+            submissions = await StudentSubmissionService.getSubmissionsByCounselId(currentCounselId);
+            document.getElementById('submission-count').textContent = `${submissions.length}명`;
+
+            if (submissions.length === 0) {
+                document.getElementById('submissions-list').innerHTML = '<div class="empty-message">제출한 학생이 없습니다.</div>';
+                return;
+            }
+
+            // 학생 목록 렌더링
+            renderSubmissionsList();
+        }
+
+        /**
+         * 학생 목록을 렌더링합니다
+         */
+        function renderSubmissionsList() {
+            const listContainer = document.getElementById('submissions-list');
+            listContainer.innerHTML = submissions
+                .map((submission, index) => `
+                    <div class="submission-item${selectedSubmission && selectedSubmission.id === submission.id ? ' active' : ''}" 
+                         onclick="selectSubmission(${index})">
+                        <div class="submission-item-name">${submission.studentCode}</div>
+                        <div class="submission-item-code">${new Date(submission.updatedAt).toLocaleString('ko-KR')}</div>
+                    </div>
+                `)
+                .join('');
+        }
+
+        /**
+         * 학생 제출을 선택하고 보고서를 표시합니다
+         */
+        function selectSubmission(index) {
+            selectedSubmission = submissions[index];
+            renderSubmissionsList();
+            displaySubmissionReport();
+        }
+
+        /**
+         * 선택된 학생의 제출 보고서를 표시합니다
+         */
+        function displaySubmissionReport() {
+            if (!selectedSubmission) return;
+
+            const reportContent = document.getElementById('report-content');
+            const submission = selectedSubmission;
+
+            // 제출 데이터에서 보고서 생성
+            const reportHtml = generateSubmissionReportHtml(submission);
+            reportContent.innerHTML = reportHtml;
+        }
+
+        /**
+         * 제출 데이터로부터 보고서 HTML을 생성합니다
+         */
+        function generateSubmissionReportHtml(submission) {
+            const data = submission.data;
+            const submittedDate = new Date(submission.updatedAt).toLocaleString('ko-KR');
+
+            let html = `
+                <div style="margin-bottom: 20px; padding-bottom: 20px; border-bottom: 2px solid #2196f3;">
+                    <h2 style="margin: 0 0 10px 0; color: #1976d2;">📋 ${submission.studentCode} 제출 보고서</h2>
+                    <p style="margin: 0; color: #666; font-size: 0.9em;">제출일: ${submittedDate}</p>
+                </div>
+            `;
+
+            // 제출 데이터가 객체인 경우 각 섹션을 렌더링
+            if (typeof data === 'object' && data !== null) {
+                for (const [key, value] of Object.entries(data)) {
+                    html += `
+                        <div style="margin-bottom: 30px; padding: 20px; background: #f9f9f9; border-radius: 6px; border-left: 4px solid #2196f3;">
+                            <h3 style="margin: 0 0 15px 0; color: #1976d2; font-size: 1.1em;">${formatSectionTitle(key)}</h3>
+                            <div style="background: white; padding: 15px; border-radius: 4px; line-height: 1.8;">
+                                ${formatValue(value)}
+                            </div>
+                        </div>
+                    `;
+                }
+            } else {
+                html += `
+                    <div style="padding: 20px; background: #f9f9f9; border-radius: 6px;">
+                        <pre style="white-space: pre-wrap; word-wrap: break-word; margin: 0;">
+${JSON.stringify(data, null, 2)}
+                        </pre>
+                    </div>
+                `;
+            }
+
+            return html;
+        }
+
+        /**
+         * 섹션 제목을 포맷합니다
+         */
+        function formatSectionTitle(key) {
+            const titles = {
+                'cookieReview': '🍪 쿠키 활동 돌아보기',
+                'chipReview': '🍫 초코칩 활동 돌아보기',
+                'badgeReview': '🏅 뱃지 활동 돌아보기',
+                'praise': '✨ 칭찬과 다짐',
+                'parentComment': '👨‍👩‍👧 격려의 한 마디',
+                'strengthAndResolve': '💪 칭찬과 다짐',
+                'summary': '📊 요약',
+            };
+            return titles[key] || key;
+        }
+
+        /**
+         * 값을 포맷합니다
+         */
+        function formatValue(value) {
+            if (typeof value === 'string') {
+                return `<p>${value.replace(/\n/g, '<br>')}</p>`;
+            } else if (Array.isArray(value)) {
+                return `<ul>${value.map(v => `<li>${formatValue(v)}</li>`).join('')}</ul>`;
+            } else if (typeof value === 'object' && value !== null) {
+                let html = '<div>';
+                for (const [k, v] of Object.entries(value)) {
+                    html += `
+                        <div style="margin-bottom: 10px;">
+                            <strong>${k}:</strong> ${formatValue(v)}
+                        </div>
+                    `;
+                }
+                html += '</div>';
+                return html;
+            } else {
+                return `<p>${String(value)}</p>`;
+            }
+        }
+
+        /**
+         * 상담 목록으로 돌아갑니다
+         */
+        function goBackToList() {
+            // 목록 뷰를 보여주도록 플래그 설정
+            sessionStorage.setItem('showListView', 'true');
+            // 선택된 상담 ID 제거
+            sessionStorage.removeItem('selectedCounselId');
+            window.location.href = 'teacher-report.html';
+        }
+
+        // 페이지 로드
+        document.addEventListener('DOMContentLoaded', initPage);
+    </script>
+</body>
+</html>

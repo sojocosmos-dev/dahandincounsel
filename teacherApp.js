@@ -31,6 +31,23 @@ class TeacherApp {
             // CounselManager에 API Key 설정 및 상담 목록 로드
             this.counselManager.setApiKey(apiKey);
             await this.counselManager.loadAndDisplayCounselList();
+        } else {
+            // apiKey가 없으면 이전 상담이 있는지 확인
+            const savedCounselId = sessionStorage.getItem('selectedCounselId');
+            const showList = sessionStorage.getItem('showListView') === 'true';
+            
+            // 상담 목록 로드 (API Key 없이)
+            this.counselManager.setApiKey(null);
+            await this.counselManager.loadAndDisplayCounselList();
+            
+            // 상담 목록을 보여야 하면 목록 뷰 유지
+            if (showList) {
+                this.counselManager.showListView();
+                sessionStorage.removeItem('showListView'); // 플래그 제거
+            } else if (savedCounselId) {
+                // 이전 상담이 있으면 자동으로 선택
+                await this.counselManager.selectCounsel(savedCounselId);
+            }
         }
     }
 
@@ -90,4 +107,11 @@ document.addEventListener('DOMContentLoaded', () => {
     window.handleSaveCounsel = () => app.counselManager.saveCurrentCounsel();
     window.handleDeleteCurrentCounsel = () => app.counselManager.deleteCurrentCounsel();
     window.handleBackToList = () => app.counselManager.backToList();
+
+    // 학생 제출 보고서 보기
+    window.handleViewSubmissionsForCounsel = (counselId) => {
+        window.location.href = `teacher-submissions.html?counselId=${counselId}`;
+    };
+
 });
+

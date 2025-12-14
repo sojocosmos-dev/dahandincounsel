@@ -1,0 +1,380 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <title>학생 제출 조회 - 진단 도구</title>
+    <style>
+        body {
+            font-family: 'Malgun Gothic', Arial, sans-serif;
+            max-width: 1000px;
+            margin: 20px auto;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        .section {
+            background: white;
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        h2 {
+            color: #2196f3;
+            border-bottom: 2px solid #2196f3;
+            padding-bottom: 10px;
+        }
+        .test-button {
+            background-color: #4CAF50;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            margin: 5px;
+            font-size: 14px;
+        }
+        .test-button:hover {
+            background-color: #45a049;
+        }
+        .result {
+            background-color: #e8f5e9;
+            border-left: 4px solid #4CAF50;
+            padding: 10px;
+            margin: 10px 0;
+            border-radius: 4px;
+            font-family: monospace;
+            white-space: pre-wrap;
+            word-wrap: break-word;
+        }
+        .error {
+            background-color: #ffebee;
+            border-left: 4px solid #f44336;
+            color: #c62828;
+        }
+        .warning {
+            background-color: #fff3e0;
+            border-left: 4px solid #ff9800;
+            color: #e65100;
+        }
+        .code-block {
+            background-color: #f5f5f5;
+            border: 1px solid #ddd;
+            padding: 10px;
+            margin: 10px 0;
+            border-radius: 4px;
+            font-family: monospace;
+            font-size: 12px;
+            overflow-x: auto;
+        }
+        textarea {
+            width: 100%;
+            height: 200px;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-family: monospace;
+            font-size: 12px;
+        }
+    </style>
+</head>
+<body>
+    <h1>🔧 학생 제출 조회 버튼 - 진단 도구</h1>
+    
+    <div class="section">
+        <h2>1. 기본 요소 확인</h2>
+        <button class="test-button" onclick="testBasicElements()">기본 요소 확인</button>
+        <div id="basicResult"></div>
+    </div>
+
+    <div class="section">
+        <h2>2. StudentSubmissionService 확인</h2>
+        <button class="test-button" onclick="testStudentSubmissionService()">StudentSubmissionService 로드 확인</button>
+        <div id="serviceResult"></div>
+    </div>
+
+    <div class="section">
+        <h2>3. localStorage 데이터 확인</h2>
+        <button class="test-button" onclick="testLocalStorage()">localStorage 데이터 확인</button>
+        <div id="storageResult"></div>
+    </div>
+
+    <div class="section">
+        <h2>4. 상담 관리 확인</h2>
+        <button class="test-button" onclick="testCounselManager()">CounselManager 상태 확인</button>
+        <div id="counselResult"></div>
+    </div>
+
+    <div class="section">
+        <h2>5. 버튼 가시성 확인</h2>
+        <button class="test-button" onclick="testButtonVisibility()">버튼 가시성 확인</button>
+        <div id="buttonResult"></div>
+    </div>
+
+    <div class="section">
+        <h2>6. 함수 확인</h2>
+        <button class="test-button" onclick="testFunctions()">함수 정의 확인</button>
+        <div id="functionResult"></div>
+    </div>
+
+    <div class="section">
+        <h2>7. 모달 테스트</h2>
+        <button class="test-button" onclick="testModalDisplay()">모달 강제 열기</button>
+        <button class="test-button" onclick="testModalClose()">모달 강제 닫기</button>
+        <div id="modalResult"></div>
+    </div>
+
+    <div class="section">
+        <h2>8. 제출 조회 함수 직접 호출</h2>
+        <button class="test-button" onclick="testHandleViewSubmissions()">handleViewSubmissions() 호출</button>
+        <div id="callResult"></div>
+    </div>
+
+    <div class="section">
+        <h2>9. 테스트 데이터 생성</h2>
+        <button class="test-button" onclick="createTestData()">테스트 데이터 생성</button>
+        <button class="test-button" onclick="clearTestData()">테스트 데이터 삭제</button>
+        <div id="testDataResult"></div>
+    </div>
+
+    <div class="section">
+        <h2>10. 콘솔 로그 보기</h2>
+        <button class="test-button" onclick="clearConsole()">콘솔 삭제</button>
+        <textarea id="consoleLog" readonly></textarea>
+    </div>
+
+    <script>
+        // 콘솔 로그 캡처
+        const originalLog = console.log;
+        const originalError = console.error;
+        const originalWarn = console.warn;
+        const logs = [];
+
+        console.log = function(...args) {
+            logs.push('[LOG] ' + args.join(' '));
+            updateConsoleDisplay();
+            originalLog.apply(console, args);
+        };
+
+        console.error = function(...args) {
+            logs.push('[ERROR] ' + args.join(' '));
+            updateConsoleDisplay();
+            originalError.apply(console, args);
+        };
+
+        console.warn = function(...args) {
+            logs.push('[WARN] ' + args.join(' '));
+            updateConsoleDisplay();
+            originalWarn.apply(console, args);
+        };
+
+        function updateConsoleDisplay() {
+            document.getElementById('consoleLog').value = logs.join('\n');
+            document.getElementById('consoleLog').scrollTop = document.getElementById('consoleLog').scrollHeight;
+        }
+
+        function clearConsole() {
+            logs.length = 0;
+            updateConsoleDisplay();
+        }
+
+        function testBasicElements() {
+            const result = document.getElementById('basicResult');
+            let html = '';
+
+            const btn = document.getElementById('view-submissions-btn');
+            html += createResult(btn !== null, '버튼 요소 존재', btn ? `요소: ${btn.tagName}` : '요소를 찾을 수 없습니다');
+
+            const modal = document.getElementById('submission-modal');
+            html += createResult(modal !== null, '모달 요소 존재', modal ? `요소: ${modal.tagName}` : '요소를 찾을 수 없습니다');
+
+            const content = document.getElementById('submission-content');
+            html += createResult(content !== null, '모달 콘텐츠 요소 존재', content ? `요소: ${content.tagName}` : '요소를 찾을 수 없습니다');
+
+            result.innerHTML = html;
+        }
+
+        function testStudentSubmissionService() {
+            const result = document.getElementById('serviceResult');
+            let html = '';
+
+            const exists = typeof StudentSubmissionService !== 'undefined';
+            html += createResult(exists, 'StudentSubmissionService 로드', 
+                exists ? 'StudentSubmissionService가 정의됨' : 'StudentSubmissionService가 정의되지 않음');
+
+            if (exists) {
+                const hasMethod = typeof StudentSubmissionService.getSubmissionsByCounselId === 'function';
+                html += createResult(hasMethod, 'getSubmissionsByCounselId 메서드', 
+                    hasMethod ? '메서드가 존재함' : '메서드가 없음');
+            }
+
+            result.innerHTML = html;
+        }
+
+        function testLocalStorage() {
+            const result = document.getElementById('storageResult');
+            let html = '';
+
+            const submissions = JSON.parse(localStorage.getItem('dahand_student_submissions') || '[]');
+            html += createResult(submissions.length > 0, '제출 데이터 존재', 
+                `${submissions.length}개의 제출이 저장됨`);
+
+            if (submissions.length > 0) {
+                html += '<div class="code-block">' + JSON.stringify(submissions.slice(0, 2), null, 2) + '</div>';
+            }
+
+            result.innerHTML = html;
+        }
+
+        function testCounselManager() {
+            const result = document.getElementById('counselResult');
+            let html = '';
+
+            const appExists = typeof app !== 'undefined';
+            html += createResult(appExists, 'app 객체 존재', appExists ? 'app이 정의됨' : 'app이 정의되지 않음');
+
+            if (appExists) {
+                const managerExists = app.counselManager !== undefined;
+                html += createResult(managerExists, 'CounselManager 존재', managerExists ? 'CounselManager가 있음' : '없음');
+
+                if (managerExists) {
+                    const currentId = app.counselManager.currentCounselId;
+                    html += createResult(currentId !== null, '상담 선택됨', 
+                        currentId ? `선택된 상담: ${currentId}` : '선택된 상담이 없음');
+                }
+            }
+
+            result.innerHTML = html;
+        }
+
+        function testButtonVisibility() {
+            const result = document.getElementById('buttonResult');
+            let html = '';
+
+            const btn = document.getElementById('view-submissions-btn');
+            if (!btn) {
+                html += createResult(false, '버튼 표시 상태', '버튼을 찾을 수 없습니다');
+                result.innerHTML = html;
+                return;
+            }
+
+            const display = btn.style.display;
+            const computed = window.getComputedStyle(btn).display;
+            const visible = computed !== 'none';
+
+            html += createResult(visible, '버튼 표시 여부', 
+                `inline-style: ${display}, computed: ${computed}`);
+
+            result.innerHTML = html;
+        }
+
+        function testFunctions() {
+            const result = document.getElementById('functionResult');
+            let html = '';
+
+            const functions = [
+                'handleViewSubmissions',
+                'closeSubmissionModal',
+                'displaySubmissionsForCounsel'
+            ];
+
+            functions.forEach(fn => {
+                const exists = typeof window[fn] === 'function';
+                html += createResult(exists, `${fn}()`, 
+                    exists ? '함수가 정의됨' : '함수가 정의되지 않음');
+            });
+
+            result.innerHTML = html;
+        }
+
+        function testModalDisplay() {
+            const modal = document.getElementById('submission-modal');
+            if (!modal) {
+                document.getElementById('modalResult').innerHTML = createResult(false, '모달 표시', '모달을 찾을 수 없습니다');
+                return;
+            }
+
+            modal.style.display = 'block';
+            modal.style.zIndex = '9999';
+            document.getElementById('modalResult').innerHTML = createResult(true, '모달 강제 표시', 
+                '모달이 화면에 나타났습니다');
+        }
+
+        function testModalClose() {
+            const modal = document.getElementById('submission-modal');
+            if (modal) {
+                modal.style.display = 'none';
+            }
+            document.getElementById('modalResult').innerHTML = createResult(true, '모달 닫기', 
+                '모달이 닫혔습니다');
+        }
+
+        function testHandleViewSubmissions() {
+            const result = document.getElementById('callResult');
+            try {
+                if (typeof window.handleViewSubmissions === 'function') {
+                    window.handleViewSubmissions();
+                    result.innerHTML = createResult(true, 'handleViewSubmissions() 호출', '함수가 정상적으로 실행됨');
+                } else {
+                    result.innerHTML = createResult(false, 'handleViewSubmissions() 호출', '함수를 찾을 수 없습니다');
+                }
+            } catch (e) {
+                result.innerHTML = createResult(false, 'handleViewSubmissions() 호출', `오류: ${e.message}`);
+            }
+        }
+
+        function createTestData() {
+            const result = document.getElementById('testDataResult');
+            try {
+                if (!app || !app.counselManager || !app.counselManager.currentCounselId) {
+                    result.innerHTML = createResult(false, '테스트 데이터 생성', '먼저 상담을 선택하세요');
+                    return;
+                }
+
+                const counselId = app.counselManager.currentCounselId;
+                const testData = {
+                    studentCode: 'TEST' + Date.now(),
+                    counselId: counselId,
+                    data: {
+                        test: '테스트 데이터입니다',
+                        timestamp: new Date().toLocaleString('ko-KR')
+                    }
+                };
+
+                if (typeof StudentSubmissionService !== 'undefined') {
+                    StudentSubmissionService.saveSubmission(testData, 'test-api');
+                    result.innerHTML = createResult(true, '테스트 데이터 생성', 
+                        `${testData.studentCode}로 테스트 데이터 생성됨`);
+                } else {
+                    result.innerHTML = createResult(false, '테스트 데이터 생성', 'StudentSubmissionService를 찾을 수 없습니다');
+                }
+            } catch (e) {
+                result.innerHTML = createResult(false, '테스트 데이터 생성', `오류: ${e.message}`);
+            }
+        }
+
+        function clearTestData() {
+            const result = document.getElementById('testDataResult');
+            try {
+                if (typeof StudentSubmissionService !== 'undefined') {
+                    StudentSubmissionService.clearAll();
+                    result.innerHTML = createResult(true, '테스트 데이터 삭제', '모든 제출 데이터가 삭제됨');
+                } else {
+                    result.innerHTML = createResult(false, '테스트 데이터 삭제', 'StudentSubmissionService를 찾을 수 없습니다');
+                }
+            } catch (e) {
+                result.innerHTML = createResult(false, '테스트 데이터 삭제', `오류: ${e.message}`);
+            }
+        }
+
+        function createResult(success, title, message) {
+            const className = success ? 'result' : 'result error';
+            return `<div class="${className}"><strong>${title}</strong><br>${message}</div>`;
+        }
+
+        // 페이지 로드 완료 후 자동 진단
+        window.addEventListener('load', () => {
+            console.log('진단 도구 로드됨');
+        });
+    </script>
+</body>
+</html>

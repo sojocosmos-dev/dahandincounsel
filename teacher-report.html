@@ -16,9 +16,11 @@
     <div id="counsel-list-view" class="counsel-list-view">
         <div class="counsel-list-header">
             <h2>📚 상담 목록</h2>
-            <button id="create-counsel-btn" class="btn-create-counsel" onclick="handleCreateCounsel()">
-                ➕ 새 상담 만들기
-            </button>
+            <div style="display: flex; gap: 10px;">
+                <button id="create-counsel-btn" class="btn-create-counsel" onclick="handleCreateCounsel()">
+                    ➕ 새 상담 만들기
+                </button>
+            </div>
         </div>
         <div id="counsel-list-container" class="counsel-list-container">
             <p class="empty-counsel-message">아직 생성된 상담이 없습니다.<br>"➕ 새 상담 만들기" 버튼을 눌러 상담을 만들어보세요.</p>
@@ -183,6 +185,7 @@
     <script src="config.js"></script>
     <script src="ConfigStorageService.js"></script>
     <script src="CounselStorageService.js"></script>
+    <script src="StudentSubmissionService.js"></script>
     <script src="StateManager.js"></script>
     <script src="APIManager.js"></script>
     <script src="TextUtility.js"></script>

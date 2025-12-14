@@ -24,6 +24,12 @@
 
     <div id="student-report-area"></div>
 
+    <div id="submission-message" style="display: none; padding: 15px; margin: 15px 0; border-radius: 6px; text-align: center; font-weight: 600;"></div>
+
+    <div style="text-align: center; margin: 20px 0;">
+        <button id="submit-report-btn" class="btn-submit-report" onclick="handleSubmitReport()">📤 제출하기</button>
+    </div>
+
     <button class="student-logout-btn" onclick="redirectToAuth()">← 뒤로가기</button>
 
     <!-- 공유 스크립트 -->
@@ -31,6 +37,7 @@
     <script src="config.js"></script>
     <script src="ConfigStorageService.js"></script>
     <script src="CounselStorageService.js"></script>
+    <script src="StudentSubmissionService.js"></script>
     <script src="TextUtility.js"></script>
     <script src="APIManager.js"></script>
 
