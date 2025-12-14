@@ -88,6 +88,50 @@
             opacity: 0.7;
         }
 
+        .title-actions {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .icon-button {
+            background: none;
+            border: none;
+            font-size: 1.3em;
+            cursor: pointer;
+            padding: 4px 8px;
+            border-radius: 4px;
+            transition: all 0.3s;
+        }
+
+        .icon-button:hover {
+            background: rgba(0, 0, 0, 0.1);
+        }
+
+        .icon-button.active {
+            background: #2196f3;
+            color: white;
+        }
+
+        .submission-item-checkbox {
+            display: none;
+            margin-right: 8px;
+        }
+
+        .submission-item.selection-mode .submission-item-checkbox {
+            display: inline-block;
+        }
+
+        .submission-item.selection-mode {
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+        }
+
+        .submission-item-content {
+            flex: 1;
+        }
+
         .empty-message {
             text-align: center;
             padding: 40px 20px;
@@ -118,8 +162,15 @@
         <div class="submissions-list-panel">
             <button class="back-button" onclick="goBackToList()">← 상담 목록으로</button>
             <div class="submissions-list-title">
-                📋 제출한 학생
-                <span id="submission-count">0명</span>
+                <span>📋 제출한 학생 (<span id="submission-count">0</span>명)</span>
+                <div class="title-actions">
+                    <button class="icon-button" id="print-toggle-btn" onclick="togglePrintMode()" title="출력하기">
+                        🖨️
+                    </button>
+                    <button class="icon-button" id="select-all-btn" onclick="toggleSelectAll()" title="전체 선택" style="display: none;">
+                        ☑️
+                    </button>
+                </div>
             </div>
             <div id="submissions-list" class="submissions-list">
                 <!-- 학생 목록이 여기에 표시됨 -->
@@ -155,6 +206,8 @@
         let currentCounsels = [];
         let submissions = [];
         let selectedSubmission = null;
+        let isPrintMode = false;
+        let selectedStudents = new Set();
 
         /**
          * 페이지 로드 시 URL 파라미터에서 상담 ID를 받아 처리
@@ -179,7 +232,7 @@
 
             // 학생 제출 데이터 로드
             submissions = await StudentSubmissionService.getSubmissionsByCounselId(currentCounselId);
-            document.getElementById('submission-count').textContent = `${submissions.length}명`;
+            document.getElementById('submission-count').textContent = submissions.length;
 
             if (submissions.length === 0) {
                 document.getElementById('submissions-list').innerHTML = '<div class="empty-message">제출한 학생이 없습니다.</div>';
@@ -195,15 +248,34 @@
          */
         function renderSubmissionsList() {
             const listContainer = document.getElementById('submissions-list');
-            listContainer.innerHTML = submissions
-                .map((submission, index) => `
-                    <div class="submission-item${selectedSubmission && selectedSubmission.id === submission.id ? ' active' : ''}" 
-                         onclick="selectSubmission(${index})">
-                        <div class="submission-item-name">${submission.studentCode}</div>
-                        <div class="submission-item-code">${new Date(submission.updatedAt).toLocaleString('ko-KR')}</div>
-                    </div>
-                `)
-                .join('');
+
+            if (isPrintMode) {
+                // 선택 모드: 체크박스 표시
+                listContainer.innerHTML = submissions
+                    .map((submission, index) => `
+                        <div class="submission-item selection-mode" onclick="toggleStudentSelection(${index})">
+                            <input type="checkbox" class="submission-item-checkbox"
+                                   ${selectedStudents.has(submission.id) ? 'checked' : ''}
+                                   onclick="event.stopPropagation()">
+                            <div class="submission-item-content">
+                                <div class="submission-item-name">${submission.studentCode}</div>
+                                <div class="submission-item-code">${new Date(submission.updatedAt).toLocaleString('ko-KR')}</div>
+                            </div>
+                        </div>
+                    `)
+                    .join('');
+            } else {
+                // 일반 모드: 기존 동작
+                listContainer.innerHTML = submissions
+                    .map((submission, index) => `
+                        <div class="submission-item${selectedSubmission && selectedSubmission.id === submission.id ? ' active' : ''}"
+                             onclick="selectSubmission(${index})">
+                            <div class="submission-item-name">${submission.studentCode}</div>
+                            <div class="submission-item-code">${new Date(submission.updatedAt).toLocaleString('ko-KR')}</div>
+                        </div>
+                    `)
+                    .join('');
+            }
         }
 
         /**
@@ -258,6 +330,145 @@
                     <div style="padding: 30px; text-align: center; background-color: #ffebee; border-radius: 12px;">
                         <h2>⚠️ 오류</h2>
                         <p>보고서 생성에 실패했습니다: ${error.message}</p>
+                    </div>
+                `;
+            }
+        }
+
+        /**
+         * 출력 모드를 토글합니다
+         */
+        function togglePrintMode() {
+            isPrintMode = !isPrintMode;
+
+            const printBtn = document.getElementById('print-toggle-btn');
+            const selectAllBtn = document.getElementById('select-all-btn');
+
+            if (isPrintMode) {
+                // 출력 모드 활성화
+                printBtn.classList.add('active');
+                selectAllBtn.style.display = 'block';
+                selectedStudents.clear();
+            } else {
+                // 출력 모드 비활성화 - PDF 생성
+                printBtn.classList.remove('active');
+                selectAllBtn.style.display = 'none';
+
+                if (selectedStudents.size > 0) {
+                    generatePDFs();
+                }
+
+                selectedStudents.clear();
+            }
+
+            renderSubmissionsList();
+        }
+
+        /**
+         * 학생 선택을 토글합니다
+         */
+        function toggleStudentSelection(index) {
+            if (!isPrintMode) return;
+
+            const submission = submissions[index];
+
+            if (selectedStudents.has(submission.id)) {
+                selectedStudents.delete(submission.id);
+            } else {
+                selectedStudents.add(submission.id);
+            }
+
+            renderSubmissionsList();
+        }
+
+        /**
+         * 전체 선택/해제를 토글합니다
+         */
+        function toggleSelectAll() {
+            if (!isPrintMode) return;
+
+            const selectAllBtn = document.getElementById('select-all-btn');
+
+            if (selectedStudents.size === submissions.length) {
+                // 전체 해제
+                selectedStudents.clear();
+                selectAllBtn.textContent = '☑️';
+            } else {
+                // 전체 선택
+                selectedStudents.clear();
+                submissions.forEach(s => selectedStudents.add(s.id));
+                selectAllBtn.textContent = '✅';
+            }
+
+            renderSubmissionsList();
+        }
+
+        /**
+         * 선택된 학생들의 PDF를 생성합니다
+         */
+        async function generatePDFs() {
+            if (selectedStudents.size === 0) {
+                alert('선택된 학생이 없습니다.');
+                return;
+            }
+
+            const reportContent = document.getElementById('report-content');
+            reportContent.innerHTML = `
+                <div style="text-align: center; padding: 40px; color: #2196f3;">
+                    <h2>📄 PDF 생성 중...</h2>
+                    <p>${selectedStudents.size}명의 학생 보고서를 처리하고 있습니다.</p>
+                </div>
+            `;
+
+            try {
+                // 선택된 학생들의 submission 찾기
+                const selectedSubmissions = submissions.filter(s => selectedStudents.has(s.id));
+
+                for (let i = 0; i < selectedSubmissions.length; i++) {
+                    const submission = selectedSubmissions[i];
+
+                    reportContent.innerHTML = `
+                        <div style="text-align: center; padding: 40px; color: #2196f3;">
+                            <h2>📄 PDF 생성 중...</h2>
+                            <p>${i + 1} / ${selectedSubmissions.length} - ${submission.studentCode}</p>
+                        </div>
+                    `;
+
+                    // 보고서 데이터 생성
+                    const reportData = await StudentReportService.fetchStudentReportFromLocalData(
+                        submission.data,
+                        currentCounselId
+                    );
+
+                    if (!reportData.error) {
+                        // 보고서 HTML 생성
+                        const reportHtml = StudentReportService.generateStudentReportHTML(reportData);
+                        reportContent.innerHTML = reportHtml;
+
+                        // PDF 생성을 위해 잠시 대기
+                        await new Promise(resolve => setTimeout(resolve, 500));
+
+                        // 브라우저 인쇄 대화상자 열기
+                        window.print();
+
+                        // 인쇄 후 대기
+                        await new Promise(resolve => setTimeout(resolve, 1000));
+                    }
+                }
+
+                reportContent.innerHTML = `
+                    <div style="text-align: center; padding: 40px; color: #4caf50;">
+                        <h2>✅ PDF 생성 완료</h2>
+                        <p>${selectedSubmissions.length}개의 보고서가 처리되었습니다.</p>
+                    </div>
+                `;
+
+            } catch (error) {
+                console.error('PDF 생성 오류:', error);
+                reportContent.innerHTML = `
+                    <div style="padding: 30px; text-align: center; background-color: #ffebee; border-radius: 12px;">
+                        <h2>⚠️ 오류</h2>
+                        <p>PDF 생성에 실패했습니다: ${error.message}</p>
                     </div>
                 `;
             }
