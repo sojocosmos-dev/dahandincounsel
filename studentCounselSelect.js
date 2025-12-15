@@ -4,6 +4,7 @@
  */
 
 let studentCode = null;
+let studentName = null;
 
 /**
  * 페이지 로드 시 초기화
@@ -20,10 +21,13 @@ document.addEventListener('DOMContentLoaded', async () => {
         return;
     }
 
-    // 학생 코드 표시
+    // 학생 이름 가져오기
+    await fetchStudentName();
+
+    // 학생 이름 또는 코드 표시
     const displayElement = document.getElementById('display-student-code');
     if (displayElement) {
-        displayElement.textContent = studentCode;
+        displayElement.textContent = studentName || studentCode;
     }
 
     // 상담 목록 로드 (API Key 불필요)
@@ -95,4 +99,50 @@ function selectCounsel(counselId, counselTitle) {
     });
 
     window.location.href = `student-report.html?${params.toString()}`;
+}
+
+/**
+ * API를 통해 학생 이름을 가져옵니다
+ */
+async function fetchStudentName() {
+    try {
+        // 상담 목록에서 첫 번째 상담의 API Key를 가져옴
+        const counselList = await CounselStorageService.loadCounselList();
+
+        if (counselList.length === 0) {
+            console.warn('상담 목록이 없어 학생 이름을 가져올 수 없습니다.');
+            return;
+        }
+
+        // 첫 번째 상담의 API Key 사용
+        const firstCounsel = counselList[0];
+        console.log('첫 번째 상담 데이터:', firstCounsel); // 디버깅용
+
+        const apiKey = firstCounsel.apiKey;
+
+        if (!apiKey) {
+            console.warn('API Key가 없어 학생 이름을 가져올 수 없습니다.');
+            console.warn('상담 객체:', firstCounsel);
+            return;
+        }
+
+        // API 호출하여 학생 정보 가져오기
+        const studentData = await APIManager.fetchStudentData(studentCode, apiKey);
+
+        console.log('API 응답 데이터:', studentData); // 디버깅용
+
+        if (studentData && !studentData.error) {
+            // 이름 필드 찾기 시도
+            studentName = studentData.student || studentData.studentName || studentData.name || null;
+
+            if (!studentName) {
+                console.warn('학생 이름 필드를 찾을 수 없습니다. 사용 가능한 필드:', Object.keys(studentData));
+            }
+        } else {
+            console.warn('학생 이름을 찾을 수 없습니다:', studentData?.error || '데이터 없음');
+        }
+    } catch (error) {
+        console.error('학생 이름 조회 실패:', error);
+        // 에러 발생 시 학생 코드를 그대로 사용
+    }
 }

@@ -33,8 +33,8 @@ const DEFAULT_USAGE_TEXTS = {
 };
 
 const COLOR_PALETTE = {
-    SAVE: '#2ecc71',
-    USE: '#e74c3c',
+    SAVE: '#7dd3fc',
+    USE: '#fda4af',
 };
 
 const ELEMENT_IDS = {

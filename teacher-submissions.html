@@ -208,6 +208,7 @@
         let selectedSubmission = null;
         let isPrintMode = false;
         let selectedStudents = new Set();
+        let studentNames = {}; // studentCode -> studentName 매핑
 
         /**
          * 페이지 로드 시 URL 파라미터에서 상담 ID를 받아 처리
@@ -239,8 +240,44 @@
                 return;
             }
 
+            // 학생 이름 가져오기
+            await fetchAllStudentNames(counsel.apiKey);
+
             // 학생 목록 렌더링
             renderSubmissionsList();
+        }
+
+        /**
+         * 모든 학생의 이름을 API를 통해 가져옵니다
+         */
+        async function fetchAllStudentNames(apiKey) {
+            if (!apiKey) {
+                console.warn('API Key가 없어 학생 이름을 가져올 수 없습니다.');
+                return;
+            }
+
+            try {
+                // 모든 학생 코드에 대해 이름 조회
+                for (const submission of submissions) {
+                    try {
+                        const studentData = await APIManager.fetchStudentData(submission.studentCode, apiKey);
+
+                        if (studentData && !studentData.error) {
+                            // 이름 필드 찾기
+                            const name = studentData.student || studentData.studentName || studentData.name || null;
+                            if (name) {
+                                studentNames[submission.studentCode] = name;
+                            }
+                        }
+                    } catch (error) {
+                        console.warn(`학생 ${submission.studentCode} 이름 조회 실패:`, error);
+                    }
+                }
+
+                console.log('✅ 학생 이름 조회 완료:', studentNames);
+            } catch (error) {
+                console.error('학생 이름 일괄 조회 실패:', error);
+            }
         }
 
         /**
@@ -252,28 +289,34 @@
             if (isPrintMode) {
                 // 선택 모드: 체크박스 표시
                 listContainer.innerHTML = submissions
-                    .map((submission, index) => `
+                    .map((submission, index) => {
+                        const displayName = studentNames[submission.studentCode] || submission.studentCode;
+                        return `
                         <div class="submission-item selection-mode" onclick="toggleStudentSelection(${index})">
                             <input type="checkbox" class="submission-item-checkbox"
                                    ${selectedStudents.has(submission.id) ? 'checked' : ''}
                                    onclick="event.stopPropagation()">
                             <div class="submission-item-content">
-                                <div class="submission-item-name">${submission.studentCode}</div>
+                                <div class="submission-item-name">${displayName}</div>
                                 <div class="submission-item-code">${new Date(submission.updatedAt).toLocaleString('ko-KR')}</div>
                             </div>
                         </div>
-                    `)
+                        `;
+                    })
                     .join('');
             } else {
                 // 일반 모드: 기존 동작
                 listContainer.innerHTML = submissions
-                    .map((submission, index) => `
+                    .map((submission, index) => {
+                        const displayName = studentNames[submission.studentCode] || submission.studentCode;
+                        return `
                         <div class="submission-item${selectedSubmission && selectedSubmission.id === submission.id ? ' active' : ''}"
                              onclick="selectSubmission(${index})">
-                            <div class="submission-item-name">${submission.studentCode}</div>
+                            <div class="submission-item-name">${displayName}</div>
                             <div class="submission-item-code">${new Date(submission.updatedAt).toLocaleString('ko-KR')}</div>
                         </div>
-                    `)
+                        `;
+                    })
                     .join('');
             }
         }
@@ -426,11 +469,12 @@
 
                 for (let i = 0; i < selectedSubmissions.length; i++) {
                     const submission = selectedSubmissions[i];
+                    const displayName = studentNames[submission.studentCode] || submission.studentCode;
 
                     reportContent.innerHTML = `
                         <div style="text-align: center; padding: 40px; color: #2196f3;">
                             <h2>📄 PDF 생성 중...</h2>
-                            <p>${i + 1} / ${selectedSubmissions.length} - ${submission.studentCode}</p>
+                            <p>${i + 1} / ${selectedSubmissions.length} - ${displayName}</p>
                         </div>
                     `;
 

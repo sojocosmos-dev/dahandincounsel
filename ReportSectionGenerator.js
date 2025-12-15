@@ -10,9 +10,13 @@ class ReportSectionGenerator {
     static generateReportHeader(student, config, reportDate, isBatchMode) {
         return `
             <div class="report-page" style="page-break-after: ${isBatchMode ? 'always' : 'auto'};">
-                <h1>✨ ${student} 학생의 성장 기록 ✨</h1>
+                <h1 style="font-size: 2.3em; font-weight: 800; text-align: center; margin: 25px 0; padding: 15px; letter-spacing: -1px;">
+                    <span style="font-family: 'Segoe UI Emoji', 'Apple Color Emoji', 'Noto Color Emoji', sans-serif;">✨</span>
+                    <span style="background: linear-gradient(135deg, #ec4899 0%, #f472b6 50%, #fb923c 100%); background-clip: text; -webkit-background-clip: text; -webkit-text-fill-color: transparent;"> ${student} 학생의 성장 기록 </span>
+                    <span style="font-family: 'Segoe UI Emoji', 'Apple Color Emoji', 'Noto Color Emoji', sans-serif;">✨</span>
+                </h1>
                 <div class="usage-section">
-                    <h2>📌 우리 학급의 다했니 다했어요 활용 방안</h2>
+                    <h2><span style="font-family: 'Segoe UI Emoji', 'Apple Color Emoji', 'Noto Color Emoji', sans-serif;">📌</span> 우리 학급의 다했니 다했어요 활용 방안</h2>
                     <div class="usage-text">${config.generalUsage}</div>
                 </div>
         `;
@@ -29,14 +33,17 @@ class ReportSectionGenerator {
 
         let section = `
             <div class="asset-section-container">
-                <h2 class="activity-title">🍪 ${student} 학생의 쿠키 활동</h2>
+                <h2 class="activity-title">
+                    <span style="font-family: 'Segoe UI Emoji', 'Apple Color Emoji', 'Noto Color Emoji', sans-serif;">🍪</span>
+                    <span style="background: linear-gradient(90deg, #0ea5e9 0%, #38bdf8 100%); background-clip: text; -webkit-background-clip: text; -webkit-text-fill-color: transparent;"> ${student} 학생의 쿠키 활동</span>
+                </h2>
                 <div class="dynamic-column-layout">
         `;
 
         if (cookie.usage) {
             section += `
                 <div style="flex: 1 1 30%;">
-                    <div class="column-title">🍪 우리 학급 쿠키 획득 및 사용</div>
+                    <div class="column-title"><span style="font-family: 'Segoe UI Emoji', 'Apple Color Emoji', 'Noto Color Emoji', sans-serif;">🍪</span> 우리 학급 쿠키 획득 및 사용</div>
                     <div class="usage-content-block" style="border-bottom: 1px dashed #ccc; padding-bottom: 10px; margin-bottom: 10px; line-height: 1.4;">
                         <p style="font-weight: bold; color: #2ecc71; margin-bottom: 5px; font-size: 1em;">획득</p>
                         <p style="white-space: pre-wrap; font-size: 0.9em;">${acquisition}</p>
@@ -52,7 +59,7 @@ class ReportSectionGenerator {
         if (cookie.asset) {
             section += `
                 <div style="flex: 1 1 30%;">
-                    <div class="column-title">💰 쿠키 자산 현황</div>
+                    <div class="column-title"><span style="font-family: 'Segoe UI Emoji', 'Apple Color Emoji', 'Noto Color Emoji', sans-serif;">💰</span> 쿠키 자산 현황</div>
                     <div class="center-asset-content">
                         <div class="graph-container">
                             <div class="pie-chart" style="${this.generatePieChartStyle(cookieSavingRatio, cookieUsageRatio)}">
@@ -75,7 +82,7 @@ class ReportSectionGenerator {
         if (cookie.review) {
             section += `
                 <div style="flex: 1 1 40%;">
-                    <div class="column-title">🍪 나의 쿠키 활동 돌아보기</div>
+                    <div class="column-title"><span style="font-family: 'Segoe UI Emoji', 'Apple Color Emoji', 'Noto Color Emoji', sans-serif;">🍪</span> 나의 쿠키 활동 돌아보기</div>
                     <div class="student-review-area">
                         <label>1. 쿠키 획득 비법:</label>
                         <textarea placeholder="쿠키 획득 비법을 적어주세요">${userInputs.cookieMethod || ''}</textarea>
@@ -100,14 +107,17 @@ class ReportSectionGenerator {
 
         let section = `
             <div class="asset-section-container">
-                <h2 class="activity-title">🍫 ${student} 학생의 초코칩 활동</h2>
+                <h2 class="activity-title">
+                    <span style="font-family: 'Segoe UI Emoji', 'Apple Color Emoji', 'Noto Color Emoji', sans-serif;">🍫</span>
+                    <span style="background: linear-gradient(90deg, #0ea5e9 0%, #38bdf8 100%); background-clip: text; -webkit-background-clip: text; -webkit-text-fill-color: transparent;"> ${student} 학생의 초코칩 활동</span>
+                </h2>
                 <div class="dynamic-column-layout">
         `;
 
         if (chip.usage) {
             section += `
                 <div style="flex: 1 1 30%;">
-                    <div class="column-title">🍫 우리 학급 초코칩 획득 및 사용</div>
+                    <div class="column-title"><span style="font-family: 'Segoe UI Emoji', 'Apple Color Emoji', 'Noto Color Emoji', sans-serif;">🍫</span> 우리 학급 초코칩 획득 및 사용</div>
                     <div class="usage-content-block" style="border-bottom: 1px dashed #ccc; padding-bottom: 10px; margin-bottom: 10px; line-height: 1.4;">
                         <p style="font-weight: bold; color: #2ecc71; margin-bottom: 5px; font-size: 1em;">획득</p>
                         <p style="white-space: pre-wrap; font-size: 0.9em;">${acquisition}</p>
@@ -123,9 +133,11 @@ class ReportSectionGenerator {
         if (chip.asset) {
             section += `
                 <div style="flex: 1 1 30%;">
-                    <div class="column-title">🍫 초코칩 자산 현황 (잔액)</div>
+                    <div class="column-title"><span style="font-family: 'Segoe UI Emoji', 'Apple Color Emoji', 'Noto Color Emoji', sans-serif;">🍫</span> 초코칩 자산 현황 (잔액)</div>
                     <div class="center-asset-content">
-                        <h3 style="color: #d35400; font-size: 2.5em; margin: 20px 0;">${currentChocoChips}개</h3>
+                        <div style="background: linear-gradient(135deg, #fff7ed 0%, #fed7aa 100%); padding: 25px 20px; border-radius: 20px; margin: 15px 0; border: 3px solid #fdba74; box-shadow: 0 6px 16px rgba(253, 186, 116, 0.25);">
+                            <h3 style="color: #ea580c; font-size: 2.8em; margin: 0; font-weight: 800; text-shadow: 2px 2px 4px rgba(234, 88, 12, 0.1);">${currentChocoChips}개</h3>
+                        </div>
                     </div>
                 </div>
             `;
@@ -134,7 +146,7 @@ class ReportSectionGenerator {
         if (chip.review) {
             section += `
                 <div style="flex: 1 1 40%;">
-                    <div class="column-title">🍫 나의 초코칩 활동 돌아보기</div>
+                    <div class="column-title"><span style="font-family: 'Segoe UI Emoji', 'Apple Color Emoji', 'Noto Color Emoji', sans-serif;">🍫</span> 나의 초코칩 활동 돌아보기</div>
                     <div class="student-review-area">
                         <label>1. 초코칩 획득 비법:</label>
                         <textarea placeholder="초코칩 획득 비법을 적어주세요">${userInputs.chipMethod || ''}</textarea>
@@ -167,14 +179,17 @@ class ReportSectionGenerator {
 
         let section = `
             <div class="asset-section-container">
-                <h2 class="activity-title">🏅 ${student} 학생의 뱃지 활동</h2>
+                <h2 class="activity-title">
+                    <span style="font-family: 'Segoe UI Emoji', 'Apple Color Emoji', 'Noto Color Emoji', sans-serif;">🏅</span>
+                    <span style="background: linear-gradient(90deg, #0ea5e9 0%, #38bdf8 100%); background-clip: text; -webkit-background-clip: text; -webkit-text-fill-color: transparent;"> ${student} 학생의 뱃지 활동</span>
+                </h2>
                 <div class="dynamic-column-layout">
         `;
 
         if (badge.usage) {
             section += `
                 <div style="flex: 1 1 30%;">
-                    <div class="column-title">🏅 우리 학급 뱃지 소개 및 획득</div>
+                    <div class="column-title"><span style="font-family: 'Segoe UI Emoji', 'Apple Color Emoji', 'Noto Color Emoji', sans-serif;">🏅</span> 우리 학급 뱃지 소개 및 획득</div>
                     <div class="usage-content-block" style="border-bottom: 1px dashed #ccc; padding-bottom: 10px; margin-bottom: 10px; line-height: 1.4;">
                         <p style="font-weight: bold; color: #1e88e5; margin-bottom: 5px; font-size: 1em;">소개</p>
                         <p style="white-space: pre-wrap; font-size: 0.9em;">${introduction}</p>
@@ -190,11 +205,11 @@ class ReportSectionGenerator {
         if (badge.status) {
             section += `
                 <div style="flex: 1 1 30%;">
-                    <div class="column-title">🏅 학생의 뱃지 획득 현황</div>
+                    <div class="column-title"><span style="font-family: 'Segoe UI Emoji', 'Apple Color Emoji', 'Noto Color Emoji', sans-serif;">🏅</span> 학생의 뱃지 획득 현황</div>
                     <div class="all-badges-container">${badgesHtml}</div>
                 </div>
                 <div style="flex: 1 1 40%;">
-                    <div class="column-title">🏅 나의 뱃지 활동 돌아보기</div>
+                    <div class="column-title"><span style="font-family: 'Segoe UI Emoji', 'Apple Color Emoji', 'Noto Color Emoji', sans-serif;">🏅</span> 나의 뱃지 활동 돌아보기</div>
                     <div class="student-review-area">
                         <label>1. 가장 자랑스러운 뱃지와 그 이유:</label>
                         <textarea placeholder="가장 자랑스러운 뱃지와 그 이유를 적어주세요">${userInputs.proudBadge || ''}</textarea>
@@ -215,7 +230,7 @@ class ReportSectionGenerator {
     static generateSummarySection(summary, analysis) {
         if (!summary) return '';
 
-        let section = '<div class="summary-section"><h2>📊 총평</h2>';
+        let section = '<div class="summary-section"><h2><span style="font-family: \'Segoe UI Emoji\', \'Apple Color Emoji\', \'Noto Color Emoji\', sans-serif;">📊</span> 총평</h2>';
 
         if (summary.summary) {
             section += `

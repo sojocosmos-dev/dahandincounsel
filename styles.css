@@ -1,3 +1,11 @@
+/* ===== 여기어때 폰트 ===== */
+@font-face {
+    font-family: 'yg-jalnan';
+    src: url('https://fastly.jsdelivr.net/gh/projectnoonnu/noonfonts_four@1.2/JalnanOTF00.woff') format('woff');
+    font-weight: normal;
+    font-style: normal;
+}
+
 /* ===== 색상 변수 ===== */
 :root {
     --color-primary: #2ecc71;
@@ -136,6 +144,7 @@ input[type="file"] {
 }
 
 h1 {
+    font-family: 'yg-jalnan', 'Malgun Gothic', 'Arial', sans-serif;
     color: #4a4a4a;
     text-align: center;
     font-size: 2.5em;
@@ -150,87 +159,146 @@ h1 {
 
 /* ===== 섹션 스타일 ===== */
 .usage-section {
-    background-color: #fff8e1;
-    padding: 10px 15px;
-    border-radius: 8px;
-    margin-bottom: 15px;
-    border-left: 5px solid var(--color-warning);
+    background: linear-gradient(135deg, #fffbeb 0%, #fef3c7 100%);
+    padding: 16px 20px;
+    border-radius: 16px;
+    margin-bottom: 20px;
+    border: 3px solid #fde68a;
+    box-shadow: 0 4px 12px rgba(253, 230, 138, 0.2);
+}
+
+.usage-section h2 {
+    color: #d97706;
+    font-weight: 700;
+    margin-bottom: 10px;
+    letter-spacing: -0.4px;
+}
+
+.usage-text {
+    color: #92400e;
+    line-height: 1.6;
+    font-size: 0.95em;
 }
 
 .summary-section {
-    background-color: #e0f7fa;
-    border: 2px solid #00bcd4;
-    padding: 15px;
-    border-radius: 8px;
-    margin-top: 20px;
+    background: linear-gradient(135deg, #fff5f7 0%, #ffe8f0 100%);
+    border: 3px solid #ffb3d9;
+    padding: 20px;
+    border-radius: 20px;
+    margin-top: 25px;
+    box-shadow: 0 8px 20px rgba(255, 179, 217, 0.2);
 }
 
 .summary-section h2 {
-    color: #00838f;
-    font-size: 1.5em;
+    color: #ff6ba9;
+    font-size: 1.6em;
     margin-top: 0;
-    margin-bottom: 10px;
+    margin-bottom: 15px;
+    font-weight: 700;
+    letter-spacing: -0.5px;
 }
 
 .summary-section h3 {
-    color: #00bcd4;
-    font-size: 1.2em;
-    margin-top: 10px;
-    margin-bottom: 8px;
+    color: #ff8cc4;
+    font-size: 1.15em;
+    margin-top: 15px;
+    margin-bottom: 10px;
+    font-weight: 600;
+    letter-spacing: -0.3px;
 }
 
 .summary-textarea {
     width: 100%;
-    min-height: 80px;
-    padding: 10px;
-    border: 1px solid #ccc;
-    border-radius: 4px;
+    min-height: 85px;
+    padding: 12px 15px;
+    border: 2px solid #ffd4e8;
+    border-radius: 12px;
     resize: vertical;
-    font-size: 1em;
+    font-size: 0.95em;
     box-sizing: border-box;
+    background: white;
+    transition: all 0.3s ease;
+    line-height: 1.6;
+}
+
+.summary-textarea:focus {
+    outline: none;
+    border-color: #ffb3d9;
+    box-shadow: 0 0 0 3px rgba(255, 179, 217, 0.1);
+}
+
+.auto-summary-area {
+    background: white;
+    padding: 14px 16px;
+    border-radius: 12px;
+    border: 2px solid #ffd4e8;
+    margin: 10px 0;
+    line-height: 1.7;
+    color: #831843;
+    font-size: 0.95em;
+    white-space: pre-wrap;
 }
 
 /* ===== 자산 섹션 스타일 ===== */
 .asset-section-container {
-    margin-bottom: 20px;
-    padding: 10px;
-    border: 1px solid #f0f0f0;
-    border-radius: 8px;
+    margin-bottom: 25px;
+    padding: 18px;
+    background: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 100%);
+    border: 3px solid #bae6fd;
+    border-radius: 20px;
+    box-shadow: 0 6px 16px rgba(186, 230, 253, 0.25);
 }
 
 .activity-title {
-    font-size: 1.4em;
-    font-weight: bold;
-    color: var(--color-info);
-    margin-top: 25px;
-    margin-bottom: 15px;
-    border-bottom: 2px solid #bbdefb;
-    padding-bottom: 5px;
+    font-size: 1.5em;
+    font-weight: 700;
+    margin-top: 20px;
+    margin-bottom: 18px;
+    border-bottom: none;
+    padding-bottom: 10px;
+    letter-spacing: -0.5px;
+}
+
+.activity-title > span:not([style*="font-family"]) {
+    background: linear-gradient(90deg, #0ea5e9 0%, #38bdf8 100%);
+    background-clip: text;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
 }
 
 /* ===== 다중 칼럼 레이아웃 ===== */
 .dynamic-column-layout {
     display: flex;
-    gap: 15px;
-    margin-top: 10px;
+    gap: 12px;
+    margin-top: 12px;
 }
 
 .dynamic-column-layout > div {
     display: flex;
     flex-direction: column;
-    padding: 8px;
-    border: 1px dashed var(--color-border-light);
-    border-radius: 4px;
+    padding: 14px;
+    background: white;
+    border: 2px solid #e0f2fe;
+    border-radius: 16px;
     min-height: 220px;
     box-sizing: border-box;
+    box-shadow: 0 2px 8px rgba(14, 165, 233, 0.08);
+    transition: all 0.3s ease;
+}
+
+.dynamic-column-layout > div:hover {
+    box-shadow: 0 4px 12px rgba(14, 165, 233, 0.15);
+    transform: translateY(-2px);
 }
 
 .column-title {
-    font-weight: bold;
-    color: var(--color-text-dark);
-    margin-bottom: 10px;
-    border-bottom: 1px solid #f0f0f0;
-    padding-bottom: 5px;
+    font-weight: 700;
+    color: #0284c7;
+    margin-bottom: 12px;
+    border-bottom: 2px solid #bae6fd;
+    padding-bottom: 8px;
+    font-size: 0.95em;
+    letter-spacing: -0.3px;
 }
 
 /* ===== 쿠키 자산 스타일 ===== */
@@ -239,24 +307,38 @@ h1 {
 }
 
 .cookie-asset-info {
-    margin-top: 10px;
-    font-size: 0.9em;
+    margin-top: 12px;
+    font-size: 0.88em;
     text-align: left;
-    padding: 0 15px;
+    padding: 0 10px;
 }
 
 .cookie-asset-info strong {
     display: block;
-    margin-bottom: 5px;
+    margin-bottom: 8px;
     font-size: 1em;
+    color: #0369a1;
+    font-weight: 700;
 }
 
 .cookie-asset-item {
     display: flex;
     justify-content: space-between;
-    margin-bottom: 5px;
-    padding: 3px 0;
-    border-bottom: 1px dotted #eee;
+    margin-bottom: 8px;
+    padding: 8px 10px;
+    background: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 100%);
+    border-radius: 10px;
+    border: 1px solid #e0f2fe;
+    font-weight: 500;
+}
+
+.cookie-asset-item span:first-child {
+    color: #0369a1;
+}
+
+.cookie-asset-item span:last-child {
+    color: #0ea5e9;
+    font-weight: 700;
 }
 
 /* ===== 학생 돌아보기 스타일 ===== */
@@ -267,15 +349,34 @@ h1 {
     justify-content: space-between;
 }
 
+.student-review-area label {
+    font-size: 0.9em;
+    font-weight: 600;
+    color: #0369a1;
+    margin-bottom: 6px;
+    margin-top: 4px;
+}
+
 .student-review-area textarea {
     flex-grow: 1;
     min-height: 0;
-    font-size: 0.95em;
-    padding: 8px;
-    margin: 0 0 10px 0;
+    font-size: 0.92em;
+    padding: 10px 12px;
+    margin: 0 0 12px 0;
     box-sizing: border-box;
-    border: 1px solid #ccc;
-    border-radius: 4px;
+    border: 2px solid #e0f2fe;
+    border-radius: 12px;
+    background: #f8fafc;
+    transition: all 0.3s ease;
+    line-height: 1.5;
+    resize: vertical;
+}
+
+.student-review-area textarea:focus {
+    outline: none;
+    border-color: #7dd3fc;
+    background: white;
+    box-shadow: 0 0 0 3px rgba(125, 211, 252, 0.1);
 }
 
 .student-review-area textarea:last-child {
@@ -287,34 +388,42 @@ h1 {
     display: flex;
     justify-content: center;
     align-items: center;
-    margin-top: 10px;
+    margin-top: 15px;
+    margin-bottom: 10px;
 }
 
 .pie-chart {
-    width: 120px;
-    height: 120px;
+    width: 130px;
+    height: 130px;
     border-radius: 50%;
     position: relative;
     display: flex;
     align-items: center;
     justify-content: center;
     flex-shrink: 0;
+    box-shadow: 0 6px 20px rgba(14, 165, 233, 0.25);
+    border: 4px solid white;
 }
 
 /* ===== 뱃지 포트폴리오 스타일 ===== */
 .all-badges-container {
     display: flex;
     flex-wrap: wrap;
-    gap: 10px;
-    padding: 10px 0;
+    gap: 12px;
+    padding: 12px 8px;
     justify-content: center;
 }
 
 .badge-item-display {
-    width: 80px;
+    width: 75px;
     text-align: center;
-    font-size: 0.85em;
-    line-height: 1.2;
+    font-size: 0.82em;
+    line-height: 1.3;
+    transition: all 0.3s ease;
+}
+
+.badge-item-display:hover {
+    transform: translateY(-4px);
 }
 
 .badge-item-display span {
@@ -322,26 +431,36 @@ h1 {
     white-space: normal;
     overflow-wrap: break-word;
     word-wrap: break-word;
+    color: #0369a1;
+    font-weight: 600;
+    margin-top: 5px;
 }
 
 .badge-item-display img {
-    width: 50px;
-    height: 50px;
-    margin-bottom: 3px;
+    width: 52px;
+    height: 52px;
+    margin-bottom: 4px;
     border-radius: 50%;
     object-fit: cover;
-    border: 3px solid var(--color-primary);
-    box-shadow: 0 0 5px rgba(46, 204, 113, 0.5);
+    border: 3px solid #7dd3fc;
+    box-shadow: 0 4px 12px rgba(125, 211, 252, 0.4);
+    transition: all 0.3s ease;
+}
+
+.badge-item-display:hover img {
+    box-shadow: 0 6px 18px rgba(125, 211, 252, 0.6);
+    border-color: #0ea5e9;
 }
 
 /* ===== 하단 스타일 ===== */
 .report-footer {
     text-align: right;
-    margin-top: 30px;
-    padding-top: 8px;
-    border-top: 1px solid var(--color-border);
-    color: var(--color-text-muted);
-    font-size: 0.85em;
+    margin-top: 35px;
+    padding-top: 12px;
+    border-top: 2px solid #e0f2fe;
+    color: #64748b;
+    font-size: 0.88em;
+    font-weight: 500;
 }
 
 
@@ -525,6 +644,7 @@ h1 {
 }
 
 .auth-logo {
+    font-family: 'yg-jalnan', 'Malgun Gothic', 'Arial', sans-serif;
     font-size: 2.5em;
     font-weight: bold;
     color: #333;
@@ -550,12 +670,14 @@ h1 {
     display: flex;
     flex-direction: column;
     align-items: center;
-    justify-content: center;
+    justify-content: flex-start;
     padding: 30px 20px;
     border-radius: 12px;
     cursor: pointer;
     transition: all 0.3s ease;
     border: 2px solid transparent;
+    height: 420px;
+    box-sizing: border-box;
 }
 
 .auth-option:hover {
@@ -566,11 +688,13 @@ h1 {
 .auth-option-icon {
     font-size: 3em;
     margin-bottom: 15px;
+    margin-top: 0;
     width: 120px;
     height: 120px;
     display: flex;
     align-items: center;
     justify-content: center;
+    flex-shrink: 0;
 }
 
 .auth-option-icon-img {
@@ -585,13 +709,40 @@ h1 {
 .auth-option-title {
     font-size: 1.3em;
     font-weight: bold;
-    margin-bottom: 8px;
+    margin-bottom: 10px;
+    margin-top: 0;
 }
 
 .auth-option-desc {
     font-size: 0.9em;
     color: #666;
     line-height: 1.4;
+    height: 45px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    text-align: center;
+    margin-bottom: 0;
+    padding: 0 10px;
+    box-sizing: border-box;
+    overflow: hidden;
+}
+
+.auth-option .form-group {
+    width: 100%;
+    margin-top: 15px !important;
+    margin-bottom: 0 !important;
+}
+
+.auth-option .form-group input {
+    width: 100%;
+    padding: 12px 15px;
+    border: 2px solid #ddd;
+    border-radius: 8px;
+    font-size: 1em;
+    box-sizing: border-box;
+    transition: border-color 0.3s ease;
 }
 
 .btn-teacher {
@@ -604,7 +755,8 @@ h1 {
     font-weight: bold;
     cursor: pointer;
     width: 100%;
-    margin-top: 15px;
+    margin-top: 15px !important;
+    margin-bottom: 0 !important;
     transition: all 0.3s ease;
 }
 
@@ -623,7 +775,8 @@ h1 {
     font-weight: bold;
     cursor: pointer;
     width: 100%;
-    margin-top: 15px;
+    margin-top: 12px !important;
+    margin-bottom: 0 !important;
     transition: all 0.3s ease;
 }
 
@@ -1484,26 +1637,27 @@ body {
 }
 /* ===== 학생 제출 관련 스타일 ===== */
 .btn-submit-report {
-    padding: 12px 24px;
-    background-color: #27ae60;
+    padding: 14px 32px;
+    background: linear-gradient(135deg, #10b981 0%, #059669 100%);
     color: white;
     border: none;
-    border-radius: 6px;
-    font-size: 1em;
-    font-weight: bold;
+    border-radius: 16px;
+    font-size: 1.05em;
+    font-weight: 700;
     cursor: pointer;
     transition: all 0.3s ease;
-    box-shadow: 0 2px 6px rgba(39, 174, 96, 0.3);
+    box-shadow: 0 4px 16px rgba(16, 185, 129, 0.3);
+    letter-spacing: -0.3px;
 }
 
 .btn-submit-report:hover {
-    background-color: #229954;
-    transform: translateY(-2px);
-    box-shadow: 0 4px 12px rgba(39, 174, 96, 0.4);
+    background: linear-gradient(135deg, #059669 0%, #047857 100%);
+    transform: translateY(-3px);
+    box-shadow: 0 6px 20px rgba(16, 185, 129, 0.4);
 }
 
 .btn-submit-report:active {
-    transform: translateY(0);
+    transform: translateY(-1px);
 }
 
 #submission-message {
@@ -1624,4 +1778,28 @@ body {
 
 .btn-close-modal:hover {
     background-color: #7f8c8d;
+}
+
+/* ===== 로그인 화면으로 돌아가기 버튼 ===== */
+.btn-back-to-login {
+    padding: 12px 30px;
+    background-color: #95a5a6;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    font-size: 1em;
+    font-weight: bold;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 2px 6px rgba(149, 165, 166, 0.3);
+}
+
+.btn-back-to-login:hover {
+    background-color: #7f8c8d;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(149, 165, 166, 0.4);
+}
+
+.btn-back-to-login:active {
+    transform: translateY(0);
 }
