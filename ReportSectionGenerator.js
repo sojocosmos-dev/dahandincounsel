@@ -240,18 +240,12 @@ class ReportSectionGenerator {
         }
 
         if (summary.praiseAndResolve) {
-            const defaultText = '내가 잘한 점과 앞으로 더 잘하고 싶은 점을 적어봅시다.';
             const currentValue = (analysis.praiseAndResolve || '').trim();
-            const isDefault = !currentValue; // 빈 문자열이면 기본 텍스트 표시
-            const displayValue = isDefault ? defaultText : currentValue;
 
             section += `
                 <h3>2. 칭찬과 다짐</h3>
                 <textarea class="summary-textarea" rows="4"
-                    placeholder="내가 잘한 점과 앞으로 더 잘하고 싶은 점을 적어봅시다."
-                    data-default="${isDefault}"
-                    onfocus="if(this.getAttribute('data-default')==='true'){this.value='';this.setAttribute('data-default','false');this.style.color='#333';}"
-                    style="color:${isDefault ? '#999' : '#333'};">${displayValue}</textarea>
+                    placeholder="학생 입력 : 스스로 잘한 부분을 칭찬하고 앞으로의 다짐을 적어봅시다.">${currentValue}</textarea>
             `;
         }
 

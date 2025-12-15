@@ -224,7 +224,7 @@ async function handleSubmitReport() {
                 userInputs.proudBadge = value;
             } else if (placeholder.includes('받고 싶은')) {
                 userInputs.wantBadge = value;
-            } else if (placeholder.includes('잘한 점') || placeholder.includes('잘하고 싶은')) {
+            } else if (placeholder.includes('칭찬') || placeholder.includes('다짐')) {
                 userInputs.praiseResolve = value;
             } else if (placeholder.includes('격려')) {
                 userInputs.parentComment = value;
