@@ -34,14 +34,19 @@ class StudentApp {
     /**
      * URL 파라미터 확인 및 자동 조회
      */
-    checkUrlParams() {
+    async checkUrlParams() {
         const params = new URLSearchParams(window.location.search);
         const studentCode = params.get('studentCode');
         const counselId = params.get('counselId');
 
+        console.log('🔍 URL 파라미터 확인:', { studentCode, counselId });
+
         if (studentCode && counselId) {
+            console.log('✅ 학생 코드와 상담 ID 발견');
+
             // 학생 코드와 상담 ID가 URL에 있으면 자동으로 조회
             this.counselId = counselId; // 상담 ID 저장
+            this.studentCode = studentCode; // 학생 코드 저장
 
             const codeInput = document.getElementById('student-code-input');
             if (codeInput) {
@@ -52,8 +57,32 @@ class StudentApp {
                 inputArea.style.display = 'none';
             }
 
-            // 자동으로 보고서 생성 (API Key는 상담 데이터에서 가져옴)
-            this.handleStudentQuery(null, counselId);
+            // 상담에서 API Key 가져오기
+            console.log('📋 상담 정보 조회 중... (counselId:', counselId, ')');
+            try {
+                const counsel = await CounselStorageService.getCounselById(counselId);
+                console.log('📥 상담 정보:', counsel);
+
+                if (counsel && counsel.apiKey) {
+                    this.apiKey = counsel.apiKey;
+                    console.log('✅ API Key를 상담에서 가져왔습니다:', this.apiKey.substring(0, 10) + '...');
+                } else {
+                    console.error('❌ 상담에 API Key가 없습니다!');
+                    console.log('상담 전체 객체:', counsel);
+                    this.showMessage('API Key를 찾을 수 없습니다. 교사가 API Key를 저장했는지 확인해주세요.', 'error');
+                    return;
+                }
+            } catch (error) {
+                console.error('❌ 상담 조회 실패:', error);
+                this.showMessage('상담 정보를 불러오는데 실패했습니다: ' + error.message, 'error');
+                return;
+            }
+
+            // 자동으로 보고서 생성
+            console.log('📊 보고서 생성 시작...');
+            await this.handleStudentQuery(this.apiKey, counselId);
+        } else {
+            console.log('ℹ️ URL 파라미터가 없습니다. 수동 입력 모드');
         }
     }
 
@@ -185,7 +214,7 @@ async function handleSubmitReport() {
             const placeholder = textarea.placeholder;
             if (placeholder.includes('쿠키 획득')) {
                 userInputs.cookieMethod = value;
-            } else if (placeholder.includes('좋았던')) {
+            } else if (placeholder.includes('쿠키') && placeholder.includes('좋았던')) {
                 userInputs.cookieGood = value;
             } else if (placeholder.includes('초코칩 획득')) {
                 userInputs.chipMethod = value;
@@ -195,7 +224,7 @@ async function handleSubmitReport() {
                 userInputs.proudBadge = value;
             } else if (placeholder.includes('받고 싶은')) {
                 userInputs.wantBadge = value;
-            } else if (placeholder.includes('칭찬') || placeholder.includes('다짐')) {
+            } else if (placeholder.includes('잘한 점') || placeholder.includes('잘하고 싶은')) {
                 userInputs.praiseResolve = value;
             } else if (placeholder.includes('격려')) {
                 userInputs.parentComment = value;

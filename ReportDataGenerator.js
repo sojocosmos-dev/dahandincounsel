@@ -63,7 +63,7 @@ class ReportDataGenerator {
 
         return {
             autoSummary: `${studentName} 학생은 우리 학급 다했니 다했어요 활동을 통해\n*쿠키(${totalCookieIncome}개), *초코칩(${currentChocoChips}개), *뱃지${badgeTitlesString}를 획득하였습니다.`,
-            praiseAndResolve: `[교사 참고] 이 자리에 선생님이 대신 칭찬과 격려의 메시지를 적거나, 학생이 직접 잘한 점과 다짐을 적을 수 있도록 안내해주세요.`,
+            praiseAndResolve: '',
         };
     }
 }

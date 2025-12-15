@@ -5,9 +5,11 @@
     <title>상담 준비 다했니?</title>
     <link rel="stylesheet" href="styles.css">
 </head>
-<body>
+<body class="teacher-page">
 
-    <h1>상담 준비 다했니?</h1>
+    <div class="page-header">
+        <h1>상담 준비 다했니?</h1>
+    </div>
 
     <!-- API Key는 URL 파라미터로 전달되어 자동으로 저장됨 -->
     <input type="hidden" id="api-key-input">
@@ -182,7 +184,7 @@
     <div id="snackbar" class="snackbar"></div>
 
     <!-- 뒤로 가기 버튼 -->
-    <div style="text-align: center; margin: 30px 0; padding: 20px 0;">
+    <div class="page-footer">
         <button class="btn-back-to-login" onclick="goBackToLogin()">← 로그인 화면으로 돌아가기</button>
     </div>
 
