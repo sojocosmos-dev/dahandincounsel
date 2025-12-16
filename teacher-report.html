@@ -19,7 +19,7 @@
         <div class="counsel-list-header">
             <h2>📚 상담 목록</h2>
             <div style="display: flex; gap: 10px;">
-                <button id="create-counsel-btn" class="btn-create-counsel" onclick="handleCreateCounsel()">
+                <button id="create-counsel-btn" class="btn-create-counsel">
                     ➕ 새 상담 만들기
                 </button>
             </div>
@@ -32,10 +32,10 @@
     <!-- 상담 입력 폼 (처음엔 숨김) -->
     <div id="counsel-form-view" class="counsel-form-view" style="display: none;">
         <div class="counsel-form-header">
-            <button class="btn-back-to-list" onclick="handleBackToList()">← 목록으로</button>
+            <button class="btn-back-to-list">← 목록으로</button>
             <div id="current-counsel-info" class="current-counsel-info">
                 <span id="current-counsel-title"></span>
-                <button class="btn-delete-counsel" onclick="handleDeleteCurrentCounsel()">🗑️ 삭제</button>
+                <button class="btn-delete-counsel">🗑️ 삭제</button>
             </div>
         </div>
 
@@ -171,7 +171,7 @@
         </div>
 
             <div class="button-group">
-                <button id="save-counsel-btn" onclick="handleSaveCounsel()">💾 상담 저장</button>
+                <button id="save-counsel-btn">💾 상담 저장</button>
             </div>
         </div>
 
@@ -185,7 +185,7 @@
 
     <!-- 뒤로 가기 버튼 -->
     <div class="page-footer">
-        <button class="btn-back-to-login" onclick="goBackToLogin()">← 로그인 화면으로 돌아가기</button>
+        <button class="btn-back-to-login">← 로그인 화면으로 돌아가기</button>
     </div>
 
     <script type="module" src="/src/apps/teacher-report-main.js"></script>

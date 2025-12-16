@@ -119,6 +119,38 @@ class TeacherApp {
         document.querySelector('.print-download-group button:nth-child(2)')?.addEventListener('click', () => {
             this.reportService.shareUrl();
         });
+
+        // 상담 생성 버튼
+        const createCounselBtn = document.getElementById('create-counsel-btn');
+        if (createCounselBtn) {
+            createCounselBtn.addEventListener('click', () => this.counselManager.createNewCounsel());
+        }
+
+        // 목록으로 돌아가기 버튼
+        const backToListBtn = document.querySelector('.btn-back-to-list');
+        if (backToListBtn) {
+            backToListBtn.addEventListener('click', () => this.counselManager.backToList());
+        }
+
+        // 상담 삭제 버튼
+        const deleteCounselBtn = document.querySelector('.btn-delete-counsel');
+        if (deleteCounselBtn) {
+            deleteCounselBtn.addEventListener('click', () => this.counselManager.deleteCurrentCounsel());
+        }
+
+        // 상담 저장 버튼
+        const saveCounselBtn = document.getElementById('save-counsel-btn');
+        if (saveCounselBtn) {
+            saveCounselBtn.addEventListener('click', () => this.counselManager.saveCurrentCounsel());
+        }
+
+        // 로그인 화면으로 돌아가기 버튼
+        const backToLoginBtn = document.querySelector('.btn-back-to-login');
+        if (backToLoginBtn) {
+            backToLoginBtn.addEventListener('click', () => {
+                window.location.href = 'index.html';
+            });
+        }
     }
 
     initialize() {
@@ -130,28 +162,11 @@ document.addEventListener('DOMContentLoaded', () => {
     app = new TeacherApp();
     app.initialize();
 
-    // 전역 함수 노출
-    window.setMode = (mode) => app.uiController.setMode(mode);
-    window.handleReport = () => app.reportService.handleReport();
-    window.handleSaveConfig = () => app.reportService.handleSaveConfigOnly();
-    window.toggleConfigGroup = (groupName, isAssetGroup = true) =>
-        app.uiController.toggleConfigGroup(groupName, isAssetGroup);
-    window.shareUrl = () => app.reportService.shareUrl();
-
-    // 상담 관리 전역 함수
-    window.handleCreateCounsel = () => app.counselManager.createNewCounsel();
+    // handleSelectCounsel은 동적으로 생성되는 HTML에서 사용하므로 유지 필요
     window.handleSelectCounsel = (counselId) => app.counselManager.selectCounsel(counselId);
-    window.handleSaveCounsel = () => app.counselManager.saveCurrentCounsel();
-    window.handleDeleteCurrentCounsel = () => app.counselManager.deleteCurrentCounsel();
-    window.handleBackToList = () => app.counselManager.backToList();
 
-    // 학생 제출 보고서 보기
+    // handleViewSubmissionsForCounsel도 동적으로 생성되는 HTML에서 사용
     window.handleViewSubmissionsForCounsel = (counselId) => {
         window.location.href = `teacher-submissions.html?counselId=${counselId}`;
     };
 });
-
-// 로그인 화면으로 돌아가기 함수
-window.goBackToLogin = function() {
-    window.location.href = 'index.html';
-};

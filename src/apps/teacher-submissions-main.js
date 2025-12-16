@@ -177,16 +177,76 @@ async function viewSubmission(submissionId) {
 /**
  * 상담 목록으로 돌아갑니다
  */
-window.goBackToList = function() {
+function goBackToList() {
     // 목록 뷰를 보여주도록 플래그 설정
     sessionStorage.setItem('showListView', 'true');
     // 선택된 상담 ID 제거
     sessionStorage.removeItem('selectedCounselId');
     window.location.href = 'teacher-report.html';
-};
+}
 
-// 전역 함수 노출
+/**
+ * 출력 모드 토글
+ */
+function togglePrintMode() {
+    const printBtn = document.getElementById('print-toggle-btn');
+    const selectAllBtn = document.getElementById('select-all-btn');
+    const submissionItems = document.querySelectorAll('.submission-item');
+
+    // selection-mode 토글
+    submissionItems.forEach(item => {
+        item.classList.toggle('selection-mode');
+    });
+
+    // 버튼 상태 토글
+    printBtn.classList.toggle('active');
+
+    // 선택 모드일 때만 전체 선택 버튼 표시
+    if (printBtn.classList.contains('active')) {
+        selectAllBtn.style.display = 'inline-block';
+    } else {
+        selectAllBtn.style.display = 'none';
+        // 선택 모드 해제 시 모든 체크박스 해제
+        document.querySelectorAll('.submission-item-checkbox').forEach(cb => {
+            cb.checked = false;
+        });
+    }
+}
+
+/**
+ * 전체 선택/해제 토글
+ */
+function toggleSelectAll() {
+    const checkboxes = document.querySelectorAll('.submission-item-checkbox');
+    const allChecked = Array.from(checkboxes).every(cb => cb.checked);
+
+    checkboxes.forEach(cb => {
+        cb.checked = !allChecked;
+    });
+}
+
+// viewSubmission은 동적 HTML에서 사용하므로 전역으로 유지
 window.viewSubmission = viewSubmission;
 
-// 페이지 로드
-document.addEventListener('DOMContentLoaded', initPage);
+// 페이지 로드 시 초기화 및 이벤트 리스너 설정
+document.addEventListener('DOMContentLoaded', () => {
+    initPage();
+
+    // 뒤로가기 버튼 이벤트 리스너
+    const backBtn = document.querySelector('.back-button');
+    if (backBtn) {
+        backBtn.addEventListener('click', goBackToList);
+    }
+
+    // 출력 버튼 이벤트 리스너
+    const printBtn = document.getElementById('print-toggle-btn');
+    if (printBtn) {
+        printBtn.addEventListener('click', togglePrintMode);
+    }
+
+    // 전체 선택 버튼 이벤트 리스너
+    const selectAllBtn = document.getElementById('select-all-btn');
+    if (selectAllBtn) {
+        selectAllBtn.addEventListener('click', toggleSelectAll);
+    }
+});
