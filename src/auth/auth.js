@@ -35,8 +35,12 @@ export class StudentAuth {
 // 공통 유틸리티 함수
 // ============================================
 
-// Snackbar 표시 함수
-window.showSnackbar = function(message, type = 'info') {
+/**
+ * Snackbar를 표시합니다
+ * @param {string} message - 표시할 메시지
+ * @param {string} type - 'info' | 'success' | 'error'
+ */
+export function showSnackbar(message, type = 'info') {
     const snackbar = document.getElementById('snackbar');
     if (snackbar) {
         snackbar.textContent = message;
@@ -48,8 +52,10 @@ window.showSnackbar = function(message, type = 'info') {
     }
 }
 
-// 교사 로그인 제출
-window.submitTeacherLogin = async function() {
+/**
+ * 교사 로그인을 처리합니다
+ */
+export async function submitTeacherLogin() {
     const apiKey = document.getElementById('teacher-api-key').value.trim();
 
     // 입력값 검증
@@ -177,16 +183,24 @@ async function fetchAndSaveStudents(apiKey) {
     }
 }
 
-window.redirectToTeacherReport = function() {
+/**
+ * 교사 보고서 페이지로 이동합니다
+ */
+export function redirectToTeacherReport() {
     window.location.href = 'teacher-report.html';
 }
 
-window.redirectToAuth = function() {
+/**
+ * 로그인 페이지로 이동합니다
+ */
+export function redirectToAuth() {
     window.location.href = 'index.html';
 }
 
-// 학생 로그인 제출
-window.submitStudentLogin = function() {
+/**
+ * 학생 로그인을 처리합니다
+ */
+export function submitStudentLogin() {
     const studentCode = document.getElementById('student-code').value.trim();
 
     // 입력값 검증

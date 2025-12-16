@@ -9,6 +9,7 @@ import '../firebase/firebase-config.js';
 // 필요한 서비스 import
 import { CounselStorageService } from '../services/counsel-storage-service.js';
 import { APIManager } from '../core/api-manager.js';
+import { redirectToAuth } from '../auth/auth.js';
 
 let studentCode = null;
 let studentName = null;
@@ -17,6 +18,11 @@ let studentName = null;
  * 페이지 로드 시 초기화
  */
 document.addEventListener('DOMContentLoaded', async () => {
+    // 뒤로가기 버튼 이벤트 리스너
+    const backBtn = document.querySelector('.btn-back');
+    if (backBtn) {
+        backBtn.addEventListener('click', redirectToAuth);
+    }
     // URL 파라미터에서 학생 코드 추출
     const params = new URLSearchParams(window.location.search);
     studentCode = params.get('studentCode');
@@ -110,6 +116,15 @@ async function loadCounselList() {
 
         // 상담 카드 렌더링
         container.innerHTML = allCounsels.map(counsel => createCounselSelectCard(counsel)).join('');
+
+        // 상담 카드 클릭 이벤트 리스너 추가
+        container.querySelectorAll('.counsel-select-card').forEach(card => {
+            card.addEventListener('click', () => {
+                const counselId = card.dataset.counselId;
+                const counselTitle = card.dataset.counselTitle;
+                selectCounsel(counselId, counselTitle);
+            });
+        });
     } catch (error) {
         console.error('❌ 상담 목록 로드 실패:', error);
         container.innerHTML = '<p class="error-message">상담 목록을 불러오는 데 실패했습니다.</p>';
@@ -124,7 +139,7 @@ function createCounselSelectCard(counsel) {
     const updatedDate = new Date(counsel.updatedAt).toLocaleDateString('ko-KR');
 
     return `
-        <div class="counsel-select-card" onclick="selectCounsel('${counsel.id}', '${escapeHtml(counsel.title)}')">
+        <div class="counsel-select-card" data-counsel-id="${counsel.id}" data-counsel-title="${escapeHtml(counsel.title)}">
             <div class="counsel-select-card-title">${escapeHtml(counsel.title)}</div>
             <div class="counsel-select-card-meta">
                 <div class="counsel-select-card-date">생성: ${createdDate}</div>
@@ -147,7 +162,7 @@ function escapeHtml(text) {
 /**
  * 상담을 선택하여 리포트 페이지로 이동
  */
-window.selectCounsel = function(counselId, counselTitle) {
+function selectCounsel(counselId, counselTitle) {
     // counselId와 studentCode 전달 (API Key는 상담 데이터에서 자동으로 가져옴)
     const params = new URLSearchParams({
         counselId: counselId,
@@ -155,13 +170,6 @@ window.selectCounsel = function(counselId, counselTitle) {
     });
 
     window.location.href = `student-report.html?${params.toString()}`;
-}
-
-/**
- * 로그인 화면으로 이동
- */
-window.redirectToAuth = function() {
-    window.location.href = 'index.html';
 }
 
 /**

@@ -66,10 +66,4 @@ class App {
 document.addEventListener('DOMContentLoaded', () => {
     app = new App();
     app.initialize();
-
-    // 전역 함수로 노출 (기존 HTML inline handlers와 호환성)
-    window.setMode = (mode) => app.uiController.setMode(mode);
-    window.handleReport = () => app.reportService.handleReport();
-    window.toggleConfigGroup = (groupName, isAssetGroup = true) => app.uiController.toggleConfigGroup(groupName, isAssetGroup);
-    window.shareUrl = () => app.reportService.shareUrl();
 });

@@ -40,8 +40,3 @@ window.StudentAuth = StudentAuth;
 
 // student-app.js 코드 import
 import '../apps/student-app.js';
-
-// 전역 함수
-window.redirectToAuth = function() {
-    window.location.href = 'index.html';
-};

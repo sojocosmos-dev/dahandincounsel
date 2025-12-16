@@ -23,13 +23,28 @@ class StudentApp {
       });
 
       // Enter 키로도 조회 가능
-      document
-        .getElementById("student-code-input")
-        .addEventListener("keypress", (e) => {
+      const studentCodeInput = document.getElementById("student-code-input");
+      if (studentCodeInput) {
+        studentCodeInput.addEventListener("keypress", (e) => {
           if (e.key === "Enter") {
             this.handleStudentQuery();
           }
         });
+      }
+    }
+
+    // 제출 버튼 이벤트 리스너
+    const submitBtn = document.getElementById("submit-report-btn");
+    if (submitBtn) {
+      submitBtn.addEventListener("click", () => this.handleSubmitReport());
+    }
+
+    // 뒤로가기 버튼 이벤트 리스너
+    const logoutBtn = document.querySelector(".student-logout-btn");
+    if (logoutBtn) {
+      logoutBtn.addEventListener("click", () => {
+        window.location.href = 'index.html';
+      });
     }
   }
 
@@ -191,106 +206,107 @@ class StudentApp {
       btn.disabled = !enabled;
     }
   }
+
+  /**
+   * 보고서 제출하기
+   */
+  async handleSubmitReport() {
+    if (!this.studentCode || !this.counselId) {
+      showMessage("오류: 학생 정보를 찾을 수 없습니다.", "error");
+      return;
+    }
+
+    if (!this.reportData) {
+      showMessage("오류: 보고서 데이터를 찾을 수 없습니다.", "error");
+      return;
+    }
+
+    const reportArea = document.getElementById("student-report-area");
+    if (!reportArea) {
+      showMessage("오류: 보고서를 찾을 수 없습니다.", "error");
+      return;
+    }
+
+    // 보고서 내의 모든 textarea 수집
+    const textareas = reportArea.querySelectorAll("textarea");
+    const userInputs = {};
+
+    // 각 textarea의 값을 저장
+    textareas.forEach((textarea, index) => {
+      const value = textarea.value.trim();
+      if (value) {
+        // textarea placeholder로 구분
+        const placeholder = textarea.placeholder;
+        if (placeholder.includes("쿠키 획득")) {
+          userInputs.cookieMethod = value;
+        } else if (
+          placeholder.includes("쿠키") &&
+          placeholder.includes("좋았던")
+        ) {
+          userInputs.cookieGood = value;
+        } else if (placeholder.includes("초코칩 획득")) {
+          userInputs.chipMethod = value;
+        } else if (
+          placeholder.includes("초코칩") &&
+          placeholder.includes("좋았던")
+        ) {
+          userInputs.chipGood = value;
+        } else if (placeholder.includes("자랑스러운")) {
+          userInputs.proudBadge = value;
+        } else if (placeholder.includes("받고 싶은")) {
+          userInputs.wantBadge = value;
+        } else if (placeholder.includes("칭찬") || placeholder.includes("다짐")) {
+          userInputs.praiseResolve = value;
+        } else if (placeholder.includes("격려")) {
+          userInputs.parentComment = value;
+        } else {
+          userInputs["textarea_" + index] = value;
+        }
+      }
+    });
+
+    // 제출할 데이터: 원본 보고서 데이터 + 학생 입력 내용
+    const submissionData = {
+      studentCode: this.studentCode,
+      studentName: this.reportData?.student, // 보고서에서 학생 이름 가져오기
+      counselId: this.counselId,
+      data: {
+        // 원본 보고서 데이터 (API에서 받아온 쿠키, 초코칩, 뱃지 정보)
+        ...this.reportData,
+        // studentCode 명시적 추가 (reportData에 없을 수 있음)
+        studentCode: this.studentCode,
+        // 학생이 입력한 내용
+        userInputs: userInputs,
+      },
+    };
+
+    try {
+      // 디버깅: 저장할 데이터 확인
+      console.log("📤 제출할 데이터:", submissionData);
+      console.log("📊 보고서 데이터:", this.reportData);
+
+      const result = await StudentSubmissionService.saveSubmission(
+        submissionData,
+        this.apiKey
+      );
+
+      if (result.success) {
+        console.log("✅ 제출 성공:", result.submission);
+        showMessage("✅ 입력 내용이 제출되었습니다!", "success");
+      } else {
+        showMessage("❌ 제출 실패: " + result.message, "error");
+      }
+    } catch (error) {
+      console.error("❌ 제출 오류:", error);
+      showMessage("❌ 오류 발생: " + error.message, "error");
+    }
+  }
 }
 
 document.addEventListener("DOMContentLoaded", () => {
   studentApp = new StudentApp();
-  window.studentApp = studentApp; // 전역으로 노출
+  window.studentApp = studentApp; // 전역으로 노출 (디버깅용)
 });
-/**
- * 보고서 제출하기
- */
-window.handleSubmitReport = async function handleSubmitReport() {
-  if (!studentApp.studentCode || !studentApp.counselId) {
-    showMessage("오류: 학생 정보를 찾을 수 없습니다.", "error");
-    return;
-  }
-
-  if (!studentApp.reportData) {
-    showMessage("오류: 보고서 데이터를 찾을 수 없습니다.", "error");
-    return;
-  }
-
-  const reportArea = document.getElementById("student-report-area");
-  if (!reportArea) {
-    showMessage("오류: 보고서를 찾을 수 없습니다.", "error");
-    return;
-  }
-
-  // 보고서 내의 모든 textarea 수집
-  const textareas = reportArea.querySelectorAll("textarea");
-  const userInputs = {};
-
-  // 각 textarea의 값을 저장
-  textareas.forEach((textarea, index) => {
-    const value = textarea.value.trim();
-    if (value) {
-      // textarea placeholder로 구분
-      const placeholder = textarea.placeholder;
-      if (placeholder.includes("쿠키 획득")) {
-        userInputs.cookieMethod = value;
-      } else if (
-        placeholder.includes("쿠키") &&
-        placeholder.includes("좋았던")
-      ) {
-        userInputs.cookieGood = value;
-      } else if (placeholder.includes("초코칩 획득")) {
-        userInputs.chipMethod = value;
-      } else if (
-        placeholder.includes("초코칩") &&
-        placeholder.includes("좋았던")
-      ) {
-        userInputs.chipGood = value;
-      } else if (placeholder.includes("자랑스러운")) {
-        userInputs.proudBadge = value;
-      } else if (placeholder.includes("받고 싶은")) {
-        userInputs.wantBadge = value;
-      } else if (placeholder.includes("칭찬") || placeholder.includes("다짐")) {
-        userInputs.praiseResolve = value;
-      } else if (placeholder.includes("격려")) {
-        userInputs.parentComment = value;
-      } else {
-        userInputs["textarea_" + index] = value;
-      }
-    }
-  });
-
-  // 제출할 데이터: 원본 보고서 데이터 + 학생 입력 내용
-  const submissionData = {
-    studentCode: studentApp.studentCode,
-    studentName: studentApp.reportData?.student, // 보고서에서 학생 이름 가져오기
-    counselId: studentApp.counselId,
-    data: {
-      // 원본 보고서 데이터 (API에서 받아온 쿠키, 초코칩, 뱃지 정보)
-      ...studentApp.reportData,
-      // studentCode 명시적 추가 (reportData에 없을 수 있음)
-      studentCode: studentApp.studentCode,
-      // 학생이 입력한 내용
-      userInputs: userInputs,
-    },
-  };
-
-  try {
-    // 디버깅: 저장할 데이터 확인
-    console.log("📤 제출할 데이터:", submissionData);
-    console.log("📊 보고서 데이터:", studentApp.reportData);
-
-    const result = await StudentSubmissionService.saveSubmission(
-      submissionData,
-      studentApp.apiKey
-    );
-
-    if (result.success) {
-      console.log("✅ 제출 성공:", result.submission);
-      showMessage("✅ 입력 내용이 제출되었습니다!", "success");
-    } else {
-      showMessage("❌ 제출 실패: " + result.message, "error");
-    }
-  } catch (error) {
-    console.error("❌ 제출 오류:", error);
-    showMessage("❌ 오류 발생: " + error.message, "error");
-  }
-};
 
 function showMessage(message, type) {
   const messageEl = document.getElementById("submission-message");
