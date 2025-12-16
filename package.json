@@ -18,7 +18,7 @@
   "bugs": {
     "url": "https://github.com/sojocosmos-dev/dahandincounsel/issues"
   },
-  "homepage": "https://github.com/sojocosmos-dev/dahandincounsel#readme",
+  "homepage": "https://sojocosmos-dev.github.io/dahandincounsel/",
   "dependencies": {
     "firebase": "^12.7.0"
   },
