@@ -208,20 +208,20 @@
     </div>
 
     <!-- Firebase 설정 (NPM 모듈 방식) -->
-    <script type="module" src="firebase-config.js"></script>
-    <script src="config.js"></script>
-    <script src="ConfigStorageService.js"></script>
-    <script src="CounselStorageService.js"></script>
-    <script src="StudentSubmissionService.js"></script>
-    <script src="StateManager.js"></script>
-    <script src="TextUtility.js"></script>
-    <script src="APIManager.js"></script>
-    <script src="ReportDataGenerator.js"></script>
-    <script src="ReportSectionGenerator.js"></script>
-    <script src="ReportGenerator.js"></script>
-    <script src="UIController.js"></script>
-    <script src="ReportService.js"></script>
-    <script src="studentReportService.js"></script>
+    <script type="module" src="src/firebase/firebase-config.js"></script>
+    <script defer src="src/core/config.js"></script>
+    <script defer src="src/services/config-storage-service.js"></script>
+    <script defer src="src/services/counsel-storage-service.js"></script>
+    <script defer src="src/services/student-submission-service.js"></script>
+    <script defer src="src/core/state-manager.js"></script>
+    <script defer src="src/utils/text-utility.js"></script>
+    <script defer src="src/core/api-manager.js"></script>
+    <script defer src="src/services/report-data-generator.js"></script>
+    <script defer src="src/services/report-section-generator.js"></script>
+    <script defer src="src/services/report-generator.js"></script>
+    <script defer src="src/ui/ui-controller.js"></script>
+    <script defer src="src/services/report-service.js"></script>
+    <script defer src="src/services/student-report-service.js"></script>
 
     <script>
         let currentCounselId = null;

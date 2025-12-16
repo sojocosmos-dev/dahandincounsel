@@ -1,7 +1,39 @@
 /**
  * auth.js
- * 로그인 페이지 네비게이션 및 학생 로그인 처리
+ * 로그인 페이지 네비게이션 및 학생/교사 로그인 처리
+ * (구 studentAuth.js 통합)
  */
+
+// ============================================
+// StudentAuth 클래스 (구 studentAuth.js에서 통합)
+// ============================================
+class StudentAuth {
+    /**
+     * API Key를 환경 설정에서 가져옵니다
+     */
+    static getApiKey() {
+        return CONFIG?.STUDENT_API_KEY || 'default-api-key';
+    }
+
+    /**
+     * 학생 코드를 검증합니다
+     */
+    static validateStudentCode(code) {
+        return /^[A-Za-z0-9]{4,}$/.test(code.trim());
+    }
+
+    /**
+     * 세션을 종료합니다
+     */
+    static logout() {
+        sessionStorage.clear();
+        window.location.href = 'index.html';
+    }
+}
+
+// ============================================
+// 공통 유틸리티 함수
+// ============================================
 
 // Snackbar 표시 함수
 window.showSnackbar = function(message, type = 'info') {
