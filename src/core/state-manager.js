@@ -59,3 +59,6 @@ class StateManager {
         this.cumulativeBadges = {};
     }
 }
+
+// ES 모듈로 export
+export { StateManager };

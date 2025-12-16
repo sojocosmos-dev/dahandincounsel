@@ -3,6 +3,8 @@
  * API 호출 및 데이터 조회 담당
  */
 
+import { CONFIG } from './config.js';
+
 class APIManager {
     /**
      * API에서 학생 데이터를 조회합니다
@@ -54,3 +56,6 @@ class APIManager {
         };
     }
 }
+
+// ES 모듈로 export
+export { APIManager };

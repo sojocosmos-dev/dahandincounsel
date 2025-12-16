@@ -1,13 +1,18 @@
 /**
- * auth.js
- * 로그인 페이지 네비게이션 및 학생/교사 로그인 처리
- * (구 studentAuth.js 통합)
+ * index-main.js
+ * 로그인 페이지 메인 엔트리 포인트
  */
+
+// Firebase 설정 import
+import '../firebase/firebase-config.js';
+
+// StudentDataService가 있다면 import (일단 주석 처리)
+// import { StudentDataService } from '../services/student-data-service.js';
 
 // ============================================
 // StudentAuth 클래스 (구 studentAuth.js에서 통합)
 // ============================================
-export class StudentAuth {
+class StudentAuth {
     /**
      * API Key를 환경 설정에서 가져옵니다
      */
@@ -98,9 +103,6 @@ window.submitTeacherLogin = async function() {
             console.log('✅ 교사 로그인 성공: API Key 유효');
             showSnackbar('로그인 성공!', 'success');
 
-            // 로그인 성공 후 전체 학생 데이터 조회
-            await fetchAndSaveStudents(apiKey);
-
             // teacher-report.html로 이동하며 API Key 전달
             setTimeout(() => {
                 const params = new URLSearchParams({
@@ -117,63 +119,6 @@ window.submitTeacherLogin = async function() {
     } catch (error) {
         console.error('❌ 교사 로그인 오류:', error);
         showSnackbar('네트워크 오류가 발생했습니다.', 'error');
-    }
-}
-
-// 전체 학생 데이터 조회 및 Firestore 저장
-async function fetchAndSaveStudents(apiKey) {
-    try {
-        const apiUrl = `https://api.dahandin.com/openapi/v1/get/student/total`;
-
-        console.log('📚 전체 학생 데이터 조회 시작...');
-
-        const response = await fetch(apiUrl, {
-            method: 'GET',
-            headers: { 'X-API-Key': apiKey }
-        });
-
-        if (!response.ok) {
-            console.warn('⚠️ 학생 데이터 조회 실패:', response.status);
-            return;
-        }
-
-        const responseData = await response.json();
-
-        if (responseData && responseData.result === true && responseData.data && Array.isArray(responseData.data)) {
-            const students = responseData.data;
-            console.log(`📝 ${students.length}명의 학생 데이터를 Firestore에 저장 시작...`);
-
-            // 모든 학생 데이터를 Firestore에 저장 (병렬 처리)
-            const savePromises = students.map(async (studentData) => {
-                const studentCode = studentData.code || studentData.studentCode || studentData.student_code;
-
-                if (!studentCode) {
-                    console.warn('⚠️ 학생 코드가 없는 데이터:', studentData);
-                    return;
-                }
-
-                try {
-                    const result = await StudentDataService.saveStudentFromAPI(
-                        studentCode,
-                        apiKey,
-                        studentData
-                    );
-
-                    if (result.success) {
-                        console.log(`✅ 학생 ${studentCode} 데이터 저장 성공`);
-                    } else {
-                        console.warn(`⚠️ 학생 ${studentCode} 데이터 저장 실패:`, result.message);
-                    }
-                } catch (error) {
-                    console.error(`❌ 학생 ${studentCode} 저장 오류:`, error);
-                }
-            });
-
-            await Promise.all(savePromises);
-            console.log('✅ 전체 학생 데이터 Firestore 저장 완료');
-        }
-    } catch (error) {
-        console.error('❌ 학생 데이터 조회 오류:', error);
     }
 }
 

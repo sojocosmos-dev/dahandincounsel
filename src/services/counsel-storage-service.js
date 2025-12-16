@@ -5,6 +5,8 @@
  * Firestore 연동 완료
  */
 
+import { db, collection, doc, getDoc, getDocs, setDoc, updateDoc, deleteDoc, query, where, orderBy, serverTimestamp } from '../firebase/firebase-config.js';
+
 class CounselStorageService {
     /**
      * Firestore 컬렉션 이름
@@ -19,9 +21,6 @@ class CounselStorageService {
      */
     static async loadCounselList(apiKey = null) {
         try {
-            const db = window.getFirestore();
-            const { collection, query, where, orderBy, getDocs } = window.firestoreLib;
-
             const collectionRef = collection(db, this.COLLECTION_NAME);
 
             // API Key가 제공된 경우 필터링, 없으면 전체 조회
@@ -66,9 +65,6 @@ class CounselStorageService {
      */
     static async getAllUniqueApiKeys() {
         try {
-            const db = window.getFirestore();
-            const { collection, getDocs } = window.firestoreLib;
-
             const counselsRef = collection(db, this.COLLECTION_NAME);
             const querySnapshot = await getDocs(counselsRef);
 
@@ -101,9 +97,6 @@ class CounselStorageService {
      */
     static async getCounselById(counselId) {
         try {
-            const db = window.getFirestore();
-            const { doc, getDoc } = window.firestoreLib;
-
             const docRef = doc(db, this.COLLECTION_NAME, counselId);
             const docSnap = await getDoc(docRef);
 
@@ -144,8 +137,6 @@ class CounselStorageService {
             }
 
             const newCounselId = this.generateCounselId();
-            const db = window.getFirestore();
-            const { doc, setDoc, serverTimestamp } = window.firestoreLib;
 
             const newCounselData = {
                 title: counselData.title || `상담 ${Date.now()}`,
@@ -195,9 +186,6 @@ class CounselStorageService {
             if (!apiKey) {
                 throw new Error('API Key가 필요합니다.');
             }
-
-            const db = window.getFirestore();
-            const { doc, getDoc, updateDoc, serverTimestamp } = window.firestoreLib;
 
             const docRef = doc(db, this.COLLECTION_NAME, counselId);
             const docSnap = await getDoc(docRef);
@@ -254,9 +242,6 @@ class CounselStorageService {
                 throw new Error('API Key가 필요합니다.');
             }
 
-            const db = window.getFirestore();
-            const { doc, getDoc, deleteDoc } = window.firestoreLib;
-
             const docRef = doc(db, this.COLLECTION_NAME, counselId);
             const docSnap = await getDoc(docRef);
 
@@ -290,3 +275,6 @@ class CounselStorageService {
         return 'counsel_' + Date.now() + '_' + Math.random().toString(36).substring(2, 11);
     }
 }
+
+// ES 모듈로 export
+export { CounselStorageService };

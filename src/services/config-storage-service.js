@@ -165,3 +165,6 @@ class ConfigStorageService {
         }
     }
 }
+
+// ES 모듈로 export
+export { ConfigStorageService };

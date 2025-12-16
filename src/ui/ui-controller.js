@@ -172,3 +172,6 @@ class UIController {
         document.getElementById(ELEMENT_IDS.generateBtn).disabled = !enabled;
     }
 }
+
+// ES 모듈로 export
+export { UIController };

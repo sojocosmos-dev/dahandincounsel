@@ -47,6 +47,13 @@ class StudentSubmissionService {
                     updatedAt: serverTimestamp()
                 };
 
+                // studentName이 있으면 추가
+                if (submissionData.studentName) {
+                    submissionDoc.studentName = submissionData.studentName;
+                } else if (submissionData.data?.studentName) {
+                    submissionDoc.studentName = submissionData.data.studentName;
+                }
+
                 // 기존 문서가 있으면 업데이트, 없으면 생성
                 const docId = existingDocId || submissionId;
                 const docRef = doc(db, this.COLLECTION_NAME, docId);
@@ -55,6 +62,7 @@ class StudentSubmissionService {
                 const newSubmission = {
                     id: docId,
                     studentCode: submissionData.studentCode,
+                    studentName: submissionData.studentName,
                     counselId: submissionData.counselId,
                     data: submissionData.data,
                     submittedAt: submissionData.submittedAt || new Date().toISOString(),
@@ -144,6 +152,7 @@ class StudentSubmissionService {
                     submissions.push({
                         id: docSnap.id,
                         studentCode: data.studentCode,
+                        studentName: data.studentName,
                         counselId: data.counselId,
                         data: data.data,
                         submittedAt: data.submittedAt?.toDate().toISOString(),
@@ -207,6 +216,49 @@ class StudentSubmissionService {
         }
     }
 
+    /**
+     * ID로 제출 데이터를 조회합니다
+     */
+    static async getSubmissionById(submissionId) {
+        try {
+            if (isFirebaseAvailable()) {
+                const db = getFirestore();
+                const { doc, getDoc } = window.firestoreLib;
+
+                const docRef = doc(db, this.COLLECTION_NAME, submissionId);
+                const docSnap = await getDoc(docRef);
+
+                if (!docSnap.exists()) {
+                    return null;
+                }
+
+                const data = docSnap.data();
+                return {
+                    id: docSnap.id,
+                    studentCode: data.studentCode,
+                    studentName: data.studentName,
+                    counselId: data.counselId,
+                    reportData: data.data,
+                    submittedAt: data.submittedAt?.toDate().toISOString(),
+                    updatedAt: data.updatedAt?.toDate().toISOString()
+                };
+            } else {
+                const submissions = await this.loadAllSubmissions();
+                const submission = submissions.find(s => s.id === submissionId);
+                if (submission) {
+                    return {
+                        ...submission,
+                        reportData: submission.data
+                    };
+                }
+                return null;
+            }
+        } catch (error) {
+            console.error('ID로 제출 데이터 조회 오류:', error);
+            return null;
+        }
+    }
+
     static generateId() {
         return `sub_${Date.now()}_${Math.random().toString(36).substring(2, 11)}`;
     }
@@ -245,3 +297,6 @@ class StudentSubmissionService {
         };
     }
 }
+
+// ES 모듈로 export
+export { StudentSubmissionService };

@@ -392,3 +392,6 @@ class CounselManager {
         }, 5000);
     }
 }
+
+// ES 모듈로 export
+export { CounselManager };

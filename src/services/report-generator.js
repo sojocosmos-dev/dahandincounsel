@@ -25,3 +25,6 @@ class ReportGenerator {
         );
     }
 }
+
+// ES 모듈로 export
+export { ReportGenerator };

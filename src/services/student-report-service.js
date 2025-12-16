@@ -199,3 +199,6 @@ class StudentReportService {
         return ReportGenerator.generateReportHtml(reportData, false);
     }
 }
+
+// ES 모듈로 export
+export { StudentReportService };

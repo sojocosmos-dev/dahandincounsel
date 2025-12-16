@@ -3,6 +3,12 @@
  * 보고서 섹션별 HTML 생성
  */
 
+// 색상 팔레트 정의
+const COLOR_PALETTE = {
+    SAVE: '#2ecc71',   // 저축 (녹색)
+    USE: '#e74c3c'     // 사용 (빨간색)
+};
+
 class ReportSectionGenerator {
     /**
      * 보고서 헤더를 생성합니다
@@ -277,3 +283,6 @@ class ReportSectionGenerator {
         return `background: conic-gradient(${COLOR_PALETTE.SAVE} 0% ${savingRatio}%, ${COLOR_PALETTE.USE} ${savingRatio}% 100%);`;
     }
 }
+
+// ES 모듈로 export
+export { ReportSectionGenerator };

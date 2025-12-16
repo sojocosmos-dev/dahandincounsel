@@ -35,3 +35,6 @@ class TextUtility {
         return { primary: primaryContent, secondary: secondaryContent };
     }
 }
+
+// ES 모듈로 export
+export { TextUtility };

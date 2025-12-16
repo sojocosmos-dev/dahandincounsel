@@ -67,3 +67,6 @@ class ReportDataGenerator {
         };
     }
 }
+
+// ES 모듈로 export
+export { ReportDataGenerator };

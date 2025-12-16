@@ -52,3 +52,6 @@ const ELEMENT_IDS = {
         batch: 'mode-batch-content',
     },
 };
+
+// ES 모듈로 export
+export { CONFIG, BADGE_LIST, DEFAULT_USAGE_TEXTS, COLOR_PALETTE, ELEMENT_IDS };

@@ -246,3 +246,6 @@ class ReportService {
         }
     }
 }
+
+// ES 모듈로 export
+export { ReportService };

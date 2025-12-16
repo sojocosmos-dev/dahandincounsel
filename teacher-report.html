@@ -188,30 +188,6 @@
         <button class="btn-back-to-login" onclick="goBackToLogin()">← 로그인 화면으로 돌아가기</button>
     </div>
 
-    <!-- Firebase 설정 (NPM 모듈 방식) -->
-    <script type="module" src="src/firebase/firebase-config.js"></script>
-
-    <!-- 기본 설정 및 서비스 -->
-    <script defer src="src/core/config.js"></script>
-    <script defer src="src/services/config-storage-service.js"></script>
-    <script defer src="src/services/counsel-storage-service.js"></script>
-    <script defer src="src/services/student-submission-service.js"></script>
-    <script defer src="src/core/state-manager.js"></script>
-    <script defer src="src/core/api-manager.js"></script>
-    <script defer src="src/utils/text-utility.js"></script>
-    <script defer src="src/services/report-data-generator.js"></script>
-    <script defer src="src/services/report-section-generator.js"></script>
-    <script defer src="src/services/report-generator.js"></script>
-    <script defer src="src/ui/ui-controller.js"></script>
-    <script defer src="src/services/report-service.js"></script>
-    <script defer src="src/ui/counsel-manager.js"></script>
-    <script defer src="src/apps/teacher-app.js"></script>
-
-    <script>
-        // 로그인 화면으로 돌아가기 함수
-        function goBackToLogin() {
-            window.location.href = 'index.html';
-        }
-    </script>
+    <script type="module" src="/src/apps/teacher-report-main.js"></script>
 </body>
 </html>

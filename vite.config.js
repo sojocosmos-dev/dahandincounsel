@@ -11,9 +11,7 @@ export default defineConfig({
         teacherReport: resolve(__dirname, 'teacher-report.html'),
         teacherSubmissions: resolve(__dirname, 'teacher-submissions.html'),
         studentCounselSelect: resolve(__dirname, 'student-counsel-select.html'),
-        studentReport: resolve(__dirname, 'student-report.html'),
-        diagnosticTool: resolve(__dirname, 'diagnostic-tool.html'),
-        debugStudent: resolve(__dirname, 'debug-student.html')
+        studentReport: resolve(__dirname, 'student-report.html')
       }
     }
   },
