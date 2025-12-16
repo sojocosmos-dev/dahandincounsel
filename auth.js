@@ -3,33 +3,158 @@
  * 로그인 페이지 네비게이션 및 학생 로그인 처리
  */
 
+// Snackbar 표시 함수
+window.showSnackbar = function(message, type = 'info') {
+    const snackbar = document.getElementById('snackbar');
+    if (snackbar) {
+        snackbar.textContent = message;
+        snackbar.className = 'show ' + type;
+
+        setTimeout(() => {
+            snackbar.className = snackbar.className.replace('show', '');
+        }, 3000);
+    }
+}
+
 // 교사 로그인 제출
-function submitTeacherLogin() {
+window.submitTeacherLogin = async function() {
     const apiKey = document.getElementById('teacher-api-key').value.trim();
 
     // 입력값 검증
     if (!apiKey) {
-        alert('API Key를 입력해주세요.');
+        showSnackbar('API Key를 입력해주세요.', 'error');
         return;
     }
 
-    // teacher-report.html로 이동하며 API Key 전달
-    const params = new URLSearchParams({
-        apiKey: apiKey
-    });
-    window.location.href = `teacher-report.html?${params.toString()}`;
+    // API 호출하여 검증
+    try {
+        const apiUrl = `https://api.dahandin.com/openapi/v1/get/class/list`;
+
+        console.log('🔑 API Key 검증 시작...');
+
+        // 클래스 목록 조회
+        const response = await fetch(apiUrl, {
+            method: 'GET',
+            headers: { 'X-API-Key': apiKey }
+        });
+
+        console.log('📡 API 응답 상태:', response.status);
+
+        // HTTP 상태 코드 확인
+        if (response.status === 401 || response.status === 403) {
+            // 401 Unauthorized 또는 403 Forbidden: API Key가 유효하지 않음
+            console.error('❌ 인증 실패: 유효하지 않은 API Key');
+            showSnackbar('유효하지 않은 API Key입니다.', 'error');
+            return;
+        }
+
+        // 응답 본문 파싱
+        let responseData;
+        try {
+            responseData = await response.json();
+            console.log('📦 API 응답 데이터:', responseData);
+        } catch (parseError) {
+            console.error('❌ JSON 파싱 실패:', parseError);
+            showSnackbar('서버 응답을 처리할 수 없습니다.', 'error');
+            return;
+        }
+
+        // API 응답의 result 필드 확인
+        // result: true = 성공, result: false = 실패
+        if (responseData && responseData.result === true) {
+            // API 호출 성공 = API Key 유효
+            console.log('✅ 교사 로그인 성공: API Key 유효');
+            showSnackbar('로그인 성공!', 'success');
+
+            // 로그인 성공 후 전체 학생 데이터 조회
+            await fetchAndSaveStudents(apiKey);
+
+            // teacher-report.html로 이동하며 API Key 전달
+            setTimeout(() => {
+                const params = new URLSearchParams({
+                    apiKey: apiKey
+                });
+                window.location.href = `teacher-report.html?${params.toString()}`;
+            }, 1000);
+        } else {
+            // result가 false이거나 없는 경우 = API Key 무효 또는 오류
+            const errorMessage = responseData?.message || '알 수 없는 오류가 발생했습니다.';
+            console.error('❌ API 호출 실패:', errorMessage);
+            showSnackbar(`로그인 실패: ${errorMessage}`, 'error');
+        }
+    } catch (error) {
+        console.error('❌ 교사 로그인 오류:', error);
+        showSnackbar('네트워크 오류가 발생했습니다.', 'error');
+    }
 }
 
-function redirectToTeacherReport() {
+// 전체 학생 데이터 조회 및 Firestore 저장
+async function fetchAndSaveStudents(apiKey) {
+    try {
+        const apiUrl = `https://api.dahandin.com/openapi/v1/get/student/total`;
+
+        console.log('📚 전체 학생 데이터 조회 시작...');
+
+        const response = await fetch(apiUrl, {
+            method: 'GET',
+            headers: { 'X-API-Key': apiKey }
+        });
+
+        if (!response.ok) {
+            console.warn('⚠️ 학생 데이터 조회 실패:', response.status);
+            return;
+        }
+
+        const responseData = await response.json();
+
+        if (responseData && responseData.result === true && responseData.data && Array.isArray(responseData.data)) {
+            const students = responseData.data;
+            console.log(`📝 ${students.length}명의 학생 데이터를 Firestore에 저장 시작...`);
+
+            // 모든 학생 데이터를 Firestore에 저장 (병렬 처리)
+            const savePromises = students.map(async (studentData) => {
+                const studentCode = studentData.code || studentData.studentCode || studentData.student_code;
+
+                if (!studentCode) {
+                    console.warn('⚠️ 학생 코드가 없는 데이터:', studentData);
+                    return;
+                }
+
+                try {
+                    const result = await StudentDataService.saveStudentFromAPI(
+                        studentCode,
+                        apiKey,
+                        studentData
+                    );
+
+                    if (result.success) {
+                        console.log(`✅ 학생 ${studentCode} 데이터 저장 성공`);
+                    } else {
+                        console.warn(`⚠️ 학생 ${studentCode} 데이터 저장 실패:`, result.message);
+                    }
+                } catch (error) {
+                    console.error(`❌ 학생 ${studentCode} 저장 오류:`, error);
+                }
+            });
+
+            await Promise.all(savePromises);
+            console.log('✅ 전체 학생 데이터 Firestore 저장 완료');
+        }
+    } catch (error) {
+        console.error('❌ 학생 데이터 조회 오류:', error);
+    }
+}
+
+window.redirectToTeacherReport = function() {
     window.location.href = 'teacher-report.html';
 }
 
-function redirectToAuth() {
+window.redirectToAuth = function() {
     window.location.href = 'index.html';
 }
 
 // 학생 로그인 제출
-function submitStudentLogin() {
+window.submitStudentLogin = function() {
     const studentCode = document.getElementById('student-code').value.trim();
 
     // 입력값 검증

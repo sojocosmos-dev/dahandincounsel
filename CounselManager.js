@@ -49,10 +49,10 @@ class CounselManager {
         const isActive = counsel.id === this.currentCounselId;
         const createdDate = new Date(counsel.createdAt).toLocaleDateString('ko-KR');
         const updatedDate = new Date(counsel.updatedAt).toLocaleDateString('ko-KR');
-        
+
         // 학생 제출 데이터 조회
         const submissions = await StudentSubmissionService.getSubmissionsByCounselId(counsel.id);
-        
+
         // 학생 제출 인원수만 표시하는 버튼
         let submissionsHtml = '';
         if (submissions.length > 0) {
@@ -151,7 +151,7 @@ class CounselManager {
         this.currentCounselId = counselId;
         // 선택된 상담 ID를 세션에 저장
         sessionStorage.setItem('selectedCounselId', counselId);
-        
+
         this.loadCounselToForm(counsel);
         this.renderCounselList();
         this.updateCurrentCounselInfo(counsel.title);
@@ -357,7 +357,7 @@ class CounselManager {
         const messageArea = document.getElementById('message-area');
         if (messageArea) {
             const alertClass = type === 'success' ? 'alert-success' :
-                             type === 'error' ? 'alert-error' : 'alert-info';
+                type === 'error' ? 'alert-error' : 'alert-info';
             messageArea.innerHTML = `<p class="alert ${alertClass}">${message}</p>`;
 
             if (type === 'success') {

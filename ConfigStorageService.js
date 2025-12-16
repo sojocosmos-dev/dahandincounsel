@@ -2,44 +2,43 @@
  * ConfigStorageService.js
  * 보고서 설정 저장/로드 서비스
  *
- * 현재: 로컬 스토리지 사용
- * 향후: 데이터베이스 연동 예정
+ * Firestore 연동 완료
  */
 
 class ConfigStorageService {
     /**
-     * 저장소 키
+     * Firestore 컬렉션 이름
      */
-    static STORAGE_KEY = 'teacherReportConfig';
+    static COLLECTION_NAME = 'reportConfigs';
 
     /**
      * 교사가 설정한 보고서 config를 저장합니다
      *
      * @param {Object} config - 저장할 보고서 설정
-     * @param {string} apiKey - API Key (향후 DB 연동 시 사용자 식별용)
+     * @param {string} apiKey - API Key (사용자 식별용)
      * @returns {Promise<{success: boolean, message: string}>}
      */
     static async saveConfig(config, apiKey = null) {
         try {
-            // TODO: 향후 데이터베이스 연동 시 아래 코드를 API 호출로 교체
-            // const response = await fetch('/api/config/save', {
-            //     method: 'POST',
-            //     headers: { 'Content-Type': 'application/json' },
-            //     body: JSON.stringify({ apiKey, config })
-            // });
-            // return await response.json();
+            if (!apiKey) {
+                throw new Error('API Key가 필요합니다.');
+            }
 
-            // 현재: 로컬 스토리지 사용
+            const db = await getFirestore();
+
             const configData = {
+                teacherApiKey: apiKey,
                 config: config,
-                apiKey: apiKey, // 향후 DB 연동을 위해 저장
-                savedAt: new Date().toISOString()
+                createdAt: firebase.firestore.FieldValue.serverTimestamp(),
+                updatedAt: firebase.firestore.FieldValue.serverTimestamp()
             };
 
-            localStorage.setItem(this.STORAGE_KEY, JSON.stringify(configData));
+            // API Key를 문서 ID로 사용 (교사당 하나의 설정)
+            const docRef = db.collection(this.COLLECTION_NAME).doc(apiKey);
+            await docRef.set(configData, { merge: true });
 
-            console.log('✅ 보고서 설정 저장 완료:', {
-                savedAt: configData.savedAt,
+            console.log('✅ Firestore에 보고서 설정 저장 완료:', {
+                apiKey: '***' + apiKey.slice(-4),
                 hasGeneralUsage: !!config.generalUsage,
                 hasCookie: !!config.cookie,
                 hasChip: !!config.chip,
@@ -63,66 +62,71 @@ class ConfigStorageService {
     /**
      * 저장된 교사 설정을 불러옵니다
      *
-     * @param {string} apiKey - API Key (향후 DB 연동 시 사용자 식별용)
+     * @param {string} apiKey - API Key (사용자 식별용)
      * @returns {Promise<Object|null>} 저장된 설정 또는 null
      */
     static async loadConfig(apiKey = null) {
         try {
-            // TODO: 향후 데이터베이스 연동 시 아래 코드를 API 호출로 교체
-            // const response = await fetch(`/api/config/load?apiKey=${apiKey}`);
-            // const data = await response.json();
-            // return data.config;
+            if (!apiKey) {
+                console.warn('⚠️ API Key가 제공되지 않았습니다.');
+                return null;
+            }
 
-            // 현재: 로컬 스토리지 사용
-            const savedData = localStorage.getItem(this.STORAGE_KEY);
+            const db = await getFirestore();
 
-            if (!savedData) {
+            const docRef = db.collection(this.COLLECTION_NAME).doc(apiKey);
+            const docSnap = await docRef.get();
+
+            if (!docSnap.exists) {
                 console.warn('⚠️ 저장된 보고서 설정이 없습니다. 기본값을 사용합니다.');
                 return null;
             }
 
-            const configData = JSON.parse(savedData);
+            const data = docSnap.data();
 
-            console.log('✅ 보고서 설정 로드 완료:', {
-                savedAt: configData.savedAt,
-                hasGeneralUsage: !!configData.config.generalUsage,
-                hasCookie: !!configData.config.cookie,
-                hasChip: !!configData.config.chip,
-                hasBadge: !!configData.config.badge,
-                hasSummary: !!configData.config.summary
+            console.log('✅ Firestore에서 보고서 설정 로드 완료:', {
+                apiKey: '***' + apiKey.slice(-4),
+                hasGeneralUsage: !!data.config.generalUsage,
+                hasCookie: !!data.config.cookie,
+                hasChip: !!data.config.chip,
+                hasBadge: !!data.config.badge,
+                hasSummary: !!data.config.summary
             });
 
-            // 향후 DB 연동 시 apiKey로 필터링 가능
-            // if (apiKey && configData.apiKey !== apiKey) {
-            //     return null;
-            // }
-
-            return configData.config;
+            return data.config;
         } catch (error) {
             console.error('❌ 설정 로드 실패:', error);
-            return null;
+            throw error;
         }
     }
 
     /**
      * 저장된 설정 정보를 조회합니다 (메타데이터 포함)
      *
+     * @param {string} apiKey - API Key
      * @returns {Promise<Object|null>}
      */
-    static async getConfigMetadata() {
+    static async getConfigMetadata(apiKey = null) {
         try {
-            const savedData = localStorage.getItem(this.STORAGE_KEY);
-
-            if (!savedData) {
+            if (!apiKey) {
                 return null;
             }
 
-            const configData = JSON.parse(savedData);
+            const db = await getFirestore();
 
+            const docRef = db.collection(this.COLLECTION_NAME).doc(apiKey);
+            const docSnap = await docRef.get();
+
+            if (!docSnap.exists) {
+                return null;
+            }
+
+            const data = docSnap.data();
             return {
                 hasSavedConfig: true,
-                savedAt: configData.savedAt,
-                apiKey: configData.apiKey ? '***' + configData.apiKey.slice(-4) : null
+                createdAt: data.createdAt?.toDate().toISOString(),
+                updatedAt: data.updatedAt?.toDate().toISOString(),
+                apiKey: '***' + apiKey.slice(-4)
             };
         } catch (error) {
             console.warn('설정 메타데이터 조회 실패:', error);
@@ -133,14 +137,21 @@ class ConfigStorageService {
     /**
      * 저장된 설정을 삭제합니다
      *
+     * @param {string} apiKey - API Key
      * @returns {Promise<{success: boolean, message: string}>}
      */
-    static async deleteConfig() {
+    static async deleteConfig(apiKey = null) {
         try {
-            // TODO: 향후 데이터베이스 연동 시 API 호출로 교체
+            if (!apiKey) {
+                throw new Error('API Key가 필요합니다.');
+            }
 
-            localStorage.removeItem(this.STORAGE_KEY);
+            const db = await getFirestore();
 
+            const docRef = db.collection(this.COLLECTION_NAME).doc(apiKey);
+            await docRef.delete();
+
+            console.log('✅ Firestore에서 설정 삭제 완료');
             return {
                 success: true,
                 message: '저장된 설정이 삭제되었습니다.'

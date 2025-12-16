@@ -41,26 +41,73 @@ document.addEventListener('DOMContentLoaded', async () => {
 
 /**
  * 상담 목록을 불러와 표시합니다
+ * 학생 코드로 API 검증을 수행하여 해당 학생이 접근 가능한 상담만 표시
  */
 async function loadCounselList() {
-    try {
-        // API Key 없이 로컬 스토리지에서 상담 목록 로드
-        const counselList = await CounselStorageService.loadCounselList();
-        const container = document.getElementById('counsel-select-list');
+    const container = document.getElementById('counsel-select-list');
 
-        if (counselList.length === 0) {
+    try {
+        container.innerHTML = '<p class="loading-message">상담 목록을 불러오는 중...</p>';
+
+        // 1단계: 모든 고유한 API Key 목록 가져오기
+        console.log('🔍 1단계: 모든 API Key 목록 조회 중...');
+        const apiKeys = await CounselStorageService.getAllUniqueApiKeys();
+
+        if (apiKeys.length === 0) {
             container.innerHTML = '<p class="empty-message">아직 생성된 상담이 없습니다.<br>교사에게 문의해주세요.</p>';
             return;
         }
 
+        console.log(`✅ ${apiKeys.length}개의 고유 API Key 발견`);
+
+        // 2단계: 각 API Key로 학생 코드 검증
+        console.log('🔍 2단계: 학생 코드로 API 검증 중...');
+        const validApiKeys = [];
+
+        for (const apiKey of apiKeys) {
+            try {
+                console.log(`📡 API Key 검증 중: ${apiKey.substring(0, 10)}...`);
+                const studentData = await APIManager.fetchStudentData(studentCode, apiKey);
+
+                if (studentData && !studentData.error) {
+                    console.log(`✅ 유효한 API Key 발견: ${apiKey.substring(0, 10)}...`);
+                    validApiKeys.push(apiKey);
+                } else {
+                    console.log(`❌ 접근 불가: ${apiKey.substring(0, 10)}... (${studentData?.error || '데이터 없음'})`);
+                }
+            } catch (error) {
+                console.log(`❌ API 호출 실패: ${apiKey.substring(0, 10)}...`, error);
+            }
+        }
+
+        if (validApiKeys.length === 0) {
+            container.innerHTML = '<p class="empty-message">접근 가능한 상담이 없습니다.<br>개인 코드를 확인하거나 교사에게 문의해주세요.</p>';
+            return;
+        }
+
+        console.log(`✅ ${validApiKeys.length}개의 유효한 API Key로 상담 목록 조회`);
+
+        // 3단계: 유효한 API Key에 해당하는 상담만 로드
+        const allCounsels = [];
+        for (const apiKey of validApiKeys) {
+            const counsels = await CounselStorageService.loadCounselList(apiKey);
+            allCounsels.push(...counsels);
+        }
+
+        if (allCounsels.length === 0) {
+            container.innerHTML = '<p class="empty-message">접근 가능한 상담이 없습니다.<br>교사에게 문의해주세요.</p>';
+            return;
+        }
+
         // 최신순으로 정렬
-        counselList.sort((a, b) => new Date(b.updatedAt) - new Date(a.updatedAt));
+        allCounsels.sort((a, b) => new Date(b.updatedAt) - new Date(a.updatedAt));
+
+        console.log(`✅ 총 ${allCounsels.length}개의 상담 표시`);
 
         // 상담 카드 렌더링
-        container.innerHTML = counselList.map(counsel => createCounselSelectCard(counsel)).join('');
+        container.innerHTML = allCounsels.map(counsel => createCounselSelectCard(counsel)).join('');
     } catch (error) {
-        console.error('상담 목록 로드 실패:', error);
-        const container = document.getElementById('counsel-select-list');
+        console.error('❌ 상담 목록 로드 실패:', error);
         container.innerHTML = '<p class="error-message">상담 목록을 불러오는 데 실패했습니다.</p>';
     }
 }
@@ -114,55 +161,36 @@ async function fetchStudentName() {
     console.log('🔍 학생 이름 조회 시작 - 학생 코드:', studentCode);
 
     try {
-        // 상담 목록에서 첫 번째 상담의 API Key를 가져옴
-        const counselList = await CounselStorageService.loadCounselList();
-        console.log('📚 상담 목록 개수:', counselList.length);
+        // 모든 API Key 가져오기
+        const apiKeys = await CounselStorageService.getAllUniqueApiKeys();
 
-        if (counselList.length === 0) {
-            console.warn('⚠️ 상담 목록이 없어 학생 이름을 가져올 수 없습니다.');
+        if (apiKeys.length === 0) {
+            console.warn('⚠️ API Key가 없어 학생 이름을 가져올 수 없습니다.');
             return null;
         }
 
-        // 첫 번째 상담의 API Key 사용
-        const firstCounsel = counselList[0];
-        console.log('📋 첫 번째 상담:', {
-            id: firstCounsel.id,
-            title: firstCounsel.title,
-            hasApiKey: !!firstCounsel.apiKey
-        });
+        // 첫 번째 유효한 API Key로 학생 정보 가져오기
+        for (const apiKey of apiKeys) {
+            try {
+                console.log('📡 API 호출 중...', apiKey.substring(0, 10) + '...');
+                const studentData = await APIManager.fetchStudentData(studentCode, apiKey);
 
-        const apiKey = firstCounsel.apiKey;
+                if (studentData && !studentData.error) {
+                    // 이름 필드 찾기 시도
+                    studentName = studentData.student || studentData.studentName || studentData.name || null;
 
-        if (!apiKey) {
-            console.error('❌ API Key가 없습니다!');
-            console.log('상담 전체 객체:', firstCounsel);
-            return null;
-        }
-
-        console.log('🔑 API Key 발견:', apiKey.substring(0, 10) + '...');
-
-        // API 호출하여 학생 정보 가져오기
-        console.log('📡 API 호출 중...');
-        const studentData = await APIManager.fetchStudentData(studentCode, apiKey);
-
-        console.log('📥 API 응답:', studentData);
-
-        if (studentData && !studentData.error) {
-            // 이름 필드 찾기 시도
-            studentName = studentData.student || studentData.studentName || studentData.name || null;
-
-            if (studentName) {
-                console.log('✅ 학생 이름 발견:', studentName);
-                return studentName;
-            } else {
-                console.warn('⚠️ 학생 이름 필드를 찾을 수 없습니다.');
-                console.log('사용 가능한 필드:', Object.keys(studentData));
-                return null;
+                    if (studentName) {
+                        console.log('✅ 학생 이름 발견:', studentName);
+                        return studentName;
+                    }
+                }
+            } catch (error) {
+                console.log('❌ API 호출 실패, 다음 API Key 시도');
             }
-        } else {
-            console.error('❌ API 오류:', studentData?.error || '데이터 없음');
-            return null;
         }
+
+        console.warn('⚠️ 학생 이름을 가져올 수 없습니다.');
+        return null;
     } catch (error) {
         console.error('❌ 학생 이름 조회 중 예외 발생:', error);
         return null;

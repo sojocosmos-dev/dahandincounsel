@@ -1,0 +1,28 @@
+{
+  "name": "dahandincounsel",
+  "version": "1.0.0",
+  "description": "다했니 다했어요 플랫폼의 학생 데이터를 조회하여 성장 기록 보고서를 자동 생성하는 웹 애플리케이션입니다.",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/sojocosmos-dev/dahandincounsel.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/sojocosmos-dev/dahandincounsel/issues"
+  },
+  "homepage": "https://github.com/sojocosmos-dev/dahandincounsel#readme",
+  "dependencies": {
+    "firebase": "^12.7.0"
+  },
+  "devDependencies": {
+    "vite": "^7.3.0"
+  }
+}

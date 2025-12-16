@@ -125,8 +125,55 @@ dahandincounsel/
 - **Frontend**: HTML5, CSS3, Vanilla JavaScript (ES6+)
 - **API 통신**: Fetch API
 - **모듈화**: ES6 Modules
+- **번들러**: Vite
+- **데이터베이스**: Firebase Firestore
+- **패키지 관리**: NPM
 - **스타일링**: CSS Variables, Flexbox
 - **접근성**: Semantic HTML
+
+## 📦 설치 및 실행
+
+### 1. 필수 요구사항
+- Node.js (v14 이상)
+- NPM (Node Package Manager)
+
+### 2. 설치
+
+```bash
+# 저장소 클론
+git clone https://github.com/sojocosmos-dev/dahandincounsel.git
+cd dahandincounsel
+
+# 의존성 패키지 설치
+npm install
+```
+
+### 3. 개발 서버 실행
+
+```bash
+# Vite 개발 서버 시작 (포트 3000)
+npm run dev
+```
+
+개발 서버가 시작되면 브라우저에서 자동으로 열립니다.
+
+### 4. 프로덕션 빌드
+
+```bash
+# 프로덕션 빌드 생성
+npm run build
+
+# 빌드된 파일 미리보기
+npm run preview
+```
+
+빌드된 파일은 `dist` 폴더에 생성됩니다.
+
+### 5. Firebase 설정
+
+Firebase 설정은 [firebase-config.js](firebase-config.js)에서 관리됩니다.
+- Firebase 프로젝트 생성 후 구성 정보를 `firebase-config.js`에 입력하세요.
+- Firestore Database를 활성화하세요.
 
 ## 📝 사용 방법
 

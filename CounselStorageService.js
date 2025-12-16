@@ -2,110 +2,131 @@
  * CounselStorageService.js
  * 상담 목록 저장/로드 서비스
  *
- * 현재: 로컬 스토리지 사용
- * 향후: 데이터베이스 연동 예정
+ * Firestore 연동 완료
  */
 
 class CounselStorageService {
     /**
-     * 저장소 키
+     * Firestore 컬렉션 이름
      */
-    static STORAGE_KEY = 'counselList';
+    static COLLECTION_NAME = 'counsels';
 
     /**
      * 상담 목록을 불러옵니다
      *
-     * @param {string} apiKey - API Key (향후 DB 연동 시 사용자 식별용)
+     * @param {string} apiKey - API Key (사용자 식별용, null이면 모든 상담 로드)
      * @returns {Promise<Array>} 상담 목록
      */
     static async loadCounselList(apiKey = null) {
         try {
-            // TODO: 향후 데이터베이스 연동 시 API 호출로 교체
-            // const response = await fetch(`/api/counsel/list?apiKey=${apiKey}`);
-            // const data = await response.json();
-            // return data.counselList;
+            const db = window.getFirestore();
+            const { collection, query, where, orderBy, getDocs } = window.firestoreLib;
 
-            // 현재: 로컬 스토리지 사용
-            const savedData = localStorage.getItem(this.STORAGE_KEY);
+            const collectionRef = collection(db, this.COLLECTION_NAME);
 
-            if (!savedData) {
-                console.log('📋 저장된 상담 목록이 없습니다. 빈 배열을 반환합니다.');
-                return [];
+            // API Key가 제공된 경우 필터링, 없으면 전체 조회
+            let q;
+            if (apiKey) {
+                q = query(collectionRef, where('teacherApiKey', '==', apiKey), orderBy('createdAt', 'desc'));
+            } else {
+                q = query(collectionRef, orderBy('createdAt', 'desc'));
             }
 
-            const counselList = JSON.parse(savedData);
+            const querySnapshot = await getDocs(q);
 
-            console.log('✅ 상담 목록 로드 완료:', {
+            const counselList = [];
+            querySnapshot.forEach(docSnap => {
+                const data = docSnap.data();
+                counselList.push({
+                    id: docSnap.id,
+                    title: data.title,
+                    config: data.config,
+                    apiKey: data.teacherApiKey,
+                    createdAt: data.createdAt?.toDate().toISOString(),
+                    updatedAt: data.updatedAt?.toDate().toISOString()
+                });
+            });
+
+            console.log('✅ Firestore에서 상담 목록 로드 완료:', {
                 count: counselList.length,
+                apiKeyFilter: apiKey ? 'filtered' : 'all',
                 counsels: counselList.map(c => ({ id: c.id, title: c.title }))
             });
 
             return counselList;
         } catch (error) {
             console.error('❌ 상담 목록 로드 실패:', error);
-            return [];
+            throw error;
         }
     }
 
     /**
-     * 상담 목록을 저장합니다
-     *
-     * @param {Array} counselList - 저장할 상담 목록
-     * @param {string} apiKey - API Key (향후 DB 연동 시 사용자 식별용)
-     * @returns {Promise<{success: boolean, message: string}>}
+     * Firestore에서 모든 고유한 API Key 목록을 가져옵니다
+     * @returns {Promise<Array<string>>} API Key 배열
      */
-    static async saveCounselList(counselList, apiKey = null) {
+    static async getAllUniqueApiKeys() {
         try {
-            // TODO: 향후 데이터베이스 연동 시 API 호출로 교체
-            // const response = await fetch('/api/counsel/save', {
-            //     method: 'POST',
-            //     headers: { 'Content-Type': 'application/json' },
-            //     body: JSON.stringify({ apiKey, counselList })
-            // });
-            // return await response.json();
+            const db = window.getFirestore();
+            const { collection, getDocs } = window.firestoreLib;
 
-            // 현재: 로컬 스토리지 사용
-            localStorage.setItem(this.STORAGE_KEY, JSON.stringify(counselList));
+            const counselsRef = collection(db, this.COLLECTION_NAME);
+            const querySnapshot = await getDocs(counselsRef);
 
-            console.log('✅ 상담 목록 저장 완료:', {
-                count: counselList.length
+            const apiKeys = new Set();
+            querySnapshot.forEach(docSnap => {
+                const data = docSnap.data();
+                if (data.teacherApiKey) {
+                    apiKeys.add(data.teacherApiKey);
+                }
             });
 
-            return {
-                success: true,
-                message: '상담 목록이 성공적으로 저장되었습니다.'
-            };
+            const apiKeyArray = Array.from(apiKeys);
+            console.log('✅ 고유 API Key 목록 조회 완료:', {
+                count: apiKeyArray.length
+            });
+
+            return apiKeyArray;
         } catch (error) {
-            console.error('❌ 상담 목록 저장 실패:', error);
-            return {
-                success: false,
-                message: '상담 목록 저장에 실패했습니다: ' + error.message
-            };
+            console.error('❌ API Key 목록 조회 실패:', error);
+            throw error;
         }
     }
+
 
     /**
      * 특정 상담을 ID로 조회합니다
      *
      * @param {string} counselId - 상담 ID
-     * @param {string} apiKey - API Key
      * @returns {Promise<Object|null>} 상담 객체 또는 null
      */
-    static async getCounselById(counselId, apiKey = null) {
+    static async getCounselById(counselId) {
         try {
-            const counselList = await this.loadCounselList(apiKey);
-            const counsel = counselList.find(c => c.id === counselId);
+            const db = window.getFirestore();
+            const { doc, getDoc } = window.firestoreLib;
 
-            if (!counsel) {
+            const docRef = doc(db, this.COLLECTION_NAME, counselId);
+            const docSnap = await getDoc(docRef);
+
+            if (!docSnap.exists()) {
                 console.warn(`⚠️ 상담 ID ${counselId}를 찾을 수 없습니다.`);
                 return null;
             }
 
-            console.log('✅ 상담 조회 완료:', { id: counsel.id, title: counsel.title });
+            const data = docSnap.data();
+            const counsel = {
+                id: docSnap.id,
+                title: data.title,
+                config: data.config,
+                apiKey: data.teacherApiKey,
+                createdAt: data.createdAt?.toDate().toISOString(),
+                updatedAt: data.updatedAt?.toDate().toISOString()
+            };
+
+            console.log('✅ Firestore에서 상담 조회 완료:', { id: counsel.id, title: counsel.title });
             return counsel;
         } catch (error) {
             console.error('❌ 상담 조회 실패:', error);
-            return null;
+            throw error;
         }
     }
 
@@ -118,31 +139,40 @@ class CounselStorageService {
      */
     static async createCounsel(counselData, apiKey = null) {
         try {
-            const counselList = await this.loadCounselList(apiKey);
+            if (!apiKey) {
+                throw new Error('API Key가 필요합니다.');
+            }
+
+            const newCounselId = this.generateCounselId();
+            const db = window.getFirestore();
+            const { doc, setDoc, serverTimestamp } = window.firestoreLib;
+
+            const newCounselData = {
+                title: counselData.title || `상담 ${Date.now()}`,
+                config: counselData.config,
+                teacherApiKey: apiKey,
+                createdAt: serverTimestamp(),
+                updatedAt: serverTimestamp()
+            };
+
+            const docRef = doc(db, this.COLLECTION_NAME, newCounselId);
+            await setDoc(docRef, newCounselData);
 
             const newCounsel = {
-                id: this.generateCounselId(),
-                title: counselData.title || `상담 ${counselList.length + 1}`,
-                config: counselData.config,
-                apiKey: apiKey, // API Key 저장
+                id: newCounselId,
+                title: newCounselData.title,
+                config: newCounselData.config,
+                apiKey: apiKey,
                 createdAt: new Date().toISOString(),
                 updatedAt: new Date().toISOString()
             };
 
-            counselList.push(newCounsel);
-
-            const result = await this.saveCounselList(counselList, apiKey);
-
-            if (result.success) {
-                console.log('✅ 상담 생성 완료:', { id: newCounsel.id, title: newCounsel.title });
-                return {
-                    success: true,
-                    counsel: newCounsel,
-                    message: '상담이 생성되었습니다.'
-                };
-            } else {
-                return result;
-            }
+            console.log('✅ Firestore에 상담 생성 완료:', { id: newCounsel.id, title: newCounsel.title });
+            return {
+                success: true,
+                counsel: newCounsel,
+                message: '상담이 생성되었습니다.'
+            };
         } catch (error) {
             console.error('❌ 상담 생성 실패:', error);
             return {
@@ -162,37 +192,46 @@ class CounselStorageService {
      */
     static async updateCounsel(counselId, updates, apiKey = null) {
         try {
-            const counselList = await this.loadCounselList(apiKey);
-            const counselIndex = counselList.findIndex(c => c.id === counselId);
+            if (!apiKey) {
+                throw new Error('API Key가 필요합니다.');
+            }
 
-            if (counselIndex === -1) {
+            const db = window.getFirestore();
+            const { doc, getDoc, updateDoc, serverTimestamp } = window.firestoreLib;
+
+            const docRef = doc(db, this.COLLECTION_NAME, counselId);
+            const docSnap = await getDoc(docRef);
+
+            if (!docSnap.exists()) {
                 return {
                     success: false,
                     message: '상담을 찾을 수 없습니다.'
                 };
             }
 
-            const updatedCounsel = {
-                ...counselList[counselIndex],
+            const updateData = {
                 ...updates,
-                apiKey: apiKey || counselList[counselIndex].apiKey, // API Key 유지 또는 업데이트
+                updatedAt: serverTimestamp()
+            };
+
+            await updateDoc(docRef, updateData);
+
+            const data = docSnap.data();
+            const updatedCounsel = {
+                id: counselId,
+                title: updates.title || data.title,
+                config: updates.config || data.config,
+                apiKey: apiKey,
+                createdAt: data.createdAt?.toDate().toISOString(),
                 updatedAt: new Date().toISOString()
             };
 
-            counselList[counselIndex] = updatedCounsel;
-
-            const result = await this.saveCounselList(counselList, apiKey);
-
-            if (result.success) {
-                console.log('✅ 상담 수정 완료:', { id: updatedCounsel.id, title: updatedCounsel.title });
-                return {
-                    success: true,
-                    counsel: updatedCounsel,
-                    message: '상담이 수정되었습니다.'
-                };
-            } else {
-                return result;
-            }
+            console.log('✅ Firestore에서 상담 수정 완료:', { id: updatedCounsel.id, title: updatedCounsel.title });
+            return {
+                success: true,
+                counsel: updatedCounsel,
+                message: '상담이 수정되었습니다.'
+            };
         } catch (error) {
             console.error('❌ 상담 수정 실패:', error);
             return {
@@ -211,27 +250,30 @@ class CounselStorageService {
      */
     static async deleteCounsel(counselId, apiKey = null) {
         try {
-            const counselList = await this.loadCounselList(apiKey);
-            const filteredList = counselList.filter(c => c.id !== counselId);
+            if (!apiKey) {
+                throw new Error('API Key가 필요합니다.');
+            }
 
-            if (filteredList.length === counselList.length) {
+            const db = window.getFirestore();
+            const { doc, getDoc, deleteDoc } = window.firestoreLib;
+
+            const docRef = doc(db, this.COLLECTION_NAME, counselId);
+            const docSnap = await getDoc(docRef);
+
+            if (!docSnap.exists()) {
                 return {
                     success: false,
                     message: '삭제할 상담을 찾을 수 없습니다.'
                 };
             }
 
-            const result = await this.saveCounselList(filteredList, apiKey);
+            await deleteDoc(docRef);
 
-            if (result.success) {
-                console.log('✅ 상담 삭제 완료:', { id: counselId });
-                return {
-                    success: true,
-                    message: '상담이 삭제되었습니다.'
-                };
-            } else {
-                return result;
-            }
+            console.log('✅ Firestore에서 상담 삭제 완료:', { id: counselId });
+            return {
+                success: true,
+                message: '상담이 삭제되었습니다.'
+            };
         } catch (error) {
             console.error('❌ 상담 삭제 실패:', error);
             return {
@@ -245,6 +287,6 @@ class CounselStorageService {
      * 고유한 상담 ID를 생성합니다
      */
     static generateCounselId() {
-        return 'counsel_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9);
+        return 'counsel_' + Date.now() + '_' + Math.random().toString(36).substring(2, 11);
     }
 }
