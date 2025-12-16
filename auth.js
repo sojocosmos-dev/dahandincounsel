@@ -159,18 +159,23 @@ window.submitStudentLogin = function() {
 
     // 입력값 검증
     if (!studentCode) {
-        alert('개인 코드를 입력해주세요.');
+        showSnackbar('개인 코드를 입력해주세요.', 'error');
         return;
     }
 
     if (!/^[A-Za-z0-9]{4,}$/.test(studentCode)) {
-        alert('개인 코드는 4자 이상의 영숫자여야 합니다.');
+        showSnackbar('개인 코드는 4자 이상의 영숫자여야 합니다.', 'error');
         return;
     }
 
+    // 로그인 성공 메시지 표시
+    showSnackbar('로그인 성공!', 'success');
+
     // 상담 선택 페이지로 이동 (학생 코드 전달, API Key 불필요)
-    const params = new URLSearchParams({
-        studentCode: studentCode
-    });
-    window.location.href = `student-counsel-select.html?${params.toString()}`;
+    setTimeout(() => {
+        const params = new URLSearchParams({
+            studentCode: studentCode
+        });
+        window.location.href = `student-counsel-select.html?${params.toString()}`;
+    }, 1000);
 }
