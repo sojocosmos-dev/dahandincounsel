@@ -62,7 +62,7 @@ async function loadCounselList() {
 
         // 2단계: 각 API Key로 학생 코드 검증
         console.log('🔍 2단계: 학생 코드로 API 검증 중...');
-        const validApiKeys = [];
+        let validApiKey = null;
 
         for (const apiKey of apiKeys) {
             try {
@@ -71,7 +71,8 @@ async function loadCounselList() {
 
                 if (studentData && !studentData.error) {
                     console.log(`✅ 유효한 API Key 발견: ${apiKey.substring(0, 10)}...`);
-                    validApiKeys.push(apiKey);
+                    validApiKey = apiKey;
+                    break;
                 } else {
                     console.log(`❌ 접근 불가: ${apiKey.substring(0, 10)}... (${studentData?.error || '데이터 없음'})`);
                 }
@@ -80,19 +81,15 @@ async function loadCounselList() {
             }
         }
 
-        if (validApiKeys.length === 0) {
+        if (!validApiKey) {
             container.innerHTML = '<p class="empty-message">접근 가능한 상담이 없습니다.<br>개인 코드를 확인하거나 교사에게 문의해주세요.</p>';
             return;
         }
 
-        console.log(`✅ ${validApiKeys.length}개의 유효한 API Key로 상담 목록 조회`);
+        console.log(`✅ 유효한 API Key로 상담 목록 조회`);
 
         // 3단계: 유효한 API Key에 해당하는 상담만 로드
-        const allCounsels = [];
-        for (const apiKey of validApiKeys) {
-            const counsels = await CounselStorageService.loadCounselList(apiKey);
-            allCounsels.push(...counsels);
-        }
+        const allCounsels = await CounselStorageService.loadCounselList(validApiKey);
 
         if (allCounsels.length === 0) {
             container.innerHTML = '<p class="empty-message">접근 가능한 상담이 없습니다.<br>교사에게 문의해주세요.</p>';
