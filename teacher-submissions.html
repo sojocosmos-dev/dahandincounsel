@@ -7,6 +7,7 @@
     <link rel="stylesheet" href="styles.css">
     <style>
         .submissions-page {
+            position: relative;
             display: flex;
             height: 100vh;
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
@@ -68,18 +69,20 @@
         }
 
         .back-button {
-            display: inline-block;
+            position: fixed;
+            top: 20px;
+            left: 0px;
             padding: 12px 20px;
             background: linear-gradient(135deg, #95a5a6 0%, #7f8c8d 100%);
             color: white;
             border: none;
-            border-radius: 10px;
+            border-radius: 0 10px 10px 0;
             cursor: pointer;
-            margin-bottom: 20px;
             font-size: 0.95em;
             font-weight: 600;
             transition: all 0.3s ease;
             box-shadow: 0 2px 8px rgba(149, 165, 166, 0.3);
+            z-index: 1000;
         }
 
         .back-button:hover {
@@ -177,10 +180,10 @@
     </style>
 </head>
 <body>
+    <button class="back-button" onclick="goBackToList()">← 상담 목록으로</button>
     <div class="submissions-page">
         <!-- 학생 목록 패널 -->
         <div class="submissions-list-panel">
-            <button class="back-button" onclick="goBackToList()">← 상담 목록으로</button>
             <div class="submissions-list-title">
                 <span>📋 제출한 학생 (<span id="submission-count">0</span>명)</span>
                 <div class="title-actions">
