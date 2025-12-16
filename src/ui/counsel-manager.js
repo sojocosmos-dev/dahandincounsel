@@ -3,6 +3,10 @@
  * 상담 목록 UI 및 비즈니스 로직 관리
  */
 
+import { DEFAULT_USAGE_TEXTS } from '../core/config.js';
+import { CounselStorageService } from '../services/counsel-storage-service.js';
+import { StudentSubmissionService } from '../services/student-submission-service.js';
+
 class CounselManager {
     constructor(uiController) {
         this.uiController = uiController;

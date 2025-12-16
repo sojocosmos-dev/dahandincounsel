@@ -6,39 +6,12 @@
 // Firebase 설정 import
 import '../firebase/firebase-config.js';
 
-// 기본 설정 및 서비스 import
-import { CONFIG, BADGE_LIST, DEFAULT_USAGE_TEXTS, COLOR_PALETTE, ELEMENT_IDS } from '../core/config.js';
-import { ConfigStorageService } from '../services/config-storage-service.js';
-import { CounselStorageService } from '../services/counsel-storage-service.js';
-import { StudentSubmissionService } from '../services/student-submission-service.js';
+// 필요한 클래스들 import
+import { CONFIG } from '../core/config.js';
 import { StateManager } from '../core/state-manager.js';
-import { APIManager } from '../core/api-manager.js';
-import { TextUtility } from '../utils/text-utility.js';
-import { ReportDataGenerator } from '../services/report-data-generator.js';
-import { ReportSectionGenerator } from '../services/report-section-generator.js';
-import { ReportGenerator } from '../services/report-generator.js';
 import { UIController } from '../ui/ui-controller.js';
 import { ReportService } from '../services/report-service.js';
 import { CounselManager } from '../ui/counsel-manager.js';
-
-// 전역으로 노출 (기존 코드 호환성)
-window.CONFIG = CONFIG;
-window.BADGE_LIST = BADGE_LIST;
-window.DEFAULT_USAGE_TEXTS = DEFAULT_USAGE_TEXTS;
-window.COLOR_PALETTE = COLOR_PALETTE;
-window.ELEMENT_IDS = ELEMENT_IDS;
-window.ConfigStorageService = ConfigStorageService;
-window.CounselStorageService = CounselStorageService;
-window.StudentSubmissionService = StudentSubmissionService;
-window.StateManager = StateManager;
-window.APIManager = APIManager;
-window.TextUtility = TextUtility;
-window.ReportDataGenerator = ReportDataGenerator;
-window.ReportSectionGenerator = ReportSectionGenerator;
-window.ReportGenerator = ReportGenerator;
-window.UIController = UIController;
-window.ReportService = ReportService;
-window.CounselManager = CounselManager;
 
 let app;
 

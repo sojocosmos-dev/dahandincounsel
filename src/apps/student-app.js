@@ -3,6 +3,11 @@
  * 학생용 애플리케이션 초기화
  */
 
+import { StudentAuth } from '../auth/auth.js';
+import { CounselStorageService } from '../services/counsel-storage-service.js';
+import { StudentSubmissionService } from '../services/student-submission-service.js';
+import { StudentReportService } from '../services/student-report-service.js';
+
 let studentApp;
 
 class StudentApp {
@@ -69,9 +74,10 @@ class StudentApp {
       if (codeInput) {
         codeInput.value = studentCode;
       }
-      const inputArea = document.getElementById("student-input-area");
-      if (inputArea) {
-        inputArea.style.display = "none";
+      // 입력 그룹만 숨기기 (메시지는 표시되어야 함)
+      const inputGroup = document.querySelector(".student-input-group");
+      if (inputGroup) {
+        inputGroup.style.display = "none";
       }
 
       // 상담에서 API Key 가져오기
@@ -116,33 +122,45 @@ class StudentApp {
    * 학생 보고서 조회 처리
    */
   async handleStudentQuery(providedApiKey = null, providedCounselId = null) {
+    console.log("🔍 handleStudentQuery 시작", { providedApiKey: providedApiKey?.substring(0, 10) + "...", providedCounselId });
+
     const studentCodeInput = document.getElementById("student-code-input");
-    if (!studentCodeInput) return;
+    if (!studentCodeInput) {
+      console.error("❌ student-code-input 요소를 찾을 수 없습니다!");
+      return;
+    }
 
     const studentCode = studentCodeInput.value.trim();
     const counselId = providedCounselId || this.counselId || null;
+    console.log("📝 학생 코드:", studentCode, "상담 ID:", counselId);
 
     // 상담 ID가 있으면 상담에 저장된 API Key를 사용
     let apiKey = providedApiKey || this.apiKey;
     if (!apiKey && counselId) {
+      console.log("🔑 상담에서 API Key 조회 중...");
       const counsel = await CounselStorageService.getCounselById(counselId);
       if (counsel && counsel.apiKey) {
         apiKey = counsel.apiKey;
+        console.log("✅ API Key 발견:", apiKey.substring(0, 10) + "...");
       }
     }
 
     // 입력값 검증
     if (!studentCode) {
+      console.log("⚠️ 학생 코드 없음");
       this.showMessage("개인 코드를 입력해주세요.", "error");
       return;
     }
 
+    console.log("🔍 학생 코드 유효성 검사 중...");
     if (!StudentAuth.validateStudentCode(studentCode)) {
+      console.log("❌ 학생 코드 형식 오류");
       this.showMessage("올바른 코드 형식이 아닙니다. (예: A1001)", "error");
       return;
     }
 
     if (!apiKey) {
+      console.log("❌ API Key 없음");
       this.showMessage(
         "API Key를 찾을 수 없습니다. 올바른 URL로 접속해주세요.",
         "error"
@@ -151,15 +169,18 @@ class StudentApp {
     }
 
     // 조회 시작
+    console.log("📊 보고서 데이터 조회 시작...");
     this.setButtonEnabled(false);
     this.showMessage("성장 기록을 불러오는 중입니다...", "info");
 
     try {
+      console.log("📡 StudentReportService.fetchStudentReport 호출 중...");
       const reportData = await StudentReportService.fetchStudentReport(
         studentCode,
         apiKey,
         counselId
       );
+      console.log("📥 보고서 데이터 응답:", reportData);
 
       if (reportData.error) {
         this.showMessage(reportData.error, "error");

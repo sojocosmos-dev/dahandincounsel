@@ -3,6 +3,8 @@
  * 전체 보고서 HTML 생성 조율
  */
 
+import { ReportSectionGenerator } from './report-section-generator.js';
+
 class ReportGenerator {
     /**
      * 완전한 보고서 HTML을 생성합니다

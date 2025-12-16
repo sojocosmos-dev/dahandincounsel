@@ -3,6 +3,8 @@
  * 보고서 섹션별 HTML 생성
  */
 
+import { TextUtility } from '../utils/text-utility.js';
+
 // 색상 팔레트 정의
 const COLOR_PALETTE = {
     SAVE: '#2ecc71',   // 저축 (녹색)

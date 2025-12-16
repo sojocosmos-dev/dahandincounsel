@@ -3,6 +3,8 @@
  * UI 이벤트 및 사용자 상호작용 관리
  */
 
+import { ELEMENT_IDS, DEFAULT_USAGE_TEXTS } from '../core/config.js';
+
 class UIController {
     constructor(stateManager) {
         this.stateManager = stateManager;

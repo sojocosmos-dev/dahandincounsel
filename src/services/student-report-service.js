@@ -3,6 +3,13 @@
  * 학생용 보고서 생성 서비스 (teacher-report.html과 동일한 형식)
  */
 
+import { CounselStorageService } from './counsel-storage-service.js';
+import { ConfigStorageService } from './config-storage-service.js';
+import { APIManager } from '../core/api-manager.js';
+import { StateManager } from '../core/state-manager.js';
+import { ReportDataGenerator } from './report-data-generator.js';
+import { ReportGenerator } from './report-generator.js';
+
 class StudentReportService {
     /**
      * 학생 개인 보고서를 조회합니다

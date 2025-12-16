@@ -3,6 +3,8 @@
  * 보고서 데이터 생성 및 분석
  */
 
+import { APIManager } from '../core/api-manager.js';
+
 class ReportDataGenerator {
     /**
      * 학생 보고서 데이터를 생성합니다
