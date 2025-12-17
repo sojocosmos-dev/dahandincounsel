@@ -52,12 +52,18 @@ async function initPage() {
  */
 async function loadSubmissions() {
     const listContainer = document.getElementById('submissions-list');
+    const submissionCountElem = document.getElementById('submission-count');
 
     try {
         listContainer.innerHTML = '<p class="loading-message">제출 목록을 불러오는 중...</p>';
 
         // Firestore에서 이 상담에 제출된 모든 보고서 조회
         const submissions = await StudentSubmissionService.getSubmissionsByCounselId(currentCounselId);
+
+        // 제출 카운트 업데이트
+        if (submissionCountElem) {
+            submissionCountElem.textContent = submissions.length;
+        }
 
         if (submissions.length === 0) {
             listContainer.innerHTML = '<p class="empty-message">아직 제출된 보고서가 없습니다.</p>';
@@ -72,6 +78,10 @@ async function loadSubmissions() {
     } catch (error) {
         console.error('❌ 제출 목록 로드 실패:', error);
         listContainer.innerHTML = '<p class="error-message">제출 목록을 불러오는 데 실패했습니다.</p>';
+        // 오류 시에도 카운트를 0으로 표시
+        if (submissionCountElem) {
+            submissionCountElem.textContent = '0';
+        }
     }
 }
 
