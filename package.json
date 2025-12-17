@@ -20,7 +20,9 @@
   },
   "homepage": "https://sojocosmos-dev.github.io/dahandincounsel/",
   "dependencies": {
-    "firebase": "^12.7.0"
+    "firebase": "^12.7.0",
+    "jspdf": "^2.5.2",
+    "html2canvas": "^1.4.1"
   },
   "devDependencies": {
     "vite": "^7.3.0"
