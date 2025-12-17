@@ -11,6 +11,10 @@ import { CounselStorageService } from '../services/counsel-storage-service.js';
 import { StudentSubmissionService } from '../services/student-submission-service.js';
 import { ReportGenerator } from '../services/report-generator.js';
 
+// PDF 생성 라이브러리 import
+import jsPDF from 'jspdf';
+import html2canvas from 'html2canvas';
+
 // teacher-submissions.html의 인라인 스크립트 코드를 여기로 이동
 let currentCounselId = null;
 let currentCounselData = null;
@@ -142,14 +146,7 @@ async function viewSubmission(event, submissionId) {
         // ReportGenerator를 사용하여 HTML 생성
         const reportHtml = ReportGenerator.generateReportHtml(reportData, false);
 
-        reportContent.innerHTML = `
-            <div style="padding: 20px; background-color: #f9f9f9; border-radius: 12px; margin-bottom: 20px;">
-                <h2>📊 ${escapeHtml(submission.studentName || submission.studentCode)} 학생 보고서</h2>
-                <p><strong>제출 일시:</strong> ${new Date(submission.submittedAt).toLocaleString('ko-KR')}</p>
-                <p><strong>상담:</strong> ${escapeHtml(currentCounselData.title)}</p>
-            </div>
-            ${reportHtml}
-        `;
+        reportContent.innerHTML = reportHtml;
 
         // PDF 다운로드 버튼 추가
         reportContent.innerHTML += `
@@ -181,9 +178,12 @@ function goBackToList() {
 }
 
 /**
- * 선택된 보고서들을 출력합니다
+ * 선택된 보고서들을 PDF로 생성합니다
  */
 async function printSelectedReports(checkedItems) {
+    const reportContent = document.getElementById('report-content');
+    const originalContent = reportContent.innerHTML;
+
     try {
         // 선택된 항목들의 submission ID 추출
         const submissionIds = checkedItems.map(checkbox => checkbox.getAttribute('data-submission-id'));
@@ -198,71 +198,123 @@ async function printSelectedReports(checkedItems) {
             submissionIds.map(id => StudentSubmissionService.getSubmissionById(id))
         );
 
-        // 보고서들을 하나의 HTML로 결합
-        let combinedHtml = '';
+        // 각 제출 보고서를 개별 PDF로 생성
+        for (let i = 0; i < submissions.length; i++) {
+            const submission = submissions[i];
+            if (!submission) continue;
 
-        submissions.forEach((submission) => {
-            if (!submission) return;
-
-            const reportData = submission.reportData;
-            const reportHtml = ReportGenerator.generateReportHtml(reportData, true);
-
-            combinedHtml += `
-                <div class="report-page" style="page-break-after: always;">
-                    <div style="padding: 20px; background-color: #f9f9f9; border-radius: 12px; margin-bottom: 20px;">
-                        <h2>📊 ${escapeHtml(submission.studentName || submission.studentCode)} 학생 보고서</h2>
-                        <p><strong>제출 일시:</strong> ${new Date(submission.submittedAt).toLocaleString('ko-KR')}</p>
-                        <p><strong>상담:</strong> ${escapeHtml(currentCounselData.title)}</p>
+            // 현재 처리 중인 보고서를 화면에 표시 (로딩 상태)
+            reportContent.innerHTML = `
+                <div style="text-align: center; padding: 40px;">
+                    <h2>📄 PDF 생성 중...</h2>
+                    <p style="font-size: 1.2em; margin: 20px 0;">
+                        <strong>${escapeHtml(submission.studentName || submission.studentCode)}</strong> 학생 보고서
+                    </p>
+                    <p style="color: #666;">
+                        ${i + 1} / ${submissions.length}
+                    </p>
+                    <div style="width: 100%; max-width: 400px; height: 8px; background: #e0e0e0; border-radius: 4px; margin: 20px auto; overflow: hidden;">
+                        <div style="width: ${((i + 1) / submissions.length) * 100}%; height: 100%; background: #4CAF50; transition: width 0.3s;"></div>
                     </div>
-                    ${reportHtml}
                 </div>
             `;
-        });
 
-        // 새 창에서 출력
-        const printWindow = window.open('', '_blank');
-        if (!printWindow) {
-            alert('팝업이 차단되었습니다. 팝업 허용 후 다시 시도해주세요.');
-            return;
+            await generateSinglePDF(submission);
         }
 
-        const htmlContent = `
-            <!DOCTYPE html>
-            <html lang="ko">
-            <head>
-                <meta charset="UTF-8">
-                <title>학생 보고서 일괄 출력</title>
-                <link rel="stylesheet" href="styles.css">
-                <style>
-                    @media print {
-                        .report-page {
-                            page-break-after: always;
-                        }
-                        body {
-                            margin: 0;
-                            padding: 20px;
-                        }
-                    }
-                </style>
-            </head>
-            <body>
-                ${combinedHtml}
-                <script>
-                    window.onload = function() {
-                        window.print();
-                    };
-                </script>
-            </body>
-            </html>
+        // 완료 메시지
+        reportContent.innerHTML = `
+            <div style="text-align: center; padding: 40px;">
+                <h2>✅ 완료!</h2>
+                <p style="font-size: 1.2em; margin: 20px 0;">
+                    ${submissions.length}개의 PDF가 다운로드되었습니다.
+                </p>
+            </div>
         `;
 
-        printWindow.document.open();
-        printWindow.document.write(htmlContent);
-        printWindow.document.close();
+        // 2초 후 원래 내용으로 복원
+        setTimeout(() => {
+            reportContent.innerHTML = originalContent;
+        }, 2000);
 
     } catch (error) {
-        console.error('❌ 보고서 출력 실패:', error);
-        alert('보고서 출력에 실패했습니다: ' + error.message);
+        console.error('❌ PDF 생성 실패:', error);
+        alert('PDF 생성에 실패했습니다: ' + error.message);
+        // 오류 시 원래 내용으로 복원
+        reportContent.innerHTML = originalContent;
+    }
+}
+
+/**
+ * 단일 보고서를 PDF로 생성합니다
+ */
+async function generateSinglePDF(submission) {
+    const reportData = submission.reportData;
+    const reportHtml = ReportGenerator.generateReportHtml(reportData, true);
+
+    const reportHtmlFull = `
+        <div style="padding: 20px; background-color: #f9f9f9; border-radius: 12px; margin-bottom: 20px;">
+            <h2>📊 ${escapeHtml(submission.studentName || submission.studentCode)} 학생 보고서</h2>
+            <p><strong>제출 일시:</strong> ${new Date(submission.submittedAt).toLocaleString('ko-KR')}</p>
+            <p><strong>상담:</strong> ${escapeHtml(currentCounselData.title)}</p>
+        </div>
+        ${reportHtml}
+    `;
+
+    // 보고서 내용을 우측 패널에 임시로 표시
+    const reportContent = document.getElementById('report-content');
+    const previousContent = reportContent.innerHTML;
+    reportContent.innerHTML = reportHtmlFull;
+
+    try {
+        // html2canvas로 HTML을 이미지로 변환
+        const canvas = await html2canvas(reportContent, {
+            scale: 2, // 고해상도
+            useCORS: true,
+            logging: false,
+            backgroundColor: '#ffffff',
+            width: reportContent.scrollWidth,
+            height: reportContent.scrollHeight
+        });
+
+        // A4 사이즈 PDF 생성 (210mm x 297mm)
+        const pdf = new jsPDF({
+            orientation: 'portrait',
+            unit: 'mm',
+            format: 'a4'
+        });
+
+        const imgWidth = 210; // A4 width in mm
+        const pageHeight = 297; // A4 height in mm
+        const imgHeight = (canvas.height * imgWidth) / canvas.width;
+
+        let heightLeft = imgHeight;
+        let position = 0;
+
+        // 이미지 데이터 추가
+        const imgData = canvas.toDataURL('image/png');
+        pdf.addImage(imgData, 'PNG', 0, position, imgWidth, imgHeight);
+        heightLeft -= pageHeight;
+
+        // 한 페이지를 넘어가는 경우 페이지 추가
+        while (heightLeft > 0) {
+            position = heightLeft - imgHeight;
+            pdf.addPage();
+            pdf.addImage(imgData, 'PNG', 0, position, imgWidth, imgHeight);
+            heightLeft -= pageHeight;
+        }
+
+        // PDF 다운로드
+        const fileName = `${submission.studentName || submission.studentCode}_보고서_${new Date().toISOString().slice(0, 10)}.pdf`;
+        pdf.save(fileName);
+
+        // 이전 내용 복원
+        reportContent.innerHTML = previousContent;
+
+    } catch (error) {
+        // 오류 시 이전 내용 복원
+        reportContent.innerHTML = previousContent;
+        throw error;
     }
 }
 

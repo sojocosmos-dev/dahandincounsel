@@ -127,21 +127,17 @@ class CounselStorageService {
      * 새 상담을 생성합니다
      *
      * @param {Object} counselData - 상담 데이터 { title, config }
-     * @param {string} apiKey - API Key
+     * @param {string} apiKey - API Key (선택적)
      * @returns {Promise<{success: boolean, counsel?: Object, message: string}>}
      */
     static async createCounsel(counselData, apiKey = null) {
         try {
-            if (!apiKey) {
-                throw new Error('API Key가 필요합니다.');
-            }
-
             const newCounselId = this.generateCounselId();
 
             const newCounselData = {
                 title: counselData.title || `상담 ${Date.now()}`,
                 config: counselData.config,
-                teacherApiKey: apiKey,
+                teacherApiKey: apiKey || null,
                 createdAt: serverTimestamp(),
                 updatedAt: serverTimestamp()
             };
@@ -178,15 +174,11 @@ class CounselStorageService {
      *
      * @param {string} counselId - 상담 ID
      * @param {Object} updates - 수정할 데이터 { title?, config? }
-     * @param {string} apiKey - API Key
+     * @param {string} apiKey - API Key (선택적)
      * @returns {Promise<{success: boolean, counsel?: Object, message: string}>}
      */
     static async updateCounsel(counselId, updates, apiKey = null) {
         try {
-            if (!apiKey) {
-                throw new Error('API Key가 필요합니다.');
-            }
-
             const docRef = doc(db, this.COLLECTION_NAME, counselId);
             const docSnap = await getDoc(docRef);
 
@@ -195,6 +187,17 @@ class CounselStorageService {
                     success: false,
                     message: '상담을 찾을 수 없습니다.'
                 };
+            }
+
+            // API Key가 제공된 경우 권한 확인
+            if (apiKey) {
+                const data = docSnap.data();
+                if (data.teacherApiKey && data.teacherApiKey !== apiKey) {
+                    return {
+                        success: false,
+                        message: '이 상담을 수정할 권한이 없습니다.'
+                    };
+                }
             }
 
             const updateData = {
@@ -233,15 +236,11 @@ class CounselStorageService {
      * 상담을 삭제합니다
      *
      * @param {string} counselId - 상담 ID
-     * @param {string} apiKey - API Key
+     * @param {string} apiKey - API Key (선택적)
      * @returns {Promise<{success: boolean, message: string}>}
      */
     static async deleteCounsel(counselId, apiKey = null) {
         try {
-            if (!apiKey) {
-                throw new Error('API Key가 필요합니다.');
-            }
-
             const docRef = doc(db, this.COLLECTION_NAME, counselId);
             const docSnap = await getDoc(docRef);
 
@@ -250,6 +249,17 @@ class CounselStorageService {
                     success: false,
                     message: '삭제할 상담을 찾을 수 없습니다.'
                 };
+            }
+
+            // API Key가 제공된 경우 권한 확인
+            if (apiKey) {
+                const data = docSnap.data();
+                if (data.teacherApiKey && data.teacherApiKey !== apiKey) {
+                    return {
+                        success: false,
+                        message: '이 상담을 삭제할 권한이 없습니다.'
+                    };
+                }
             }
 
             await deleteDoc(docRef);
