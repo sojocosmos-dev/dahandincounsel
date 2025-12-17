@@ -93,12 +93,12 @@ function createSubmissionCard(submission) {
     const studentName = submission.studentName || submission.studentCode || '이름 없음';
 
     return `
-        <div class="submission-item" onclick="viewSubmission(event, '${submission.id}')">
+        <div class="submission-item" data-submission-id="${submission.id}" onclick="viewSubmission(event, '${submission.id}')">
             <div class="submission-item-content">
                 <div class="submission-item-name">${escapeHtml(studentName)}</div>
                 <div class="submission-item-code">${date}</div>
             </div>
-            <input type="checkbox" class="submission-item-checkbox" />
+            <input type="checkbox" class="submission-item-checkbox" data-submission-id="${submission.id}" />
         </div>
     `;
 }
@@ -181,30 +181,130 @@ function goBackToList() {
 }
 
 /**
+ * 선택된 보고서들을 출력합니다
+ */
+async function printSelectedReports(checkedItems) {
+    try {
+        // 선택된 항목들의 submission ID 추출
+        const submissionIds = checkedItems.map(checkbox => checkbox.getAttribute('data-submission-id'));
+
+        if (submissionIds.length === 0) {
+            alert('출력할 보고서를 선택해주세요.');
+            return;
+        }
+
+        // 모든 선택된 보고서 데이터 가져오기
+        const submissions = await Promise.all(
+            submissionIds.map(id => StudentSubmissionService.getSubmissionById(id))
+        );
+
+        // 보고서들을 하나의 HTML로 결합
+        let combinedHtml = '';
+
+        submissions.forEach((submission) => {
+            if (!submission) return;
+
+            const reportData = submission.reportData;
+            const reportHtml = ReportGenerator.generateReportHtml(reportData, true);
+
+            combinedHtml += `
+                <div class="report-page" style="page-break-after: always;">
+                    <div style="padding: 20px; background-color: #f9f9f9; border-radius: 12px; margin-bottom: 20px;">
+                        <h2>📊 ${escapeHtml(submission.studentName || submission.studentCode)} 학생 보고서</h2>
+                        <p><strong>제출 일시:</strong> ${new Date(submission.submittedAt).toLocaleString('ko-KR')}</p>
+                        <p><strong>상담:</strong> ${escapeHtml(currentCounselData.title)}</p>
+                    </div>
+                    ${reportHtml}
+                </div>
+            `;
+        });
+
+        // 새 창에서 출력
+        const printWindow = window.open('', '_blank');
+        if (!printWindow) {
+            alert('팝업이 차단되었습니다. 팝업 허용 후 다시 시도해주세요.');
+            return;
+        }
+
+        const htmlContent = `
+            <!DOCTYPE html>
+            <html lang="ko">
+            <head>
+                <meta charset="UTF-8">
+                <title>학생 보고서 일괄 출력</title>
+                <link rel="stylesheet" href="styles.css">
+                <style>
+                    @media print {
+                        .report-page {
+                            page-break-after: always;
+                        }
+                        body {
+                            margin: 0;
+                            padding: 20px;
+                        }
+                    }
+                </style>
+            </head>
+            <body>
+                ${combinedHtml}
+                <script>
+                    window.onload = function() {
+                        window.print();
+                    };
+                </script>
+            </body>
+            </html>
+        `;
+
+        printWindow.document.open();
+        printWindow.document.write(htmlContent);
+        printWindow.document.close();
+
+    } catch (error) {
+        console.error('❌ 보고서 출력 실패:', error);
+        alert('보고서 출력에 실패했습니다: ' + error.message);
+    }
+}
+
+/**
  * 출력 모드 토글
  */
-function togglePrintMode() {
+async function togglePrintMode() {
     const printBtn = document.getElementById('print-toggle-btn');
     const selectAllBtn = document.getElementById('select-all-btn');
     const submissionItems = document.querySelectorAll('.submission-item');
 
-    // selection-mode 토글
-    submissionItems.forEach(item => {
-        item.classList.toggle('selection-mode');
-    });
-
-    // 버튼 상태 토글
-    printBtn.classList.toggle('active');
-
-    // 선택 모드일 때만 전체 선택 버튼 표시
+    // 버튼이 활성화 상태였다면 (선택 모드 해제 시) 선택된 항목들 출력
     if (printBtn.classList.contains('active')) {
-        selectAllBtn.style.display = 'inline-block';
-    } else {
+        // 체크된 항목들 찾기
+        const checkedItems = Array.from(document.querySelectorAll('.submission-item-checkbox:checked'));
+
+        if (checkedItems.length > 0) {
+            // 선택된 항목들의 보고서 출력
+            await printSelectedReports(checkedItems);
+        }
+
+        // selection-mode 해제
+        submissionItems.forEach(item => {
+            item.classList.remove('selection-mode');
+        });
+
+        // 버튼 상태 해제
+        printBtn.classList.remove('active');
         selectAllBtn.style.display = 'none';
-        // 선택 모드 해제 시 모든 체크박스 해제
+
+        // 체크박스 해제
         document.querySelectorAll('.submission-item-checkbox').forEach(cb => {
             cb.checked = false;
         });
+    } else {
+        // 선택 모드 활성화
+        submissionItems.forEach(item => {
+            item.classList.add('selection-mode');
+        });
+
+        printBtn.classList.add('active');
+        selectAllBtn.style.display = 'inline-block';
     }
 }
 
