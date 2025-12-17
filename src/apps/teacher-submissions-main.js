@@ -252,19 +252,10 @@ async function generateSinglePDF(submission) {
     const reportData = submission.reportData;
     const reportHtml = ReportGenerator.generateReportHtml(reportData, true);
 
-    const reportHtmlFull = `
-        <div style="padding: 20px; background-color: #f9f9f9; border-radius: 12px; margin-bottom: 20px;">
-            <h2>📊 ${escapeHtml(submission.studentName || submission.studentCode)} 학생 보고서</h2>
-            <p><strong>제출 일시:</strong> ${new Date(submission.submittedAt).toLocaleString('ko-KR')}</p>
-            <p><strong>상담:</strong> ${escapeHtml(currentCounselData.title)}</p>
-        </div>
-        ${reportHtml}
-    `;
-
     // 보고서 내용을 우측 패널에 임시로 표시
     const reportContent = document.getElementById('report-content');
     const previousContent = reportContent.innerHTML;
-    reportContent.innerHTML = reportHtmlFull;
+    reportContent.innerHTML = reportHtml;
 
     try {
         // html2canvas로 HTML을 이미지로 변환

@@ -189,7 +189,7 @@ class CounselStorageService {
                 };
             }
 
-            // API Key가 제공된 경우 권한 확인
+            // API Key가 제공된 경우에만 권한 확인
             if (apiKey) {
                 const data = docSnap.data();
                 if (data.teacherApiKey && data.teacherApiKey !== apiKey) {
@@ -251,7 +251,7 @@ class CounselStorageService {
                 };
             }
 
-            // API Key가 제공된 경우 권한 확인
+            // API Key가 제공된 경우에만 권한 확인
             if (apiKey) {
                 const data = docSnap.data();
                 if (data.teacherApiKey && data.teacherApiKey !== apiKey) {
