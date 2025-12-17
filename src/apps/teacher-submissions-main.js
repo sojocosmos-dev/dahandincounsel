@@ -83,10 +83,12 @@ function createSubmissionCard(submission) {
     const studentName = submission.studentName || submission.studentCode || '이름 없음';
 
     return `
-        <div class="submission-card" onclick="viewSubmission('${submission.id}')">
-            <div class="submission-card-student">${escapeHtml(studentName)}</div>
-            <div class="submission-card-date">${date}</div>
-            <div class="submission-card-arrow">→</div>
+        <div class="submission-item" onclick="viewSubmission(event, '${submission.id}')">
+            <div class="submission-item-content">
+                <div class="submission-item-name">${escapeHtml(studentName)}</div>
+                <div class="submission-item-code">${date}</div>
+            </div>
+            <input type="checkbox" class="submission-item-checkbox" />
         </div>
     `;
 }
@@ -103,8 +105,16 @@ function escapeHtml(text) {
 /**
  * 특정 제출 보고서를 조회합니다
  */
-async function viewSubmission(submissionId) {
+async function viewSubmission(event, submissionId) {
     const reportContent = document.getElementById('report-content');
+
+    // 모든 submission-item에서 active 클래스 제거
+    document.querySelectorAll('.submission-item').forEach(item => {
+        item.classList.remove('active');
+    });
+
+    // 클릭된 항목에 active 클래스 추가
+    event.target.closest('.submission-item')?.classList.add('active');
 
     try {
         reportContent.innerHTML = '<p class="loading-message">보고서를 불러오는 중...</p>';

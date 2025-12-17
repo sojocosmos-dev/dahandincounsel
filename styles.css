@@ -1,4 +1,4 @@
-/* ===== 여기어때 폰트 ===== */
+/* ===== 커스텀 폰트 ===== */
 @font-face {
     font-family: 'yg-jalnan';
     src: url('https://fastly.jsdelivr.net/gh/projectnoonnu/noonfonts_four@1.2/JalnanOTF00.woff') format('woff');
@@ -6,75 +6,159 @@
     font-style: normal;
 }
 
-/* ===== 색상 변수 ===== */
+/* ===== CSS 변수 (모던 컬러 팔레트) ===== */
 :root {
-    --color-primary: #2ecc71;
-    --color-primary-dark: #27ae60;
-    --color-secondary: #3498db;
-    --color-secondary-dark: #2980b9;
-    --color-bg-light: #f8f8f8;
-    --color-bg-white: #ffffff;
-    --color-border: #ddd;
-    --color-border-light: #e0e0e0;
-    --color-text-dark: #333;
-    --color-text-muted: #777;
-    --color-danger: #e74c3c;
-    --color-warning: #ffc107;
-    --color-info: #1e88e5;
-    --color-success: #2ecc71;
+    /* Primary Colors - 밝고 친근한 파랑 */
+    --color-primary-50: #eff6ff;
+    --color-primary-100: #dbeafe;
+    --color-primary-200: #bfdbfe;
+    --color-primary-300: #93c5fd;
+    --color-primary-400: #60a5fa;
+    --color-primary-500: #3b82f6;
+    --color-primary-600: #2563eb;
+    --color-primary-700: #1d4ed8;
+
+    /* Secondary Colors - 생동감 있는 보라/핑크 */
+    --color-secondary-50: #fdf4ff;
+    --color-secondary-100: #fae8ff;
+    --color-secondary-300: #f0abfc;
+    --color-secondary-500: #d946ef;
+    --color-secondary-600: #c026d3;
+
+    /* Success - 밝은 초록 */
+    --color-success-50: #f0fdf4;
+    --color-success-100: #dcfce7;
+    --color-success-500: #22c55e;
+    --color-success-600: #16a34a;
+
+    /* Warning - 따뜻한 주황/노랑 */
+    --color-warning-50: #fffbeb;
+    --color-warning-100: #fef3c7;
+    --color-warning-500: #f59e0b;
+    --color-warning-700: #b45309;
+
+    /* Danger - 부드러운 빨강 */
+    --color-danger-500: #ef4444;
+    --color-danger-600: #dc2626;
+
+    /* Neutrals */
+    --color-gray-50: #f9fafb;
+    --color-gray-100: #f3f4f6;
+    --color-gray-200: #e5e7eb;
+    --color-gray-300: #d1d5db;
+    --color-gray-500: #6b7280;
+    --color-gray-600: #4b5563;
+    --color-gray-700: #374151;
+    --color-gray-800: #1f2937;
+    --color-gray-900: #111827;
+
+    /* Shadows */
+    --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+    --shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px -1px rgba(0, 0, 0, 0.1);
+    --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -2px rgba(0, 0, 0, 0.1);
+    --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -4px rgba(0, 0, 0, 0.1);
+    --shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.1);
+    --shadow-2xl: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+
+    /* Transitions */
+    --transition-fast: 150ms cubic-bezier(0.4, 0, 0.2, 1);
+    --transition-base: 200ms cubic-bezier(0.4, 0, 0.2, 1);
+    --transition-slow: 300ms cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 /* ===== 기본 스타일 ===== */
+* {
+    box-sizing: border-box;
+}
+
 body {
-    font-family: 'Malgun Gothic', 'Arial', sans-serif;
+    font-family: 'Malgun Gothic', 'Apple SD Gothic Neo', -apple-system, BlinkMacSystemFont, 'Segoe UI', Arial, sans-serif;
     max-width: 1000px;
     margin: 20px auto;
     padding: 0 20px;
-    background-color: var(--color-bg-light);
+    background-color: var(--color-gray-50);
+    color: var(--color-gray-900);
+    line-height: 1.6;
 }
 
+h1, h2, h3, h4, h5, h6 {
+    font-family: 'yg-jalnan', 'Malgun Gothic', Arial, sans-serif;
+}
+
+/* ===== 입력 필드 스타일 ===== */
 input[type="text"],
+input[type="password"],
 textarea,
 input[type="file"] {
-    padding: 10px;
+    padding: 12px 16px;
     margin: 8px 0;
     width: 100%;
     box-sizing: border-box;
     font-size: 16px;
-    border-radius: 4px;
-    border: 1px solid var(--color-border);
+    border-radius: 12px;
+    border: 2px solid var(--color-gray-200);
+    background: white;
+    font-family: inherit;
+    transition: all var(--transition-base);
+    outline: none;
+}
+
+input[type="text"]:focus,
+input[type="password"]:focus,
+textarea:focus {
+    border-color: var(--color-primary-500);
+    box-shadow: 0 0 0 3px var(--color-primary-100);
+}
+
+textarea {
     resize: vertical;
+    min-height: 100px;
 }
 
 /* ===== 버튼 스타일 ===== */
+button {
+    font-family: inherit;
+    cursor: pointer;
+    border: none;
+    font-weight: 600;
+    border-radius: 12px;
+    padding: 12px 24px;
+    font-size: 16px;
+    transition: all var(--transition-base);
+    box-shadow: var(--shadow);
+    position: relative;
+    overflow: hidden;
+}
+
+button:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-lg);
+}
+
+button:active {
+    transform: translateY(0);
+}
+
 .button-group button,
 .print-download-group button {
-    padding: 12px 20px;
     margin: 5px;
     color: white;
-    border: none;
-    cursor: pointer;
-    border-radius: 6px;
-    transition: background-color 0.3s ease;
-    font-weight: 600;
 }
 
 .button-group button {
-    background-color: var(--color-primary);
+    background: linear-gradient(135deg, var(--color-success-500), var(--color-success-600));
 }
 
 .button-group button:hover {
-    background-color: var(--color-primary-dark);
+    background: linear-gradient(135deg, var(--color-success-600), var(--color-success-600));
 }
 
 .print-download-group button {
-    background-color: var(--color-secondary);
-    padding: 10px 18px;
-    font-size: 1em;
+    background: linear-gradient(135deg, var(--color-primary-500), var(--color-primary-600));
 }
 
 .print-download-group button:hover {
-    background-color: var(--color-secondary-dark);
+    background: linear-gradient(135deg, var(--color-primary-600), var(--color-primary-700));
 }
 
 .button-group,
@@ -84,72 +168,96 @@ input[type="file"] {
     margin-top: 20px;
 }
 
-/* ===== 입력 영역 스타일 ===== */
+/* ===== 카드/섹션 스타일 ===== */
+.card {
+    background: white;
+    border-radius: 16px;
+    padding: 24px;
+    box-shadow: var(--shadow-md);
+    transition: all var(--transition-base);
+}
+
+.card:hover {
+    box-shadow: var(--shadow-lg);
+}
+
 #input-area {
-    background-color: var(--color-bg-white);
-    padding: 15px;
-    border-radius: 8px;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+    background-color: white;
+    padding: 24px;
+    border-radius: 16px;
+    box-shadow: var(--shadow-md);
 }
 
 .config-section {
-    margin-top: 15px;
-    padding: 10px;
-    border: 1px solid var(--color-border-light);
-    border-radius: 6px;
-    background-color: #fefefe;
+    margin-top: 20px;
+    padding: 20px;
+    border: 2px solid var(--color-gray-200);
+    border-radius: 12px;
+    background-color: white;
+    transition: all var(--transition-base);
+}
+
+.config-section:hover {
+    border-color: var(--color-primary-300);
+    box-shadow: 0 0 0 3px var(--color-primary-50);
 }
 
 .output-option-group {
     display: flex;
     flex-direction: column;
-    margin-bottom: 10px;
-    padding: 8px;
-    border: 1px solid #b3e5fc;
-    border-radius: 4px;
-    background-color: #e1f5fe;
+    margin-bottom: 12px;
+    padding: 12px;
+    border: 2px solid var(--color-primary-200);
+    border-radius: 12px;
+    background: linear-gradient(135deg, var(--color-primary-50), var(--color-primary-100));
 }
 
 /* ===== 탭 스타일 ===== */
 .mode-selection {
     display: flex;
-    margin-bottom: 15px;
-    border-bottom: 2px solid var(--color-border);
+    margin-bottom: 20px;
+    border-bottom: 2px solid var(--color-gray-200);
+    gap: 8px;
 }
 
 .mode-tab {
     flex: 1;
-    padding: 10px 0;
+    padding: 12px 0;
     text-align: center;
     cursor: pointer;
-    border-bottom: 2px solid transparent;
+    border-bottom: 3px solid transparent;
     font-weight: bold;
-    color: var(--color-text-muted);
-    transition: all 0.3s ease;
+    color: var(--color-gray-500);
+    transition: all var(--transition-base);
+    border-radius: 8px 8px 0 0;
+}
+
+.mode-tab:hover {
+    background-color: var(--color-gray-50);
 }
 
 .mode-tab.active {
-    border-bottom: 2px solid var(--color-primary);
-    color: var(--color-primary);
-    background-color: #e8f5e9;
+    border-bottom-color: var(--color-primary-500);
+    color: var(--color-primary-600);
+    background: linear-gradient(135deg, var(--color-primary-50), transparent);
 }
 
 /* ===== 보고서 스타일 ===== */
 #report-area {
-    background-color: var(--color-bg-white);
-    border-radius: 12px;
+    background-color: white;
+    border-radius: 20px;
     padding: 40px;
-    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+    box-shadow: var(--shadow-xl);
     margin-top: 30px;
 }
 
 h1 {
-    font-family: 'yg-jalnan', 'Malgun Gothic', 'Arial', sans-serif;
-    color: #4a4a4a;
+    font-family: 'yg-jalnan', 'Malgun Gothic', Arial, sans-serif;
+    color: var(--color-gray-800);
     text-align: center;
     font-size: 2.5em;
-    padding-bottom: 7px;
-    margin-bottom: 10px;
+    padding-bottom: 10px;
+    margin-bottom: 15px;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -158,80 +266,77 @@ h1 {
 
 /* ===== 섹션 스타일 ===== */
 .usage-section {
-    background: linear-gradient(135deg, #fffbeb 0%, #fef3c7 100%);
-    padding: 16px 20px;
+    background: linear-gradient(135deg, var(--color-warning-50), var(--color-warning-100));
+    padding: 20px 24px;
     border-radius: 16px;
-    margin-bottom: 20px;
-    border: 3px solid #fde68a;
-    box-shadow: 0 4px 12px rgba(253, 230, 138, 0.2);
+    margin-bottom: 24px;
+    border: 2px solid var(--color-warning-500);
+    box-shadow: var(--shadow-md);
 }
 
 .usage-section h2 {
-    color: #d97706;
+    color: var(--color-warning-700);
     font-weight: 700;
-    margin-bottom: 10px;
-    letter-spacing: -0.4px;
+    margin-bottom: 12px;
 }
 
 .usage-text {
-    color: #92400e;
-    line-height: 1.6;
+    color: var(--color-gray-700);
+    line-height: 1.7;
     font-size: 0.95em;
 }
 
 .summary-section {
-    background: linear-gradient(135deg, #fff5f7 0%, #ffe8f0 100%);
-    border: 3px solid #ffb3d9;
-    padding: 20px;
+    background: linear-gradient(135deg, #fff5f7, #ffe4ec);
+    border: 2px solid #ff6ba9;
+    padding: 24px;
     border-radius: 20px;
-    margin-top: 25px;
-    box-shadow: 0 8px 20px rgba(255, 179, 217, 0.2);
+    margin-top: 30px;
+    box-shadow: var(--shadow-lg);
 }
 
 .summary-section h2 {
     color: #ff6ba9;
-    font-size: 1.6em;
+    font-size: 1.8em;
     margin-top: 0;
-    margin-bottom: 15px;
+    margin-bottom: 16px;
     font-weight: 700;
-    letter-spacing: -0.5px;
 }
 
 .summary-section h3 {
     color: #ff8cc4;
-    font-size: 1.15em;
-    margin-top: 15px;
-    margin-bottom: 10px;
+    font-size: 1.2em;
+    margin-top: 16px;
+    margin-bottom: 12px;
     font-weight: 600;
-    letter-spacing: -0.3px;
 }
 
 .summary-textarea {
     width: 100%;
-    min-height: 85px;
-    padding: 12px 15px;
+    min-height: 90px;
+    padding: 14px 18px;
     border: 2px solid #ffd4e8;
     border-radius: 12px;
     resize: vertical;
     font-size: 0.95em;
     box-sizing: border-box;
     background: white;
-    transition: all 0.3s ease;
+    transition: all var(--transition-base);
     line-height: 1.6;
 }
 
 .summary-textarea:focus {
     outline: none;
-    border-color: #ffb3d9;
-    box-shadow: 0 0 0 3px rgba(255, 179, 217, 0.1);
+    border-color: #ff6ba9;
+    box-shadow: 0 0 0 3px rgba(255, 107, 169, 0.1);
 }
 
 .auto-summary-area {
     background: white;
-    padding: 14px 16px;
+    padding: 16px 20px;
     border-radius: 12px;
     border: 2px solid #ffd4e8;
-    margin: 10px 0;
+    margin: 12px 0;
     line-height: 1.7;
     color: #831843;
     font-size: 0.95em;
@@ -240,26 +345,25 @@ h1 {
 
 /* ===== 자산 섹션 스타일 ===== */
 .asset-section-container {
-    margin-bottom: 25px;
-    padding: 18px;
-    background: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 100%);
-    border: 3px solid #bae6fd;
+    margin-bottom: 28px;
+    padding: 20px;
+    background: linear-gradient(135deg, #f0f9ff, #e0f2fe);
+    border: 2px solid #38bdf8;
     border-radius: 20px;
-    box-shadow: 0 6px 16px rgba(186, 230, 253, 0.25);
+    box-shadow: var(--shadow-md);
 }
 
 .activity-title {
-    font-size: 1.5em;
+    font-size: 1.6em;
     font-weight: 700;
-    margin-top: 20px;
-    margin-bottom: 18px;
+    margin-top: 24px;
+    margin-bottom: 20px;
     border-bottom: none;
-    padding-bottom: 10px;
-    letter-spacing: -0.5px;
+    padding-bottom: 12px;
 }
 
 .activity-title > span:not([style*="font-family"]) {
-    background: linear-gradient(90deg, #0ea5e9 0%, #38bdf8 100%);
+    background: linear-gradient(90deg, #0ea5e9, #38bdf8);
     background-clip: text;
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
@@ -268,26 +372,26 @@ h1 {
 /* ===== 다중 칼럼 레이아웃 ===== */
 .dynamic-column-layout {
     display: flex;
-    gap: 12px;
-    margin-top: 12px;
+    gap: 16px;
+    margin-top: 16px;
 }
 
 .dynamic-column-layout > div {
     display: flex;
     flex-direction: column;
-    padding: 14px;
+    padding: 16px;
     background: white;
     border: 2px solid #e0f2fe;
     border-radius: 16px;
     min-height: 220px;
     box-sizing: border-box;
-    box-shadow: 0 2px 8px rgba(14, 165, 233, 0.08);
-    transition: all 0.3s ease;
+    box-shadow: var(--shadow);
+    transition: all var(--transition-base);
 }
 
 .dynamic-column-layout > div:hover {
-    box-shadow: 0 4px 12px rgba(14, 165, 233, 0.15);
-    transform: translateY(-2px);
+    box-shadow: var(--shadow-lg);
+    transform: translateY(-4px);
 }
 
 .column-title {
@@ -295,9 +399,8 @@ h1 {
     color: #0284c7;
     margin-bottom: 12px;
     border-bottom: 2px solid #bae6fd;
-    padding-bottom: 8px;
-    font-size: 0.95em;
-    letter-spacing: -0.3px;
+    padding-bottom: 10px;
+    font-size: 1em;
 }
 
 /* ===== 쿠키 자산 스타일 ===== */
@@ -306,16 +409,16 @@ h1 {
 }
 
 .cookie-asset-info {
-    margin-top: 12px;
-    font-size: 0.88em;
+    margin-top: 14px;
+    font-size: 0.9em;
     text-align: left;
-    padding: 0 10px;
+    padding: 0 12px;
 }
 
 .cookie-asset-info strong {
     display: block;
-    margin-bottom: 8px;
-    font-size: 1em;
+    margin-bottom: 10px;
+    font-size: 1.05em;
     color: #0369a1;
     font-weight: 700;
 }
@@ -323,12 +426,18 @@ h1 {
 .cookie-asset-item {
     display: flex;
     justify-content: space-between;
-    margin-bottom: 8px;
-    padding: 8px 10px;
-    background: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 100%);
+    margin-bottom: 10px;
+    padding: 10px 12px;
+    background: linear-gradient(135deg, #f0f9ff, #e0f2fe);
     border-radius: 10px;
     border: 1px solid #e0f2fe;
     font-weight: 500;
+    transition: all var(--transition-fast);
+}
+
+.cookie-asset-item:hover {
+    box-shadow: var(--shadow);
+    transform: translateX(4px);
 }
 
 .cookie-asset-item span:first-child {
@@ -349,33 +458,33 @@ h1 {
 }
 
 .student-review-area label {
-    font-size: 0.9em;
+    font-size: 0.92em;
     font-weight: 600;
     color: #0369a1;
-    margin-bottom: 6px;
-    margin-top: 4px;
+    margin-bottom: 8px;
+    margin-top: 6px;
 }
 
 .student-review-area textarea {
     flex-grow: 1;
     min-height: 0;
     font-size: 0.92em;
-    padding: 10px 12px;
-    margin: 0 0 12px 0;
+    padding: 12px 14px;
+    margin: 0 0 14px 0;
     box-sizing: border-box;
     border: 2px solid #e0f2fe;
     border-radius: 12px;
     background: #f8fafc;
-    transition: all 0.3s ease;
+    transition: all var(--transition-base);
     line-height: 1.5;
     resize: vertical;
 }
 
 .student-review-area textarea:focus {
     outline: none;
-    border-color: #7dd3fc;
+    border-color: #38bdf8;
     background: white;
-    box-shadow: 0 0 0 3px rgba(125, 211, 252, 0.1);
+    box-shadow: 0 0 0 3px rgba(56, 189, 248, 0.1);
 }
 
 .student-review-area textarea:last-child {
@@ -387,20 +496,20 @@ h1 {
     display: flex;
     justify-content: center;
     align-items: center;
-    margin-top: 15px;
-    margin-bottom: 10px;
+    margin-top: 16px;
+    margin-bottom: 12px;
 }
 
 .pie-chart {
-    width: 130px;
-    height: 130px;
+    width: 140px;
+    height: 140px;
     border-radius: 50%;
     position: relative;
     display: flex;
     align-items: center;
     justify-content: center;
     flex-shrink: 0;
-    box-shadow: 0 6px 20px rgba(14, 165, 233, 0.25);
+    box-shadow: var(--shadow-lg);
     border: 4px solid white;
 }
 
@@ -408,200 +517,58 @@ h1 {
 .all-badges-container {
     display: flex;
     flex-wrap: wrap;
-    gap: 12px;
-    padding: 12px 8px;
+    gap: 14px;
+    padding: 14px 10px;
     justify-content: center;
 }
 
 .badge-item-display {
-    width: 75px;
+    width: 80px;
     text-align: center;
-    font-size: 0.82em;
+    font-size: 0.85em;
     line-height: 1.3;
-    transition: all 0.3s ease;
+    transition: all var(--transition-base);
 }
 
 .badge-item-display:hover {
-    transform: translateY(-4px);
+    transform: translateY(-6px);
 }
 
 .badge-item-display span {
     display: block;
     white-space: normal;
-    overflow-wrap: break-word;
     word-wrap: break-word;
     color: #0369a1;
     font-weight: 600;
-    margin-top: 5px;
+    margin-top: 6px;
 }
 
 .badge-item-display img {
-    width: 52px;
-    height: 52px;
+    width: 56px;
+    height: 56px;
     margin-bottom: 4px;
     border-radius: 50%;
     object-fit: cover;
-    border: 3px solid #7dd3fc;
-    box-shadow: 0 4px 12px rgba(125, 211, 252, 0.4);
-    transition: all 0.3s ease;
+    border: 3px solid #38bdf8;
+    box-shadow: var(--shadow-md);
+    transition: all var(--transition-base);
 }
 
 .badge-item-display:hover img {
-    box-shadow: 0 6px 18px rgba(125, 211, 252, 0.6);
+    box-shadow: var(--shadow-xl);
     border-color: #0ea5e9;
+    transform: scale(1.1);
 }
 
 /* ===== 하단 스타일 ===== */
 .report-footer {
     text-align: right;
-    margin-top: 35px;
-    padding-top: 12px;
+    margin-top: 40px;
+    padding-top: 14px;
     border-top: 2px solid #e0f2fe;
-    color: #64748b;
-    font-size: 0.88em;
+    color: var(--color-gray-600);
+    font-size: 0.9em;
     font-weight: 500;
-}
-
-
-/* ===== 인쇄 최적화 ===== */
-@media print {
-    body {
-        padding: 0;
-        margin: 0;
-        font-size: 8.2pt;
-    }
-
-    body > h1:first-of-type {
-        display: none;
-    }
-
-    #input-area,
-    .button-group,
-    .print-download-group {
-        display: none;
-    }
-
-    #report-area {
-        box-shadow: none;
-        padding: 2mm 4mm;
-        margin: 0;
-        border-radius: 0;
-        background-color: white;
-    }
-
-    #report-area h1 {
-        font-size: 1.6em;
-        padding-bottom: 6px;
-        margin-bottom: 3px;
-    }
-
-    .usage-section {
-        margin-bottom: 3px;
-        padding: 4px;
-        page-break-inside: avoid;
-    }
-
-    .asset-section-container,
-    .summary-section {
-        margin-bottom: 2px;
-        padding: 4px;
-        page-break-inside: avoid;
-    }
-
-    .dynamic-column-layout {
-        gap: 6px;
-        margin-top: 5px;
-    }
-
-    .dynamic-column-layout > div {
-        min-height: 110px;
-        padding: 3px;
-        font-size: 0.85em;
-    }
-
-    .column-title {
-        font-size: 0.9em;
-        margin-bottom: 5px;
-    }
-
-    .activity-title {
-        margin-top: 10px;
-        margin-bottom: 8px;
-        font-size: 1.2em;
-    }
-
-    .summary-section {
-        padding: 8px;
-        margin-top: 10px;
-    }
-
-    .summary-section h3 {
-        margin-top: 8px;
-        margin-bottom: 3px;
-        font-size: 1.05em;
-    }
-
-    .summary-textarea {
-        min-height: 40px;
-        font-size: 0.9em;
-    }
-
-    .auto-summary-area {
-        padding: 8px;
-        font-size: 0.9em;
-    }
-
-    .student-review-area label {
-        margin-top: 5px;
-        margin-bottom: 3px;
-        font-size: 0.85em;
-    }
-
-    .student-review-area textarea {
-        min-height: 35px;
-        padding: 4px;
-        font-size: 0.8em;
-        margin-bottom: 5px !important;
-    }
-
-    .student-review-area textarea:last-child {
-        margin-bottom: 0 !important;
-    }
-
-    .report-footer {
-        margin-top: 10px;
-        padding-top: 5px;
-        font-size: 8pt;
-    }
-
-    .badge-item-display {
-        width: 60px;
-        font-size: 7pt;
-    }
-
-    .badge-item-display img {
-        width: 40px;
-        height: 40px;
-    }
-
-    .pie-chart {
-        width: 70px;
-        height: 70px;
-        -webkit-print-color-adjust: exact;
-        print-color-adjust: exact;
-    }
-
-    .pie-chart > div {
-        font-size: 0.9em !important;
-    }
-
-    .cookie-asset-info {
-        padding: 0 5px;
-    }
-
-    .cookie-asset-item {
-        font-size: 0.8em;
-    }
 }
 
 /* ===== 인증 페이지 (로그인 선택) 스타일 ===== */
@@ -611,7 +578,7 @@ h1 {
     justify-content: center;
     min-height: 100vh;
     background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-    font-family: 'Malgun Gothic', 'Arial', sans-serif;
+    font-family: 'Malgun Gothic', Arial, sans-serif;
     margin: 0;
     padding: 20px;
     max-width: none;
@@ -624,18 +591,30 @@ h1 {
     justify-content: center;
     align-items: stretch;
     flex-wrap: nowrap;
+    animation: fadeInUp 0.6s ease-out;
+}
+
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
 }
 
 .auth-container {
     background-color: white;
-    border-radius: 16px;
-    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
-    padding: 40px 35px;
+    border-radius: 24px;
+    box-shadow: var(--shadow-2xl);
+    padding: 40px 36px;
     text-align: center;
     width: 480px;
     min-width: 480px;
     max-width: 480px;
-    min-height: 450px;
+    min-height: 480px;
     display: flex;
     flex-direction: column;
     flex: 0 0 auto;
@@ -643,15 +622,15 @@ h1 {
 }
 
 .auth-logo {
-    font-family: 'yg-jalnan', 'Malgun Gothic', 'Arial', sans-serif;
+    font-family: 'yg-jalnan', 'Malgun Gothic', Arial, sans-serif;
     font-size: 2.5em;
     font-weight: bold;
-    color: #333;
-    margin-bottom: 10px;
+    color: var(--color-gray-800);
+    margin-bottom: 12px;
 }
 
 .auth-subtitle {
-    color: #666;
+    color: var(--color-gray-600);
     font-size: 1.1em;
     margin-bottom: 0;
     line-height: 1.5;
@@ -661,7 +640,7 @@ h1 {
 .auth-selection {
     display: flex;
     flex-direction: column;
-    gap: 20px;
+    gap: 24px;
     margin-top: 0;
 }
 
@@ -670,26 +649,26 @@ h1 {
     flex-direction: column;
     align-items: center;
     justify-content: flex-start;
-    padding: 30px 20px;
-    border-radius: 12px;
+    padding: 32px 24px;
+    border-radius: 16px;
     cursor: pointer;
-    transition: all 0.3s ease;
+    transition: all var(--transition-slow);
     border: 2px solid transparent;
-    height: 420px;
+    height: 440px;
     box-sizing: border-box;
 }
 
 .auth-option:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+    transform: translateY(-6px);
+    box-shadow: var(--shadow-2xl);
 }
 
 .auth-option-icon {
     font-size: 3em;
-    margin-bottom: 15px;
+    margin-bottom: 16px;
     margin-top: 0;
-    width: 120px;
-    height: 120px;
+    width: 130px;
+    height: 130px;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -697,606 +676,703 @@ h1 {
 }
 
 .auth-option-icon-img {
-    width: 120px !important;
-    height: 120px !important;
-    max-width: 120px !important;
-    max-height: 120px !important;
+    width: 130px !important;
+    height: 130px !important;
+    max-width: 130px !important;
+    max-height: 130px !important;
     object-fit: contain;
     display: block;
 }
 
 .auth-option-title {
-    font-size: 1.3em;
+    font-size: 1.4em;
     font-weight: bold;
-    margin-bottom: 10px;
+    margin-bottom: 12px;
     margin-top: 0;
+    color: var(--color-gray-800);
 }
 
 .auth-option-desc {
-    font-size: 0.9em;
-    color: #666;
-    line-height: 1.4;
-    height: 45px;
+    font-size: 0.95em;
+    color: var(--color-gray-600);
+    line-height: 1.5;
+    height: 48px;
     display: flex;
     align-items: center;
     justify-content: center;
     width: 100%;
     text-align: center;
     margin-bottom: 0;
-    padding: 0 10px;
+    padding: 0 12px;
     box-sizing: border-box;
     overflow: hidden;
 }
 
 .auth-option .form-group {
     width: 100%;
-    margin-top: 15px !important;
+    margin-top: 16px !important;
     margin-bottom: 0 !important;
 }
 
 .auth-option .form-group input {
     width: 100%;
-    padding: 12px 15px;
-    border: 2px solid #ddd;
-    border-radius: 8px;
+    padding: 14px 16px;
+    border: 2px solid var(--color-gray-200);
+    border-radius: 12px;
     font-size: 1em;
     box-sizing: border-box;
-    transition: border-color 0.3s ease;
+    transition: all var(--transition-base);
+    text-align: center;
+}
+
+.auth-option .form-group input:focus {
+    border-color: var(--color-primary-500);
+    box-shadow: 0 0 0 3px var(--color-primary-100);
 }
 
 .btn-teacher {
     background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
     color: white;
-    padding: 15px 30px;
+    padding: 16px 32px;
     border: none;
-    border-radius: 8px;
+    border-radius: 12px;
     font-size: 1.1em;
     font-weight: bold;
     cursor: pointer;
     width: 100%;
-    margin-top: 15px !important;
+    margin-top: 16px !important;
     margin-bottom: 0 !important;
-    transition: all 0.3s ease;
+    transition: all var(--transition-base);
 }
 
 .btn-teacher:hover {
-    transform: scale(1.05);
+    transform: scale(1.02);
     box-shadow: 0 8px 20px rgba(102, 126, 234, 0.4);
 }
 
 .btn-student {
     background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
     color: white;
-    padding: 15px 30px;
+    padding: 16px 32px;
     border: none;
-    border-radius: 8px;
+    border-radius: 12px;
     font-size: 1.1em;
     font-weight: bold;
     cursor: pointer;
     width: 100%;
-    margin-top: 12px !important;
+    margin-top: 14px !important;
     margin-bottom: 0 !important;
-    transition: all 0.3s ease;
+    transition: all var(--transition-base);
 }
 
 .btn-student:hover {
-    transform: scale(1.05);
+    transform: scale(1.02);
     box-shadow: 0 8px 20px rgba(245, 87, 108, 0.4);
+}
+
+/* ===== 교사 페이지 스타일 ===== */
+.teacher-page {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    min-height: 100vh;
+    margin: 0;
+    padding: 32px 20px;
+    max-width: none;
+}
+
+.teacher-page .page-header {
+    text-align: center;
+    margin-bottom: 32px;
+    animation: fadeInUp 0.6s ease-out;
+}
+
+.teacher-page .page-header h1 {
+    font-family: 'yg-jalnan', 'Malgun Gothic', Arial, sans-serif;
+    font-size: 3em;
+    color: white;
+    text-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+    margin: 0;
+}
+
+.teacher-page .counsel-list-view,
+.teacher-page .counsel-form-view {
+    background: white;
+    border-radius: 24px;
+    box-shadow: var(--shadow-2xl);
+    padding: 32px;
+    max-width: 1100px;
+    margin: 0 auto 32px;
+    animation: fadeInUp 0.6s ease-out 0.1s backwards;
+}
+
+.teacher-page .counsel-list-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 28px;
+    padding-bottom: 20px;
+    border-bottom: 2px solid var(--color-gray-100);
+}
+
+.teacher-page .counsel-list-header h2 {
+    font-size: 2em;
+    color: var(--color-gray-800);
+    margin: 0;
+    font-weight: 700;
+}
+
+.teacher-page .btn-create-counsel {
+    background: linear-gradient(135deg, var(--color-primary-500), var(--color-primary-600));
+    color: white;
+    padding: 14px 28px;
+    border-radius: 12px;
+    font-weight: 600;
+}
+
+.teacher-page .counsel-card {
+    background: linear-gradient(135deg, #f0f9ff, #e0f2fe);
+    border: 2px solid #bae6fd;
+    border-radius: 16px;
+    padding: 24px;
+    margin-bottom: 16px;
+    cursor: pointer;
+    transition: all var(--transition-base);
+    box-shadow: var(--shadow);
+}
+
+.teacher-page .counsel-card:hover {
+    transform: translateY(-4px);
+    box-shadow: var(--shadow-xl);
+    border-color: var(--color-primary-400);
+}
+
+.teacher-page .counsel-card.active {
+    border-color: var(--color-primary-500);
+    background: linear-gradient(135deg, var(--color-primary-50), var(--color-primary-100));
+    box-shadow: 0 0 0 3px var(--color-primary-100);
+}
+
+.teacher-page .counsel-card-title {
+    font-weight: bold;
+    font-size: 1.3em;
+    color: var(--color-gray-800);
+    margin-bottom: 12px;
+    line-height: 1.4;
+}
+
+.teacher-page .counsel-card.active .counsel-card-title {
+    color: var(--color-primary-700);
+}
+
+.teacher-page .counsel-card-meta {
+    font-size: 0.92em;
+    color: var(--color-gray-600);
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.teacher-page .counsel-form-header {
+    background: linear-gradient(135deg, #f0f9ff, #e0f2fe);
+    padding: 16px 20px;
+    border-radius: 16px;
+    margin-bottom: 28px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.teacher-page .btn-back-to-list {
+    background: linear-gradient(135deg, var(--color-gray-500), var(--color-gray-600));
+    color: white;
+    padding: 10px 20px;
+    border-radius: 10px;
+    font-size: 0.95em;
+}
+
+.teacher-page .current-counsel-info {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    padding: 12px 20px;
+    background: linear-gradient(135deg, var(--color-warning-50), var(--color-warning-100));
+    border-radius: 12px;
+    border: 2px solid var(--color-warning-500);
+}
+
+.teacher-page .current-counsel-info span {
+    font-weight: bold;
+    font-size: 1.15em;
+    color: var(--color-warning-700);
+}
+
+.teacher-page .btn-delete-counsel {
+    background: linear-gradient(135deg, var(--color-danger-500), var(--color-danger-600));
+    color: white;
+    padding: 8px 16px;
+    border-radius: 8px;
+    font-size: 0.9em;
+}
+
+.teacher-page .config-section {
+    background: white;
+    border-radius: 16px;
+    padding: 24px;
+    margin-bottom: 24px;
+    border: 2px solid var(--color-gray-100);
+    transition: all var(--transition-base);
+}
+
+.teacher-page .config-section:hover {
+    border-color: var(--color-primary-300);
+    box-shadow: 0 0 0 3px var(--color-primary-50);
+}
+
+.teacher-page .config-section h3 {
+    color: var(--color-gray-800);
+    font-size: 1.4em;
+    margin-top: 0;
+    margin-bottom: 16px;
+    font-weight: 700;
+}
+
+.teacher-page .button-group button {
+    background: linear-gradient(135deg, var(--color-success-500), var(--color-success-600));
+    color: white;
+    padding: 16px 36px;
+    font-size: 1.1em;
+}
+
+.teacher-page .page-footer {
+    text-align: center;
+    margin-top: 40px;
+    padding: 20px 0;
+}
+
+.teacher-page .btn-back-to-login {
+    background: rgba(255, 255, 255, 0.2);
+    backdrop-filter: blur(10px);
+    color: white;
+    padding: 14px 32px;
+    border: 2px solid rgba(255, 255, 255, 0.4);
+    border-radius: 12px;
+    font-size: 1em;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all var(--transition-base);
+}
+
+.teacher-page .btn-back-to-login:hover {
+    background: rgba(255, 255, 255, 0.3);
+    border-color: rgba(255, 255, 255, 0.6);
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(255, 255, 255, 0.3);
 }
 
 /* ===== 학생 페이지 스타일 ===== */
 .student-page {
     background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
     min-height: 100vh;
-    padding: 20px;
-}
-
-.student-page body {
-    background: transparent;
     margin: 0;
-    max-width: 800px;
-    margin-left: auto;
-    margin-right: auto;
+    padding: 32px 20px;
+    max-width: none;
 }
 
-.student-input-area {
-    background-color: white;
-    border-radius: 12px;
-    padding: 30px;
-    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
-    margin-bottom: 30px;
+.student-page .student-input-area {
+    background: white;
+    border-radius: 24px;
+    box-shadow: var(--shadow-2xl);
+    padding: 36px;
+    max-width: 600px;
+    margin: 0 auto 32px;
+    animation: fadeInUp 0.6s ease-out;
 }
 
-.student-input-area h2 {
-    color: #333;
-    margin-top: 0;
-    margin-bottom: 20px;
-    font-size: 1.8em;
-}
-
-.student-input-group {
-    display: flex;
-    gap: 10px;
-    margin-bottom: 15px;
-}
-
-.student-input-group input {
-    flex: 1;
-    padding: 12px 15px;
-    border: 2px solid #ddd;
-    border-radius: 8px;
-    font-size: 1em;
-    transition: border-color 0.3s ease;
-}
-
-.student-input-group input:focus {
-    outline: none;
-    border-color: #667eea;
-}
-
-.student-input-group button {
-    padding: 12px 30px;
-    background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
-    color: white;
-    border: none;
-    border-radius: 8px;
-    font-size: 1em;
-    font-weight: bold;
-    cursor: pointer;
-    transition: all 0.3s ease;
-}
-
-.student-input-group button:hover {
-    transform: scale(1.05);
-    box-shadow: 0 8px 15px rgba(245, 87, 108, 0.4);
-}
-
-.student-input-group button:disabled {
-    opacity: 0.6;
-    cursor: not-allowed;
-    transform: none;
-}
-
-.student-message {
-    padding: 12px 15px;
-    border-radius: 8px;
-    margin-bottom: 15px;
-    display: none;
-    font-weight: 500;
-}
-
-.student-message.show {
-    display: block;
-}
-
-.student-message.error {
-    background-color: #ffebee;
-    color: #c62828;
-    border: 1px solid #ef5350;
-}
-
-.student-message.success {
-    background-color: #e8f5e9;
-    color: #2e7d32;
-    border: 1px solid #81c784;
-}
-
-.student-message.info {
-    background-color: #e3f2fd;
-    color: #1565c0;
-    border: 1px solid #42a5f5;
-}
-
-#student-report-area {
-    background-color: white;
-    border-radius: 12px;
-    padding: 30px;
-    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
-    display: none;
-}
-
-#student-report-area.show {
-    display: block;
-}
-
-.student-report-header {
-    text-align: center;
-    margin-bottom: 30px;
-    padding-bottom: 20px;
-    border-bottom: 3px solid #667eea;
-}
-
-.student-report-header h1 {
-    color: #333;
-    margin: 0 0 10px 0;
-    font-size: 2em;
-}
-
-.student-report-header p {
-    color: #666;
-    margin: 5px 0;
-}
-
-.stat-boxes-container {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-    gap: 15px;
-    margin-bottom: 30px;
-}
-
-.stat-box {
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-    color: white;
-    padding: 20px;
-    border-radius: 12px;
-    text-align: center;
-    box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
-    transition: all 0.3s ease;
-}
-
-.stat-box:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 8px 25px rgba(102, 126, 234, 0.4);
-}
-
-.stat-box-value {
+.student-page .student-input-area h2 {
+    font-family: 'yg-jalnan', 'Malgun Gothic', Arial, sans-serif;
     font-size: 2.2em;
-    font-weight: bold;
-    margin-bottom: 8px;
-}
-
-.stat-box-label {
-    font-size: 0.95em;
-    opacity: 0.95;
-}
-
-.badge-section-title {
-    font-size: 1.4em;
-    font-weight: bold;
-    color: #333;
-    margin: 30px 0 20px 0;
-    padding-bottom: 10px;
-    border-bottom: 2px solid #f093fb;
-}
-
-.badge-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(90px, 1fr));
-    gap: 15px;
-    margin-bottom: 30px;
-}
-
-.badge-item {
+    color: var(--color-gray-800);
     text-align: center;
-    padding: 10px;
-    border-radius: 10px;
-    background-color: #f8f8f8;
-    transition: all 0.3s ease;
+    margin-bottom: 28px;
 }
 
-.badge-item:hover {
-    background-color: #f0f0f0;
-    transform: scale(1.05);
-}
-
-.badge-item img {
-    width: 60px;
-    height: 60px;
-    border-radius: 50%;
-    object-fit: cover;
-    border: 3px solid #667eea;
-    margin-bottom: 8px;
-    box-shadow: 0 2px 8px rgba(102, 126, 234, 0.3);
-}
-
-.badge-item-name {
-    font-size: 0.85em;
-    color: #333;
-    font-weight: 500;
-    word-wrap: break-word;
-    line-height: 1.3;
-}
-
-.student-logout-btn {
-    display: block;
-    margin: 30px auto 0;
-    padding: 10px 30px;
-    background-color: #ccc;
-    color: #333;
-    border: none;
-    border-radius: 6px;
-    cursor: pointer;
-    font-weight: bold;
-    transition: all 0.3s ease;
-}
-
-.student-logout-btn:hover {
-    background-color: #aaa;
-}
-
-/* ===== 반응형 디자인 ===== */
-@media (max-width: 768px) {
-    .auth-wrapper {
-        flex-direction: column;
-        align-items: center;
-    }
-
-    .auth-container {
-        padding: 30px 20px;
-        width: 100%;
-        max-width: 400px;
-    }
-
-    .auth-logo {
-        font-size: 2em;
-    }
-
-    .auth-subtitle {
-        font-size: 0.95em;
-    }
-
-    .auth-selection {
-        gap: 15px;
-    }
-
-    .auth-option {
-        padding: 20px;
-    }
-
-    .stat-boxes-container {
-        grid-template-columns: 1fr;
-    }
-
-    .badge-grid {
-        grid-template-columns: repeat(auto-fill, minmax(70px, 1fr));
-        gap: 10px;
-    }
-
-    .badge-item img {
-        width: 50px;
-        height: 50px;
-    }
-
-    .student-input-group {
-        flex-direction: column;
-    }
-
-    .student-input-group button {
-        width: 100%;
-    }
-
-    #report-area {
-        padding: 20px;
-    }
-
-    h1 {
-        font-size: 1.8em;
-    }
-}
-
-@media (max-width: 480px) {
-    .auth-container {
-        padding: 20px 15px;
-    }
-
-    .auth-logo {
-        font-size: 1.6em;
-    }
-
-    .auth-subtitle {
-        font-size: 0.85em;
-        margin-bottom: 25px;
-    }
-
-    .auth-option-icon {
-        font-size: 2.5em;
-        margin-bottom: 10px;
-    }
-
-    .auth-option-title {
-        font-size: 1.1em;
-    }
-
-    .auth-option-desc {
-        font-size: 0.8em;
-    }
-
-    .stat-box-value {
-        font-size: 1.8em;
-    }
-
-    .badge-grid {
-        grid-template-columns: repeat(3, 1fr);
-    }
-
-    .student-input-group input,
-    .student-input-group button {
-        padding: 10px;
-    }
-}
-
-/* ===== 학생 페이지 인쇄 스타일 ===== */
-@media print {
-    .student-page {
-        background: white;
-    }
-
-    .student-input-area,
-    .student-logout-btn {
-        display: none;
-    }
-
-    #student-report-area {
-        box-shadow: none;
-        padding: 0;
-        background-color: white;
-    }
-
-    .stat-boxes-container {
-        gap: 10px;
-        margin-bottom: 20px;
-    }
-
-    .stat-box {
-        background: white;
-        color: #333;
-        border: 2px solid #667eea;
-        padding: 15px;
-        -webkit-print-color-adjust: exact;
-        print-color-adjust: exact;
-    }
-
-    .badge-grid {
-        gap: 10px;
-        margin-bottom: 20px;
-    }
-
-    .badge-item {
-        background-color: white;
-        padding: 5px;
-    }
-
-    .badge-item img {
-        width: 50px;
-        height: 50px;
-    }
-}
-
-/* ===== 학생 로그인 폼 스타일 ===== */
-.student-login-form {
-    width: 100%;
-    background-color: white;
-    border-radius: 12px;
-    padding: 30px;
-    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
-}
-
-.form-header {
+.student-page .student-input-group {
     display: flex;
-    align-items: center;
-    margin-bottom: 30px;
-    position: relative;
+    gap: 12px;
+    margin-top: 20px;
 }
 
-.back-button {
-    position: absolute;
-    left: 0;
-    background: none;
-    border: none;
-    font-size: 1.2em;
-    cursor: pointer;
-    color: #667eea;
-    font-weight: bold;
-    padding: 5px 10px;
-    transition: all 0.3s ease;
-}
-
-.back-button:hover {
-    transform: translateX(-3px);
-}
-
-.form-header h2 {
+.student-page .student-input-group input {
     flex: 1;
+    padding: 14px 16px;
+    border: 2px solid var(--color-gray-200);
+    border-radius: 12px;
+    font-size: 1em;
+    transition: all var(--transition-base);
+}
+
+.student-page .student-input-group input:focus {
+    border-color: var(--color-primary-500);
+    box-shadow: 0 0 0 3px var(--color-primary-100);
+}
+
+.student-page .student-input-group button {
+    background: linear-gradient(135deg, var(--color-primary-500), var(--color-primary-600));
+    color: white;
+    padding: 14px 28px;
+    border-radius: 12px;
+    font-weight: 600;
+}
+
+.student-page .student-logout-btn {
+    position: fixed;
+    bottom: 32px;
+    left: 32px;
+    background: rgba(255, 255, 255, 0.2);
+    backdrop-filter: blur(10px);
+    color: white;
+    padding: 12px 24px;
+    border: 2px solid rgba(255, 255, 255, 0.4);
+    border-radius: 12px;
+    font-size: 0.95em;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all var(--transition-base);
+}
+
+.student-page .student-logout-btn:hover {
+    background: rgba(255, 255, 255, 0.3);
+    border-color: rgba(255, 255, 255, 0.6);
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(255, 255, 255, 0.3);
+}
+
+.student-page .student-message {
+    padding: 14px 18px;
+    border-radius: 12px;
+    margin: 16px 0;
+    display: none;
+    font-weight: 600;
     text-align: center;
-    color: #333;
+    box-shadow: var(--shadow);
+}
+
+.student-page .student-message.show {
+    display: block;
+    animation: fadeInUp 0.3s ease-out;
+}
+
+.student-page .student-message.error {
+    background: linear-gradient(135deg, #fee2e2, #fecaca);
+    color: #b91c1c;
+    border: 2px solid #f87171;
+}
+
+.student-page .student-message.success {
+    background: linear-gradient(135deg, var(--color-success-50), var(--color-success-100));
+    color: #15803d;
+    border: 2px solid var(--color-success-500);
+}
+
+.student-page .student-message.info {
+    background: linear-gradient(135deg, var(--color-primary-50), var(--color-primary-100));
+    color: var(--color-primary-700);
+    border: 2px solid var(--color-primary-500);
+}
+
+.student-page #student-report-area {
+    background: white;
+    border-radius: 24px;
+    box-shadow: var(--shadow-2xl);
+    padding: 32px;
+    max-width: 1200px;
+    margin: 20px auto;
+    animation: fadeInUp 0.6s ease-out 0.2s backwards;
+}
+
+.student-page #submit-report-btn {
+    display: block;
+    margin: 0 auto;
+}
+
+/* ===== 학생용 상담 선택 페이지 ===== */
+.auth-page .student-info-box {
+    background: linear-gradient(135deg, var(--color-success-50), var(--color-success-100));
+    border: 2px solid var(--color-success-500);
+    border-radius: 16px;
+    padding: 20px;
+    margin: 28px 0;
+    text-align: center;
+    box-shadow: var(--shadow);
+}
+
+.auth-page .student-info-box strong {
+    color: #15803d;
+    font-size: 1.15em;
+}
+
+.auth-page .counsel-select-container {
+    margin: 32px 0;
+}
+
+.auth-page .counsel-select-container h3 {
+    color: var(--color-gray-800);
+    margin-bottom: 24px;
+    padding-bottom: 16px;
+    border-bottom: 2px solid var(--color-gray-200);
+    font-size: 1.4em;
+    font-weight: 700;
+}
+
+.auth-page .counsel-select-list {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+.auth-page .counsel-select-card {
+    background: linear-gradient(135deg, #f0f9ff, #e0f2fe);
+    border: 2px solid #bae6fd;
+    border-radius: 16px;
+    padding: 24px;
+    cursor: pointer;
+    transition: all var(--transition-base);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    position: relative;
+    box-shadow: var(--shadow);
+}
+
+.auth-page .counsel-select-card:hover {
+    border-color: var(--color-primary-500);
+    background: linear-gradient(135deg, #dbeafe, #bfdbfe);
+    transform: translateX(8px);
+    box-shadow: var(--shadow-lg);
+}
+
+.auth-page .counsel-select-card-title {
+    font-weight: 700;
+    font-size: 1.3em;
+    color: var(--color-gray-800);
+    margin-bottom: 12px;
+}
+
+.auth-page .counsel-select-card-meta {
+    font-size: 0.92em;
+    color: var(--color-gray-600);
+}
+
+.auth-page .counsel-select-card-arrow {
+    font-size: 2.4em;
+    color: var(--color-primary-500);
+    font-weight: bold;
+    transition: transform var(--transition-base);
+}
+
+.auth-page .counsel-select-card:hover .counsel-select-card-arrow {
+    transform: translateX(12px);
+}
+
+.auth-page .loading-message,
+.auth-page .empty-message,
+.auth-page .error-message {
+    text-align: center;
+    padding: 48px 20px;
+    color: var(--color-gray-500);
+    line-height: 1.7;
+}
+
+.auth-page .error-message {
+    color: var(--color-danger-500);
+}
+
+.auth-page .btn-back {
+    background: linear-gradient(135deg, var(--color-gray-400), var(--color-gray-500));
+    color: white;
+    padding: 14px 28px;
+    border-radius: 12px;
+    font-weight: 600;
+    margin-top: 32px;
+    width: 100%;
+}
+
+/* ===== 학생 제출 관련 스타일 ===== */
+.btn-submit-report {
+    background: linear-gradient(135deg, var(--color-success-500), var(--color-success-600));
+    color: white;
+    padding: 16px 36px;
+    border-radius: 14px;
+    font-size: 1.1em;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all var(--transition-base);
+    box-shadow: var(--shadow-lg);
+}
+
+.btn-submit-report:hover {
+    background: linear-gradient(135deg, var(--color-success-600), #059669);
+    transform: translateY(-3px);
+    box-shadow: var(--shadow-xl);
+}
+
+#submission-message {
+    padding: 16px 20px;
+    border-radius: 12px;
+    margin: 16px 0;
+    font-weight: 600;
+    text-align: center;
+    border: 2px solid;
+}
+
+.message-success {
+    background: linear-gradient(135deg, var(--color-success-50), var(--color-success-100));
+    color: #15803d;
+    border-color: var(--color-success-500);
+}
+
+.message-error {
+    background: linear-gradient(135deg, #fee2e2, #fecaca);
+    color: #b91c1c;
+    border-color: #f87171;
+}
+
+.btn-view-submissions {
+    background: linear-gradient(135deg, var(--color-primary-500), var(--color-primary-600));
+    color: white;
+    padding: 12px 24px;
+    border-radius: 10px;
+    font-weight: 600;
+}
+
+/* ===== 모달 스타일 ===== */
+.modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0, 0, 0, 0.5);
+    backdrop-filter: blur(4px);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+    animation: fadeIn 0.2s ease-out;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+.modal-content {
+    background: white;
+    border-radius: 20px;
+    width: 90%;
+    max-width: 800px;
+    max-height: 80vh;
+    display: flex;
+    flex-direction: column;
+    box-shadow: var(--shadow-2xl);
+    animation: fadeInUp 0.3s ease-out;
+}
+
+.modal-header {
+    padding: 24px;
+    border-bottom: 2px solid var(--color-gray-100);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.modal-header h2 {
     margin: 0;
     font-size: 1.5em;
+    color: var(--color-gray-800);
 }
 
-.form-group {
-    margin-bottom: 20px;
-    text-align: left;
-}
-
-.form-group label {
-    display: block;
-    margin-bottom: 8px;
-    color: #333;
-    font-weight: 600;
-    font-size: 0.95em;
-}
-
-.form-group input {
-    width: 100%;
-    padding: 12px 15px;
-    border: 2px solid #ddd;
+.modal-close-btn {
+    background: none;
+    border: none;
+    font-size: 1.8em;
+    cursor: pointer;
+    color: var(--color-gray-500);
+    transition: all var(--transition-base);
+    padding: 0;
+    width: 32px;
+    height: 32px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
     border-radius: 8px;
-    font-size: 1em;
-    box-sizing: border-box;
-    transition: border-color 0.3s ease;
 }
 
-.form-group input:focus {
-    outline: none;
-    border-color: #667eea;
+.modal-close-btn:hover {
+    color: var(--color-gray-800);
+    background: var(--color-gray-100);
 }
 
-.form-message {
-    padding: 12px 15px;
-    border-radius: 8px;
-    margin-bottom: 15px;
-    display: none;
-    font-weight: 500;
-    text-align: center;
+.modal-body {
+    padding: 24px;
+    overflow-y: auto;
+    flex: 1;
 }
 
-.form-message.show {
-    display: block;
+.modal-footer {
+    padding: 16px 24px;
+    border-top: 1px solid var(--color-gray-100);
+    display: flex;
+    justify-content: flex-end;
+    gap: 12px;
 }
 
-.form-message.error {
-    background-color: #ffebee;
-    color: #c62828;
-    border: 1px solid #ef5350;
-}
-
-.form-message.success {
-    background-color: #e8f5e9;
-    color: #2e7d32;
-    border: 1px solid #81c784;
-}
-
-.form-message.info {
-    background-color: #e3f2fd;
-    color: #1565c0;
-    border: 1px solid #42a5f5;
+.btn-close-modal {
+    background: linear-gradient(135deg, var(--color-gray-400), var(--color-gray-500));
+    color: white;
+    padding: 10px 20px;
+    border-radius: 10px;
 }
 
 /* ===== 스낵바 스타일 ===== */
+#snackbar,
 .snackbar {
     visibility: hidden;
     min-width: 300px;
     max-width: 600px;
-    background-color: #323232;
-    color: #fff;
+    background-color: var(--color-gray-800);
+    color: white;
     text-align: left;
-    border-radius: 8px;
+    border-radius: 12px;
     padding: 16px 24px;
     position: fixed;
     z-index: 10000;
     left: 50%;
-    bottom: 30px;
+    bottom: 32px;
     transform: translateX(-50%);
     font-size: 14px;
     line-height: 1.6;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+    box-shadow: var(--shadow-2xl);
 }
 
+#snackbar.show,
 .snackbar.show {
     visibility: visible;
-    animation: snackbar-fadein 0.3s, snackbar-fadeout 0.3s 4.7s;
+    animation: snackbarFadeIn 0.3s, snackbarFadeOut 0.3s 4.7s;
 }
 
+#snackbar.success,
 .snackbar.success {
-    background-color: #2e7d32;
+    background: linear-gradient(135deg, var(--color-success-600), #059669);
 }
 
+#snackbar.error,
 .snackbar.error {
-    background-color: #c62828;
+    background: linear-gradient(135deg, var(--color-danger-600), #b91c1c);
 }
 
+#snackbar.info,
 .snackbar.info {
-    background-color: #1565c0;
+    background: linear-gradient(135deg, var(--color-primary-600), var(--color-primary-700));
 }
 
 .snackbar-title {
@@ -1319,20 +1395,20 @@ h1 {
     margin: 4px 0;
 }
 
-@keyframes snackbar-fadein {
+@keyframes snackbarFadeIn {
     from {
         bottom: 0;
         opacity: 0;
     }
     to {
-        bottom: 30px;
+        bottom: 32px;
         opacity: 1;
     }
 }
 
-@keyframes snackbar-fadeout {
+@keyframes snackbarFadeOut {
     from {
-        bottom: 30px;
+        bottom: 32px;
         opacity: 1;
     }
     to {
@@ -1341,117 +1417,53 @@ h1 {
     }
 }
 
-/* ===== 상담 관리 페이지 레이아웃 ===== */
-body {
-    max-width: 1200px;
+/* ===== 폼 요소 ===== */
+.form-group {
+    margin-bottom: 20px;
+    text-align: left;
 }
 
-/* 상담 목록 뷰 (전체 화면) */
-.counsel-list-view {
-    background: white;
-    border-radius: 8px;
-    padding: 30px;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-    margin-top: 20px;
-}
-
-.counsel-list-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 30px;
-    padding-bottom: 20px;
-    border-bottom: 2px solid #e0e0e0;
-}
-
-.counsel-list-header h2 {
-    margin: 0;
-    color: #333;
-}
-
-.btn-create-counsel {
-    padding: 14px 28px;
-    background-color: #2ecc71;
-    color: white;
-    border: none;
-    border-radius: 8px;
-    font-size: 1.1em;
-    font-weight: bold;
-    cursor: pointer;
-    transition: all 0.3s ease;
-    box-shadow: 0 2px 6px rgba(46, 204, 113, 0.3);
-}
-
-.btn-create-counsel:hover {
-    background-color: #27ae60;
-    transform: translateY(-2px);
-    box-shadow: 0 4px 12px rgba(46, 204, 113, 0.4);
-}
-
-/* 상담 입력 폼 뷰 */
-.counsel-form-view {
-    background: white;
-    border-radius: 8px;
-    padding: 30px;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-    margin-top: 20px;
-}
-
-.counsel-form-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 25px;
-    padding-bottom: 15px;
-    border-bottom: 2px solid #e0e0e0;
-}
-
-.btn-back-to-list {
-    padding: 10px 20px;
-    background-color: #95a5a6;
-    color: white;
-    border: none;
-    border-radius: 6px;
-    font-size: 1em;
-    cursor: pointer;
-    transition: background-color 0.3s ease;
-}
-
-.btn-back-to-list:hover {
-    background-color: #7f8c8d;
-}
-
-.current-counsel-info {
-    display: flex;
-    align-items: center;
-    gap: 15px;
-    padding: 10px 20px;
-    background-color: #fff3e0;
-    border-radius: 6px;
-    border: 2px solid #ff9800;
-}
-
-.current-counsel-info span {
-    font-weight: bold;
-    font-size: 1.1em;
-    color: #e65100;
-}
-
-.btn-delete-counsel {
-    padding: 8px 16px;
-    background-color: #e74c3c;
-    color: white;
-    border: none;
-    border-radius: 4px;
+.form-group label {
+    display: block;
+    margin-bottom: 8px;
+    color: var(--color-gray-800);
+    font-weight: 600;
     font-size: 0.95em;
-    cursor: pointer;
-    transition: background-color 0.3s ease;
 }
 
-.btn-delete-counsel:hover {
-    background-color: #c0392b;
+.form-message {
+    padding: 14px 18px;
+    border-radius: 12px;
+    margin-bottom: 16px;
+    display: none;
+    font-weight: 600;
+    text-align: center;
+    border: 2px solid;
 }
 
+.form-message.show {
+    display: block;
+}
+
+.form-message.error {
+    background: linear-gradient(135deg, #fee2e2, #fecaca);
+    color: #b91c1c;
+    border-color: #f87171;
+}
+
+.form-message.success {
+    background: linear-gradient(135deg, var(--color-success-50), var(--color-success-100));
+    color: #15803d;
+    border-color: var(--color-success-500);
+}
+
+.form-message.info {
+    background: linear-gradient(135deg, var(--color-primary-50), var(--color-primary-100));
+    color: var(--color-primary-700);
+    border-color: var(--color-primary-500);
+}
+
+/* ===== 상담 관리 페이지 ===== */
 .counsel-list-container {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
@@ -1460,672 +1472,499 @@ body {
 
 .empty-counsel-message {
     text-align: center;
-    color: #999;
-    padding: 60px 20px;
+    color: var(--color-gray-500);
+    padding: 64px 20px;
     line-height: 1.8;
     font-size: 1.1em;
     grid-column: 1 / -1;
 }
 
 .counsel-card {
-    padding: 25px;
-    border: 2px solid #e0e0e0;
-    border-radius: 12px;
+    padding: 26px;
+    border: 2px solid var(--color-gray-200);
+    border-radius: 16px;
     cursor: pointer;
-    transition: all 0.3s ease;
+    transition: all var(--transition-base);
     background-color: white;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+    box-shadow: var(--shadow);
 }
 
 .counsel-card:hover {
-    border-color: #2ecc71;
-    background-color: #f1f8f4;
+    border-color: var(--color-primary-400);
+    background: linear-gradient(135deg, #f0f9ff, #e0f2fe);
     transform: translateY(-4px);
-    box-shadow: 0 6px 16px rgba(46, 204, 113, 0.25);
+    box-shadow: var(--shadow-xl);
 }
 
-.counsel-card.active {
-    border-color: #2ecc71;
-    background-color: #e8f5e9;
-    box-shadow: 0 6px 16px rgba(46, 204, 113, 0.3);
+/* ===== 기타 UI 요소 ===== */
+.stat-boxes-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    gap: 16px;
+    margin-bottom: 32px;
 }
 
-.counsel-card-title {
+.stat-box {
+    background: linear-gradient(135deg, #667eea, #764ba2);
+    color: white;
+    padding: 24px;
+    border-radius: 16px;
+    text-align: center;
+    box-shadow: var(--shadow-md);
+    transition: all var(--transition-base);
+}
+
+.stat-box:hover {
+    transform: translateY(-4px);
+    box-shadow: var(--shadow-xl);
+}
+
+.stat-box-value {
+    font-size: 2.5em;
     font-weight: bold;
-    font-size: 1.3em;
-    color: #333;
-    margin-bottom: 15px;
-    line-height: 1.4;
+    margin-bottom: 8px;
 }
 
-.counsel-card.active .counsel-card-title {
-    color: #27ae60;
+.stat-box-label {
+    font-size: 0.95em;
+    opacity: 0.95;
 }
 
-.counsel-card-meta {
-    font-size: 0.9em;
-    color: #777;
-    display: flex;
-    flex-direction: column;
-    gap: 6px;
+.badge-section-title {
+    font-size: 1.6em;
+    font-weight: bold;
+    color: var(--color-gray-800);
+    margin: 32px 0 20px 0;
+    padding-bottom: 12px;
+    border-bottom: 3px solid #f093fb;
 }
 
-.counsel-card-date {
-    color: #999;
+.badge-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(90px, 1fr));
+    gap: 16px;
+    margin-bottom: 32px;
 }
 
-.counsel-card-updated {
-    color: #666;
-    font-style: italic;
+.badge-item {
+    text-align: center;
+    padding: 12px;
+    border-radius: 12px;
+    background-color: var(--color-gray-50);
+    transition: all var(--transition-base);
 }
 
-/* 반응형 디자인 */
+.badge-item:hover {
+    background-color: var(--color-gray-100);
+    transform: scale(1.05);
+}
+
+.badge-item img {
+    width: 64px;
+    height: 64px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 3px solid #667eea;
+    margin-bottom: 8px;
+    box-shadow: var(--shadow);
+    margin-left: auto;
+    margin-right: auto;
+    display: block;
+}
+
+.badge-item-name {
+    font-size: 0.85em;
+    color: var(--color-gray-800);
+    font-weight: 500;
+    word-wrap: break-word;
+    line-height: 1.3;
+}
+
+/* ===== 반응형 디자인 ===== */
 @media (max-width: 768px) {
+    .auth-wrapper {
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .auth-container {
+        padding: 32px 24px;
+        width: 100%;
+        max-width: 420px;
+        min-width: auto;
+    }
+
+    .auth-logo {
+        font-size: 2em;
+    }
+
+    .stat-boxes-container {
+        grid-template-columns: 1fr;
+    }
+
+    .badge-grid {
+        grid-template-columns: repeat(3, 1fr);
+    }
+
+    .student-page .student-input-group {
+        flex-direction: column;
+    }
+
+    .student-page .student-input-group button {
+        width: 100%;
+    }
+
+    #report-area {
+        padding: 24px;
+    }
+
+    h1 {
+        font-size: 2em;
+    }
+
     .counsel-list-container {
         grid-template-columns: 1fr;
     }
+
+    .dynamic-column-layout {
+        flex-direction: column;
+    }
 }
 
-/* ===== 학생용 상담 선택 페이지 ===== */
-.auth-page .student-info-box {
-    background: linear-gradient(135deg, #e8f5e9 0%, #c8e6c9 100%);
-    border: 2px solid #66bb6a;
-    border-radius: 12px;
-    padding: 18px;
-    margin: 25px 0;
-    text-align: center;
-    box-shadow: 0 2px 8px rgba(102, 187, 106, 0.15);
+@media (max-width: 480px) {
+    .auth-container {
+        padding: 24px 20px;
+    }
+
+    .auth-logo {
+        font-size: 1.8em;
+    }
+
+    .auth-option-title {
+        font-size: 1.2em;
+    }
+
+    .stat-box-value {
+        font-size: 2em;
+    }
+
+    .badge-grid {
+        grid-template-columns: repeat(3, 1fr);
+        gap: 12px;
+    }
+
+    .badge-item img {
+        width: 52px;
+        height: 52px;
+    }
 }
 
-.auth-page .student-info-box strong {
-    color: #2e7d32;
-    font-size: 1.1em;
-}
-
-.auth-page .counsel-select-container {
-    margin: 30px 0;
-}
-
-.auth-page .counsel-select-container h3 {
-    color: #333;
-    margin-bottom: 25px;
-    padding-bottom: 15px;
-    border-bottom: 3px solid rgba(102, 126, 234, 0.2);
-    font-size: 1.3em;
-    font-weight: 700;
-}
-
-.auth-page .counsel-select-list {
+/* ===== 학생 제출 보고서 페이지 (교사용) ===== */
+.submissions-page {
+    position: relative;
     display: flex;
-    flex-direction: column;
-    gap: 15px;
+    height: 100vh;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    margin: 0;
+    padding: 0;
 }
 
-.auth-page .counsel-select-card {
-    background: linear-gradient(135deg, #f8f9ff 0%, #f0f4ff 100%);
-    border: 2px solid #e0e7ff;
-    border-radius: 14px;
-    padding: 22px;
-    cursor: pointer;
-    transition: all 0.3s ease;
+.submissions-list-panel {
+    width: 30%;
+    min-width: 320px;
+    background: rgba(255, 255, 255, 0.97);
+    backdrop-filter: blur(12px);
+    border-right: 2px solid rgba(102, 126, 234, 0.15);
+    overflow-y: auto;
+    padding: 28px 24px;
+    box-shadow: 4px 0 24px rgba(0, 0, 0, 0.08);
+}
+
+.submissions-detail-panel {
+    width: 70%;
+    overflow-y: auto;
+    padding: 40px;
+    background: white;
+}
+
+.submissions-list-title {
+    font-size: 1.6em;
+    font-weight: 700;
+    margin-bottom: 24px;
     display: flex;
     justify-content: space-between;
     align-items: center;
-    position: relative;
-    box-shadow: 0 2px 8px rgba(102, 126, 234, 0.1);
+    color: var(--color-gray-800);
+    padding-bottom: 16px;
+    border-bottom: 2px solid var(--color-gray-200);
 }
 
-.auth-page .counsel-select-card:hover {
-    border-color: #667eea;
-    background: linear-gradient(135deg, #e8edff 0%, #dce4ff 100%);
-    transform: translateX(8px);
-    box-shadow: 0 6px 16px rgba(102, 126, 234, 0.25);
-}
-
-.auth-page .counsel-select-card-title {
-    font-weight: 700;
-    font-size: 1.3em;
-    color: #333;
-    margin-bottom: 10px;
-}
-
-.auth-page .counsel-select-card-meta {
-    font-size: 0.9em;
-    color: #666;
-}
-
-.auth-page .counsel-select-card-date,
-.auth-page .counsel-select-card-updated {
-    margin: 5px 0;
-}
-
-.auth-page .counsel-select-card-arrow {
-    font-size: 2.2em;
-    color: #667eea;
-    font-weight: bold;
-    transition: transform 0.3s ease;
-}
-
-.auth-page .counsel-select-card:hover .counsel-select-card-arrow {
-    transform: translateX(12px);
-}
-
-.auth-page .loading-message,
-.auth-page .empty-message,
-.auth-page .error-message {
-    text-align: center;
-    padding: 40px 20px;
-    color: #999;
-    line-height: 1.6;
-}
-
-.auth-page .error-message {
-    color: #e74c3c;
-}
-
-.auth-page .btn-back {
-    margin-top: 30px;
-    padding: 14px 28px;
-    background: linear-gradient(135deg, #95a5a6 0%, #7f8c8d 100%);
-    color: white;
-    border: none;
-    border-radius: 12px;
+.submissions-list-title > span {
     font-size: 1em;
-    font-weight: 600;
-    cursor: pointer;
-    transition: all 0.3s ease;
-    width: 100%;
-    box-shadow: 0 4px 12px rgba(149, 165, 166, 0.3);
 }
 
-.auth-page .btn-back:hover {
-    background: linear-gradient(135deg, #7f8c8d 0%, #6c7a7b 100%);
-    transform: translateY(-2px);
-    box-shadow: 0 6px 16px rgba(149, 165, 166, 0.4);
-}
-/* ===== 학생 제출 관련 스타일 ===== */
-.btn-submit-report {
-    padding: 14px 32px;
-    background: linear-gradient(135deg, #10b981 0%, #059669 100%);
-    color: white;
-    border: none;
-    border-radius: 16px;
-    font-size: 1.05em;
-    font-weight: 700;
-    cursor: pointer;
-    transition: all 0.3s ease;
-    box-shadow: 0 4px 16px rgba(16, 185, 129, 0.3);
-    letter-spacing: -0.3px;
-}
-
-.btn-submit-report:hover {
-    background: linear-gradient(135deg, #059669 0%, #047857 100%);
-    transform: translateY(-3px);
-    box-shadow: 0 6px 20px rgba(16, 185, 129, 0.4);
-}
-
-.btn-submit-report:active {
-    transform: translateY(-1px);
-}
-
-#submission-message {
-    padding: 15px 20px;
-    border-radius: 6px;
-    margin: 15px 0;
-    font-weight: 600;
-    text-align: center;
-    border: 1px solid transparent;
-}
-
-.message-success {
-    background-color: #d4edda;
-    color: #155724;
-    border-color: #c3e6cb;
-}
-
-.message-error {
-    background-color: #f8d7da;
-    color: #721c24;
-    border-color: #f5c6cb;
-}
-
-/* ===== 학생 제출 조회 버튼 ===== */
-.btn-view-submissions {
-    padding: 12px 24px;
-    background-color: #3498db;
-    color: white;
-    border: none;
-    border-radius: 6px;
-    font-size: 1em;
-    font-weight: bold;
-    cursor: pointer;
-    transition: all 0.3s ease;
-    box-shadow: 0 2px 6px rgba(52, 152, 219, 0.3);
-}
-
-.btn-view-submissions:hover {
-    background-color: #2980b9;
-    transform: translateY(-2px);
-    box-shadow: 0 4px 12px rgba(52, 152, 219, 0.4);
-}
-
-/* ===== 모달 스타일 ===== */
-.modal {
-    position: fixed;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background-color: rgba(0, 0, 0, 0.5);
+.title-actions {
     display: flex;
-    justify-content: center;
     align-items: center;
+    gap: 10px;
+}
+
+.icon-button {
+    background: linear-gradient(135deg, #f0f9ff, #e0f2fe);
+    border: 2px solid #bae6fd;
+    font-size: 1.3em;
+    cursor: pointer;
+    padding: 10px 14px;
+    border-radius: 12px;
+    transition: all var(--transition-base);
+    box-shadow: var(--shadow-sm);
+}
+
+.icon-button:hover {
+    background: linear-gradient(135deg, #dbeafe, #bfdbfe);
+    border-color: var(--color-primary-500);
+    transform: translateY(-3px);
+    box-shadow: var(--shadow-md);
+}
+
+.icon-button.active {
+    background: linear-gradient(135deg, var(--color-primary-500), var(--color-primary-600));
+    color: white;
+    border-color: var(--color-primary-600);
+    box-shadow: var(--shadow-lg);
+}
+
+.submission-item {
+    background: linear-gradient(135deg, #f0f9ff, #e0f2fe);
+    padding: 16px 18px;
+    margin-bottom: 14px;
+    border-radius: 14px;
+    cursor: pointer;
+    border: 2px solid #bae6fd;
+    transition: all var(--transition-base);
+    box-shadow: var(--shadow-sm);
+}
+
+.submission-item:hover {
+    background: linear-gradient(135deg, #dbeafe, #bfdbfe);
+    border-color: var(--color-primary-500);
+    transform: translateX(6px);
+    box-shadow: var(--shadow-md);
+}
+
+.submission-item.active {
+    background: linear-gradient(135deg, #667eea, #764ba2);
+    color: white;
+    border-color: #667eea;
+    box-shadow: var(--shadow-lg);
+}
+
+.submission-item-name {
+    font-weight: 700;
+    font-size: 1.1em;
+    margin-bottom: 6px;
+}
+
+.submission-item-code {
+    font-size: 0.88em;
+    opacity: 0.85;
+}
+
+.submission-item-checkbox {
+    display: none;
+    margin-right: 10px;
+    width: 18px;
+    height: 18px;
+    cursor: pointer;
+}
+
+.submission-item.selection-mode {
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+}
+
+.submission-item.selection-mode .submission-item-checkbox {
+    display: inline-block;
+}
+
+.submission-item-content {
+    flex: 1;
+}
+
+.back-button {
+    position: fixed;
+    top: 24px;
+    left: 0px;
+    padding: 14px 28px;
+    background: linear-gradient(135deg, rgba(255, 255, 255, 0.95), rgba(255, 255, 255, 0.85));
+    backdrop-filter: blur(12px);
+    color: #667eea;
+    border: 2px solid rgba(102, 126, 234, 0.3);
+    border-left: none;
+    border-radius: 0 12px 12px 0;
+    cursor: pointer;
+    font-size: 1em;
+    font-weight: 700;
+    transition: all var(--transition-base);
+    box-shadow: 4px 4px 12px rgba(0, 0, 0, 0.15);
     z-index: 1000;
 }
 
-.modal-content {
-    background: white;
-    border-radius: 8px;
-    width: 90%;
-    max-width: 800px;
-    max-height: 80vh;
-    display: flex;
-    flex-direction: column;
-    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.3);
+.back-button:hover {
+    background: linear-gradient(135deg, #ffffff, #f0f9ff);
+    border-color: #667eea;
+    color: #764ba2;
+    transform: translateX(6px);
+    box-shadow: 6px 6px 16px rgba(0, 0, 0, 0.2);
 }
 
-.modal-header {
-    padding: 20px;
-    border-bottom: 2px solid #e0e0e0;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-}
-
-.modal-header h2 {
-    margin: 0;
-    font-size: 1.3em;
-}
-
-.modal-close-btn {
-    background: none;
-    border: none;
-    font-size: 1.5em;
-    cursor: pointer;
-    color: #999;
-    transition: color 0.3s ease;
-}
-
-.modal-close-btn:hover {
-    color: #333;
-}
-
-.modal-body {
-    padding: 20px;
-    overflow-y: auto;
-    flex: 1;
-}
-
-.modal-footer {
-    padding: 15px 20px;
-    border-top: 1px solid #e0e0e0;
-    display: flex;
-    justify-content: flex-end;
-    gap: 10px;
-}
-
-.btn-close-modal {
-    padding: 10px 20px;
-    background-color: #95a5a6;
-    color: white;
-    border: none;
-    border-radius: 6px;
-    cursor: pointer;
-    transition: background-color 0.3s ease;
-}
-
-.btn-close-modal:hover {
-    background-color: #7f8c8d;
-}
-
-/* ===== 로그인 화면으로 돌아가기 버튼 ===== */
-.btn-back-to-login {
-    padding: 12px 30px;
-    background-color: #95a5a6;
-    color: white;
-    border: none;
-    border-radius: 8px;
-    font-size: 1em;
-    font-weight: bold;
-    cursor: pointer;
-    transition: all 0.3s ease;
-    box-shadow: 0 2px 6px rgba(149, 165, 166, 0.3);
-}
-
-.btn-back-to-login:hover {
-    background-color: #7f8c8d;
-    transform: translateY(-2px);
-    box-shadow: 0 4px 12px rgba(149, 165, 166, 0.4);
-}
-
-.btn-back-to-login:active {
-    transform: translateY(0);
-}
-
-/* ===== 교사 페이지 통일 디자인 ===== */
-.teacher-page {
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-    min-height: 100vh;
-    margin: 0;
-    padding: 30px 20px;
-    max-width: none;
-}
-
-.teacher-page .page-header {
+.empty-message {
     text-align: center;
-    margin-bottom: 30px;
-}
-
-.teacher-page .page-header h1 {
-    font-family: 'yg-jalnan', 'Malgun Gothic', 'Arial', sans-serif;
-    font-size: 3.em;
-    color: white;
-    text-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
-    margin: 0;
-}
-
-.teacher-page .counsel-list-view {
-    background: white;
-    border-radius: 20px;
-    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
-    padding: 30px;
-    max-width: 1000px;
-    margin: 0 auto 30px;
-}
-
-.teacher-page .counsel-form-view {
-    background: white;
-    border-radius: 20px;
-    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
-    padding: 30px;
-    max-width: 1000px;
-    margin: 0 auto 30px;
-}
-
-.teacher-page .counsel-list-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 25px;
-    padding-bottom: 20px;
-    border-bottom: 3px solid #f0f0f0;
-}
-
-.teacher-page .counsel-list-header h2 {
-    font-size: 1.8em;
-    color: #333;
-    margin: 0;
-    font-weight: 700;
-}
-
-.teacher-page .btn-create-counsel {
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-    color: white;
-    padding: 12px 24px;
-    border: none;
-    border-radius: 12px;
-    font-size: 1em;
-    font-weight: 600;
-    cursor: pointer;
-    transition: all 0.3s ease;
-    box-shadow: 0 4px 16px rgba(102, 126, 234, 0.3);
-}
-
-.teacher-page .btn-create-counsel:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 6px 20px rgba(102, 126, 234, 0.4);
-}
-
-.teacher-page .counsel-card {
-    background: linear-gradient(135deg, #f8f9ff 0%, #f0f4ff 100%);
-    border: 2px solid #e0e7ff;
-    border-radius: 16px;
-    padding: 20px;
-    margin-bottom: 15px;
-    cursor: pointer;
-    transition: all 0.3s ease;
-    box-shadow: 0 2px 8px rgba(102, 126, 234, 0.1);
-}
-
-.teacher-page .counsel-card:hover {
-    transform: translateY(-3px);
-    box-shadow: 0 8px 20px rgba(102, 126, 234, 0.25);
-    border-color: #667eea;
-}
-
-.teacher-page .counsel-form-header {
-    background: linear-gradient(135deg, #f8f9ff 0%, #f0f4ff 100%);
-    padding: 15px 20px;
-    border-radius: 12px;
-    margin-bottom: 25px;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-}
-
-.teacher-page .btn-back-to-list {
-    background: linear-gradient(135deg, #95a5a6 0%, #7f8c8d 100%);
-    color: white;
-    padding: 10px 20px;
-    border: none;
-    border-radius: 10px;
-    font-size: 0.95em;
-    font-weight: 600;
-    cursor: pointer;
-    transition: all 0.3s ease;
-}
-
-.teacher-page .btn-back-to-list:hover {
-    transform: translateX(-3px);
-    box-shadow: 0 4px 12px rgba(149, 165, 166, 0.3);
-}
-
-.teacher-page .config-section {
-    background: white;
-    border-radius: 12px;
-    padding: 20px;
-    margin-bottom: 20px;
-    border: 2px solid #e0e0e0;
-    transition: all 0.3s ease;
-}
-
-.teacher-page .config-section:hover {
-    border-color: #667eea;
-    box-shadow: 0 4px 12px rgba(102, 126, 234, 0.1);
-}
-
-.teacher-page .config-section h3 {
-    color: #333;
-    font-size: 1.3em;
-    margin-top: 0;
-    margin-bottom: 15px;
-    font-weight: 700;
-}
-
-.teacher-page .button-group button {
-    background: linear-gradient(135deg, #10b981 0%, #059669 100%);
-    color: white;
-    padding: 14px 32px;
-    border: none;
-    border-radius: 12px;
+    padding: 40px 24px;
+    color: var(--color-gray-500);
     font-size: 1.05em;
-    font-weight: 700;
-    cursor: pointer;
-    transition: all 0.3s ease;
-    box-shadow: 0 4px 16px rgba(16, 185, 129, 0.3);
+    line-height: 1.7;
+    background: linear-gradient(135deg, #f0f9ff, #e0f2fe);
+    border-radius: 16px;
+    border: 2px dashed #bae6fd;
+    margin: 20px 0;
 }
 
-.teacher-page .button-group button:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 6px 20px rgba(16, 185, 129, 0.4);
-}
-
-.teacher-page .page-footer {
-    text-align: center;
-    margin-top: 40px;
-    padding: 20px 0;
-}
-
-.teacher-page .btn-back-to-login {
-    background: rgba(255, 255, 255, 0.25);
-    backdrop-filter: blur(10px);
-    color: white;
-    padding: 14px 32px;
-    border: 2px solid rgba(255, 255, 255, 0.4);
-    border-radius: 12px;
-    font-size: 1em;
-    font-weight: 600;
-    cursor: pointer;
-    transition: all 0.3s ease;
-}
-
-.teacher-page .btn-back-to-login:hover {
-    background: rgba(255, 255, 255, 0.35);
-    border-color: rgba(255, 255, 255, 0.6);
-    transform: translateY(-2px);
-    box-shadow: 0 6px 20px rgba(255, 255, 255, 0.3);
-}
-
-/* ===== 학생 페이지 통일 디자인 ===== */
-.student-page {
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-    min-height: 100vh;
-    margin: 0;
-    padding: 30px 20px;
-    max-width: none;
-}
-
-.student-page .student-input-area {
-    background: white;
-    border-radius: 20px;
-    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
-    padding: 35px;
-    max-width: 600px;
-    margin: 0 auto 30px;
-}
-
-.student-page .student-input-area h2 {
-    font-family: 'yg-jalnan', 'Malgun Gothic', 'Arial', sans-serif;
-    font-size: 2em;
-    color: #333;
-    text-align: center;
-    margin-bottom: 25px;
-}
-
-.student-page .student-input-group {
-    display: flex;
-    gap: 10px;
-    margin-top: 20px;
-}
-
-.student-page .student-input-group input {
-    flex: 1;
-    padding: 14px;
-    border: 2px solid #e0e0e0;
-    border-radius: 12px;
-    font-size: 1em;
-    transition: all 0.3s ease;
-}
-
-.student-page .student-input-group input:focus {
-    border-color: #667eea;
-    outline: none;
-    box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
-}
-
-.student-page .student-input-group button {
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-    color: white;
-    padding: 14px 28px;
+.submissions-list {
+    min-height: 200px;
+    background: transparent;
+    border-radius: 0;
+    padding: 0;
     border: none;
-    border-radius: 12px;
-    font-size: 1em;
-    font-weight: 600;
-    cursor: pointer;
-    transition: all 0.3s ease;
-    box-shadow: 0 4px 16px rgba(102, 126, 234, 0.3);
+    box-shadow: none;
 }
 
-.student-page .student-input-group button:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 6px 20px rgba(102, 126, 234, 0.4);
-}
-
-.student-page .student-logout-btn {
-    position: fixed;
-    bottom: 30px;
-    left: 30px;
-    background: rgba(255, 255, 255, 0.25);
-    backdrop-filter: blur(10px);
-    color: white;
-    padding: 12px 24px;
-    border: 2px solid rgba(255, 255, 255, 0.4);
-    border-radius: 12px;
-    font-size: 0.95em;
-    font-weight: 600;
-    cursor: pointer;
-    transition: all 0.3s ease;
-}
-
-.student-page .student-logout-btn:hover {
-    background: rgba(255, 255, 255, 0.35);
-    border-color: rgba(255, 255, 255, 0.6);
-    transform: translateY(-2px);
-    box-shadow: 0 6px 20px rgba(255, 255, 255, 0.3);
-}
-
-.student-page .student-message {
-    padding: 14px 18px;
-    border-radius: 12px;
-    margin: 15px 0;
-    display: none;
-    font-weight: 600;
+/* 제출 목록 없을 때 */
+.submissions-list:empty::after {
+    content: "📭 아직 제출한 학생이 없습니다.";
+    display: block;
     text-align: center;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    padding: 60px 24px;
+    color: var(--color-gray-400);
+    font-size: 1.05em;
+    background: linear-gradient(135deg, #f0f9ff, #e0f2fe);
+    border-radius: 12px;
+    border: 2px dashed #bae6fd;
+    margin: 0;
 }
 
-.student-page .student-message.show {
-    display: block;
-}
-
-.student-page .student-message.error {
-    background: linear-gradient(135deg, #ffebee 0%, #ffcdd2 100%);
-    color: #c62828;
-    border: 2px solid #ef5350;
-}
-
-.student-page .student-message.success {
-    background: linear-gradient(135deg, #e8f5e9 0%, #c8e6c9 100%);
-    color: #2e7d32;
-    border: 2px solid #66bb6a;
-}
-
-.student-page .student-message.info {
-    background: linear-gradient(135deg, #e3f2fd 0%, #bbdefb 100%);
-    color: #1565c0;
-    border: 2px solid #42a5f5;
-}
-
-.student-page #student-report-area {
+.report-container {
     background: white;
-    border-radius: 20px;
-    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
-    padding: 30px;
-    max-width: 1200px;
-    margin: 20px auto;
 }
 
-.student-page #submit-report-btn {
-    display: block;
-    margin: 0 auto;
+/* ===== 반응형: 학생 제출 페이지 ===== */
+@media (max-width: 1024px) {
+    .submissions-list-panel {
+        width: 35%;
+        min-width: 280px;
+    }
+
+    .submissions-detail-panel {
+        width: 65%;
+    }
+}
+
+@media (max-width: 768px) {
+    .submissions-page {
+        flex-direction: column;
+    }
+
+    .submissions-list-panel {
+        width: 100%;
+        height: 40vh;
+        border-right: none;
+        border-bottom: 2px solid rgba(102, 126, 234, 0.15);
+    }
+
+    .submissions-detail-panel {
+        width: 100%;
+        height: 60vh;
+    }
+
+    .back-button {
+        top: 12px;
+        padding: 10px 18px;
+        font-size: 0.9em;
+    }
+}
+
+/* ===== 인쇄 최적화 ===== */
+@media print {
+    body {
+        padding: 0;
+        margin: 0;
+        font-size: 8.5pt;
+    }
+
+    body > h1:first-of-type,
+    #input-area,
+    .button-group,
+    .print-download-group,
+    .student-input-area,
+    .student-logout-btn,
+    .back-button {
+        display: none;
+    }
+
+    .submissions-page {
+        display: block;
+        background: white;
+    }
+
+    .submissions-list-panel {
+        display: none;
+    }
+
+    .submissions-detail-panel {
+        width: 100%;
+        padding: 0;
+    }
+
+    #report-area,
+    #student-report-area {
+        box-shadow: none;
+        padding: 2mm 4mm;
+        margin: 0;
+        border-radius: 0;
+        background-color: white;
+    }
+
+    .usage-section,
+    .asset-section-container,
+    .summary-section {
+        margin-bottom: 3mm;
+        padding: 2mm;
+        page-break-inside: avoid;
+    }
+
+    .dynamic-column-layout {
+        gap: 2mm;
+    }
+
+    .pie-chart {
+        width: 70px;
+        height: 70px;
+        -webkit-print-color-adjust: exact;
+        print-color-adjust: exact;
+    }
+
+    .stat-box {
+        background: white !important;
+        color: var(--color-gray-800) !important;
+        border: 2px solid #667eea !important;
+        padding: 12px !important;
+        -webkit-print-color-adjust: exact;
+        print-color-adjust: exact;
+    }
+
+    .badge-item img {
+        width: 48px;
+        height: 48px;
+    }
 }
