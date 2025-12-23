@@ -17,7 +17,10 @@ class ReportSectionGenerator {
      */
     static generateReportHeader(student, config, reportDate, isBatchMode) {
         return `
-            <div class="report-page" style="page-break-after: ${isBatchMode ? 'always' : 'auto'};">
+            <div class="report-page" style="page-break-after: ${isBatchMode ? 'always' : 'auto'}; position: relative;">
+                <div class="report-date-header" style="position: absolute; top: 0; right: 0; font-size: 0.9em; color: #666; padding: 5px 10px;">
+                    조회 일시: ${reportDate}
+                </div>
                 <h1 style="font-size: 2.3em; font-weight: 800; text-align: center; margin: 25px 0; padding: 15px; letter-spacing: -1px;">
                     <span style="font-family: 'Segoe UI Emoji', 'Apple Color Emoji', 'Noto Color Emoji', sans-serif;">✨</span>
                     <span style="background: linear-gradient(135deg, #ec4899 0%, #f472b6 50%, #fb923c 100%); background-clip: text; -webkit-background-clip: text; -webkit-text-fill-color: transparent;"> ${student} 학생의 성장 기록 </span>
@@ -114,7 +117,7 @@ class ReportSectionGenerator {
         const { primary: acquisition, secondary: use } = TextUtility.splitUsageText(chip.usage, '획득', '사용');
 
         let section = `
-            <div class="asset-section-container">
+            <div class="asset-section-container chip-section">
                 <h2 class="activity-title">
                     <span style="font-family: 'Segoe UI Emoji', 'Apple Color Emoji', 'Noto Color Emoji', sans-serif;">🍫</span>
                     <span style="background: linear-gradient(90deg, #0ea5e9 0%, #38bdf8 100%); background-clip: text; -webkit-background-clip: text; -webkit-text-fill-color: transparent;"> ${student} 학생의 초코칩 활동</span>
@@ -186,7 +189,7 @@ class ReportSectionGenerator {
             : '<p style="text-align: center; font-size: 0.9em; color: #777; width: 100%; margin: 10px 0;">아직 획득한 뱃지가 없습니다.</p>';
 
         let section = `
-            <div class="asset-section-container">
+            <div class="asset-section-container badge-section" data-page-break-after="true">
                 <h2 class="activity-title">
                     <span style="font-family: 'Segoe UI Emoji', 'Apple Color Emoji', 'Noto Color Emoji', sans-serif;">🏅</span>
                     <span style="background: linear-gradient(90deg, #0ea5e9 0%, #38bdf8 100%); background-clip: text; -webkit-background-clip: text; -webkit-text-fill-color: transparent;"> ${student} 학생의 뱃지 활동</span>
@@ -273,7 +276,6 @@ class ReportSectionGenerator {
      */
     static generateFooter(reportDate) {
         return `
-            <div class="report-footer">조회 일시: ${reportDate}</div>
             </div>
         `;
     }
